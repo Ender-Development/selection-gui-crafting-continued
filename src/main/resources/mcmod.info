@@ -1,13 +1,13 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "selectionguicrafting",
+  "name": "Selection GUI Crafting",
+  "description": " RMB. Choose option. Craft.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["CleanroomMC"],
+  "authorList": ["Gliese 832 c"],
   "credits": "Authors of this project",
   "logoFile": "",
   "screenshots": [],

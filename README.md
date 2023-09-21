@@ -1,16 +1,8 @@
-## TemplateDevEnv
+## Selection GUI Crafting
 
-Template workspace for modding Minecraft 1.12.2. Licensed under MIT, it is made for public use.
+Minecraft 1.12.2 mod that gives modpack authors the ability to add crafting recipes into a selection GUI that is triggered by right-clicking while holding the right items.
 
-This template currently utilizies **Gradle 8.1.1** + **[RetroFuturaGradle](https://github.com/GTNewHorizons/RetroFuturaGradle) 1.3.6** + **Forge 14.23.5.2847**.
+This could, for example, be used for clay recipes. Instead of manually arranging clay balls in a different way in a crafting table, it would be possible to make it so that you right-click with a spatula in one hand, clay in the other, and just select the clay item you want to make.
+Another use example would be forging. Right-click with a hammer in one hand, an ingot in the other, and select your desired toolhead.
 
-With **coremod and mixin support** that is easy to configure.
-
-### Instructions:
-
-1. Click `use this template` at the top.
-2. Clone the repository you have created with this template.
-3. In the local repository, run the command `gradlew setupDecompWorkspace`
-4. Open the project folder in IDEA.
-5. Right-click in IDEA `build.gradle` of your project, and select `Link Gradle Project`, after completion, hit `Refresh All` in the gradle tab on the right.
-6. Run `gradlew runClient` and `gradlew runServer`, or use the auto-imported run configurations in IntelliJ like `1. Run Client`.
+You can add as many recipes as you want with CraftTweaker. The possibilities are endless.
