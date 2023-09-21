@@ -1,3 +1,5 @@
 gui.selectionguicrafting.title.select=Select
 gui.selectionguicrafting.title.recipe=Recipe
 gui.selectionguicrafting.close=Close GUI
+
+gui.selectionguicrafting.needed=Needed

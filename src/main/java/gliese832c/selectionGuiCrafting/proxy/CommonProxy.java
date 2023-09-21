@@ -4,6 +4,8 @@ package gliese832c.selectionGuiCrafting.proxy;
 import gliese832c.SelectionGuiCrafting;
 import gliese832c.selectionGuiCrafting.events.EventRightClick;
 import gliese832c.selectionGuiCrafting.gui.ModGuiHandler;
+import gliese832c.selectionGuiCrafting.network.SelectionMessageGiveItem;
+import gliese832c.selectionGuiCrafting.network.SelectionPacketHandler;
 import gliese832c.selectionGuiCrafting.recipe.GuiSelectionItemPair;
 import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipe;
 import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipeCategory;
@@ -16,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +32,8 @@ public class CommonProxy
     public void preInit(FMLPreInitializationEvent preEvent)
     {
         MinecraftForge.EVENT_BUS.register(new EventRightClick());
+
+        SelectionPacketHandler.SELECTION_NETWORK_WRAPPER.registerMessage(SelectionMessageGiveItem.SelectionMessageGiveItemHandler.class, SelectionMessageGiveItem.class, 0, Side.SERVER);
     }
 
     public void init(FMLInitializationEvent event)
@@ -38,6 +43,17 @@ public class CommonProxy
 
     public void postInit(FMLPostInitializationEvent postEvent)
     {
+        assert Blocks.BARRIER != null;
+        GuiSelectionRecipeCategory invalid = new GuiSelectionRecipeCategory("INVALID", true, new GuiSelectionRecipe[]{
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Blocks.BARRIER, 1) }, 20)
+        });
+        selectionCraftingItems.add(new GuiSelectionItemPair(new Item[]{Item.getItemFromBlock(Blocks.BARRIER)}, new Item[]{ Item.getItemFromBlock(Blocks.BARRIER) }, "invalid"));
+        recipeCategories.put("invalid", invalid);
+
+
+
+
+
         GuiSelectionRecipeCategory schmongus = new GuiSelectionRecipeCategory("Schmongus", true, new GuiSelectionRecipe[]{
                 new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.IRON_NUGGET, 2) }, 60),
                 new GuiSelectionRecipe(2, new ItemStack[]{ new ItemStack(Items.BUCKET, 6) }, 30)
@@ -53,6 +69,39 @@ public class CommonProxy
         recipeCategories.put("schmongus2", schmongus2);
 
         GuiSelectionRecipeCategory axing = new GuiSelectionRecipeCategory("Axing", true, new GuiSelectionRecipe[]{
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.BOAT, 1) }, 90),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.WOODEN_AXE, 5463) }, 60),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.ARMOR_STAND, 64) }, 30),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.BOAT, 1) }, 90),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.WOODEN_AXE, 5463) }, 60),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.ARMOR_STAND, 64) }, 30),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.BOAT, 1) }, 90),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.WOODEN_AXE, 5463) }, 60),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.ARMOR_STAND, 64) }, 30),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.BOAT, 1) }, 90),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.WOODEN_AXE, 5463) }, 60),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.ARMOR_STAND, 64) }, 30),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.BOAT, 1) }, 90),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.WOODEN_AXE, 5463) }, 60),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.ARMOR_STAND, 64) }, 30),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.BOAT, 1) }, 90),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.WOODEN_AXE, 5463) }, 60),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.ARMOR_STAND, 64) }, 30),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.BOAT, 1) }, 90),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.WOODEN_AXE, 5463) }, 60),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.ARMOR_STAND, 64) }, 30),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.BOAT, 1) }, 90),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.WOODEN_AXE, 5463) }, 60),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.ARMOR_STAND, 64) }, 30),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.BOAT, 1) }, 90),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.WOODEN_AXE, 5463) }, 60),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.ARMOR_STAND, 64) }, 30),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.BOAT, 1) }, 90),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.WOODEN_AXE, 5463) }, 60),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.ARMOR_STAND, 64) }, 30),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.BOAT, 1) }, 90),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.WOODEN_AXE, 5463) }, 60),
+                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.ARMOR_STAND, 64) }, 30),
                 new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.BOAT, 1) }, 90),
                 new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.WOODEN_AXE, 5463) }, 60),
                 new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Items.ARMOR_STAND, 64) }, 30)
@@ -75,15 +124,6 @@ public class CommonProxy
         }
         selectionCraftingItems.add(new GuiSelectionItemPair(new Item[]{ Items.IRON_HOE }, new Item[]{ Items.DIAMOND }, "hoeing"));
         recipeCategories.put("hoeing", hoeing);
-
-
-
-        assert Blocks.BARRIER != null;
-        GuiSelectionRecipeCategory invalid = new GuiSelectionRecipeCategory("INVALID", true, new GuiSelectionRecipe[]{
-                new GuiSelectionRecipe(1, new ItemStack[]{ new ItemStack(Blocks.BARRIER, 1) }, 20)
-        });
-        selectionCraftingItems.add(new GuiSelectionItemPair(new Item[]{Item.getItemFromBlock(Blocks.BARRIER)}, new Item[]{ Item.getItemFromBlock(Blocks.BARRIER) }, "invalid"));
-        recipeCategories.put("invalid", invalid);
     }
 
     public void serverStart(FMLServerStartingEvent serverStartEvent) {

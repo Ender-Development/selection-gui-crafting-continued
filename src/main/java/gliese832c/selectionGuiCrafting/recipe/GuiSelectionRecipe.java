@@ -1,7 +1,6 @@
 package gliese832c.selectionGuiCrafting.recipe;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.crafting.IngredientNBT;
 
 import java.util.Arrays;
 

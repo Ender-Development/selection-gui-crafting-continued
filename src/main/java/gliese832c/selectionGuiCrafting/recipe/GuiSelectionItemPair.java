@@ -1,5 +1,6 @@
 package gliese832c.selectionGuiCrafting.recipe;
 
+import gliese832c.selectionGuiCrafting.proxy.CommonProxy;
 import net.minecraft.item.Item;
 
 public class GuiSelectionItemPair {
@@ -11,5 +12,9 @@ public class GuiSelectionItemPair {
         this.tool = tool;
         this.input = input;
         this.recipeCategory = recipeCategory;
+    }
+
+    public GuiSelectionRecipeCategory getRecipeCategory() {
+        return CommonProxy.recipeCategories.get(recipeCategory);
     }
 }

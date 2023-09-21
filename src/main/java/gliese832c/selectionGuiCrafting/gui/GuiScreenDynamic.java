@@ -4,12 +4,12 @@ import gliese832c.SelectionGuiCrafting;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiScreenDynamic extends GuiScreen {
+import java.io.IOException;
+
+public abstract class GuiScreenDynamic extends GuiScreen {
 
     // Container size
     private int guiWidth = 0;
@@ -93,5 +93,10 @@ public class GuiScreenDynamic extends GuiScreen {
         // Buttons
         for (GuiLabel aLabelList : this.labelList)
             aLabelList.drawLabel(this.mc, mouseX, mouseY);
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 }
