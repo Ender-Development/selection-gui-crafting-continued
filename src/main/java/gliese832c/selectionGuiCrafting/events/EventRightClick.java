@@ -31,10 +31,18 @@ public class EventRightClick {
             for (Item itemTool : itemPair.tool) {
                 if (ItemStack.areItemStacksEqual(new ItemStack(itemTool), new ItemStack(eventItemMainhand))) {
                     for (ItemStack itemInput : itemPair.input) {
-                        if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), new ItemStack(eventStackOffhand.getItem(), 1, eventStackOffhand.getMetadata(), eventStackOffhand.getTagCompound()))) {
-                            openSelectionGui();
-                            event.setCanceled(true);
-                            return;
+                        if (itemInput.getMetadata() == Short.MAX_VALUE) {
+                            if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, Short.MAX_VALUE, itemInput.getTagCompound()), (new ItemStack(eventStackOffhand.getItem(), 1, Short.MAX_VALUE, eventStackOffhand.getTagCompound())))) {
+                                openSelectionGui();
+                                event.setCanceled(true);
+                                return;
+                            }
+                        } else {
+                            if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), new ItemStack(eventStackOffhand.getItem(), 1, eventStackOffhand.getMetadata(), eventStackOffhand.getTagCompound()))) {
+                                openSelectionGui();
+                                event.setCanceled(true);
+                                return;
+                            }
                         }
                     }
                 }

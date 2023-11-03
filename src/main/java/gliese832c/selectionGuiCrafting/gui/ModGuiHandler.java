@@ -27,9 +27,16 @@ public class ModGuiHandler implements IGuiHandler {
             for (Item itemTool : itemPair.tool) {
                 if (ItemStack.areItemStacksEqual(new ItemStack(itemTool), (new ItemStack(heldItemMainhand)))) {
                     for (ItemStack itemInput : itemPair.input) {
-                        if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), (new ItemStack(heldStackOffhand.getItem(), 1, heldStackOffhand.getMetadata(), heldStackOffhand.getTagCompound())))) {
-                            recipeCategory = itemPair.recipeCategory;
-                            //pair = itemPair;
+                        if (itemInput.getMetadata() == Short.MAX_VALUE) {
+                            if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, Short.MAX_VALUE, itemInput.getTagCompound()), (new ItemStack(heldStackOffhand.getItem(), 1, Short.MAX_VALUE, heldStackOffhand.getTagCompound())))) {
+                                recipeCategory = itemPair.recipeCategory;
+                                //pair = itemPair;
+                            }
+                        } else {
+                            if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), (new ItemStack(heldStackOffhand.getItem(), 1, heldStackOffhand.getMetadata(), heldStackOffhand.getTagCompound())))) {
+                                recipeCategory = itemPair.recipeCategory;
+                                //pair = itemPair;
+                            }
                         }
                     }
                 }
@@ -57,9 +64,16 @@ public class ModGuiHandler implements IGuiHandler {
             for (Item itemTool : itemPair.tool) {
                 if (ItemStack.areItemStacksEqual(new ItemStack(itemTool), (new ItemStack(heldItemMainhand)))) {
                     for (ItemStack itemInput : itemPair.input) {
-                        if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), (new ItemStack(heldStackOffhand.getItem(), 1, heldStackOffhand.getMetadata(), heldStackOffhand.getTagCompound())))) {
-                            recipeCategory = itemPair.recipeCategory;
-                            //pair = itemPair;
+                        if (itemInput.getMetadata() == Short.MAX_VALUE) {
+                            if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, Short.MAX_VALUE, itemInput.getTagCompound()), (new ItemStack(heldStackOffhand.getItem(), 1, Short.MAX_VALUE, heldStackOffhand.getTagCompound())))) {
+                                recipeCategory = itemPair.recipeCategory;
+                                //pair = itemPair;
+                            }
+                        } else {
+                            if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), (new ItemStack(heldStackOffhand.getItem(), 1, heldStackOffhand.getMetadata(), heldStackOffhand.getTagCompound())))) {
+                                recipeCategory = itemPair.recipeCategory;
+                                //pair = itemPair;
+                            }
                         }
                     }
                 }

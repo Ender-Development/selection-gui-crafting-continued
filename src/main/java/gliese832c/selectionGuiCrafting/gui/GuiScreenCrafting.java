@@ -9,8 +9,6 @@ This class contains some of the worst code I have ever written.
 package gliese832c.selectionGuiCrafting.gui;
 
 import gliese832c.SelectionGuiCrafting;
-import gliese832c.selectionGuiCrafting.gui.GuiScreenDynamic;
-import gliese832c.selectionGuiCrafting.network.SelectionMessageGiveItem;
 import gliese832c.selectionGuiCrafting.network.SelectionMessageProcessRecipe;
 import gliese832c.selectionGuiCrafting.network.SelectionPacketHandler;
 import gliese832c.selectionGuiCrafting.proxy.CommonProxy;

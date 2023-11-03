@@ -4,7 +4,6 @@ package gliese832c.selectionGuiCrafting.proxy;
 import gliese832c.SelectionGuiCrafting;
 import gliese832c.selectionGuiCrafting.events.EventRightClick;
 import gliese832c.selectionGuiCrafting.gui.ModGuiHandler;
-import gliese832c.selectionGuiCrafting.network.SelectionMessageGiveItem;
 import gliese832c.selectionGuiCrafting.network.SelectionMessageProcessRecipe;
 import gliese832c.selectionGuiCrafting.network.SelectionPacketHandler;
 import gliese832c.selectionGuiCrafting.recipe.GuiSelectionItemPair;
@@ -33,7 +32,6 @@ public class CommonProxy
     {
         MinecraftForge.EVENT_BUS.register(new EventRightClick());
 
-        //SelectionPacketHandler.SELECTION_NETWORK_WRAPPER.registerMessage(SelectionMessageGiveItem.SelectionMessageGiveItemHandler.class, SelectionMessageGiveItem.class, 0, Side.SERVER);
         SelectionPacketHandler.SELECTION_NETWORK_WRAPPER.registerMessage(SelectionMessageProcessRecipe.SelectionMessageProcessRecipeHandler.class, SelectionMessageProcessRecipe.class, 0, Side.SERVER);
     }
 

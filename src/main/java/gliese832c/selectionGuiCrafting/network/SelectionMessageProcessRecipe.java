@@ -81,7 +81,18 @@ public class SelectionMessageProcessRecipe implements IMessage {
             for (Item itemTool : getToolFromCategory(message.recipeCategory)) {
                 if (ItemStack.areItemStacksEqual(new ItemStack(itemTool), new ItemStack(itemMainhand))) {
                     for (ItemStack itemInput : getItemFromCategory(message.recipeCategory)) {
-                        if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), new ItemStack(stackOffhand.getItem(), 1, stackOffhand.getMetadata(), stackOffhand.getTagCompound()))) {
+                        boolean valid = false;
+                        if (itemInput.getMetadata() == Short.MAX_VALUE) {
+                            if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, Short.MAX_VALUE, itemInput.getTagCompound()), (new ItemStack(stackOffhand.getItem(), 1, Short.MAX_VALUE, stackOffhand.getTagCompound())))) {
+                                valid = true;
+                            }
+                        } else {
+                            if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), new ItemStack(stackOffhand.getItem(), 1, stackOffhand.getMetadata(), stackOffhand.getTagCompound()))) {
+                                valid = true;
+                            }
+                        }
+
+                        if (valid) {
                             if (category.recipes.get(message.recipeIndex).inputQuantity <= player.getHeldItemOffhand().getCount()) {
 
                                 // If all requirements are met, do the actual recipe
