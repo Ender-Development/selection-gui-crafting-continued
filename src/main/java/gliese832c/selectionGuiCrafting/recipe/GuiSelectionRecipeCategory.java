@@ -1,15 +1,15 @@
 package gliese832c.selectionGuiCrafting.recipe;
 
+import java.util.ArrayList;
+
 public class GuiSelectionRecipeCategory {
 
     public String displayName;
-    public boolean usesDurability;
 
-    public GuiSelectionRecipe[] recipes;
+    public ArrayList<GuiSelectionRecipe> recipes;
 
-    public GuiSelectionRecipeCategory(String displayName, boolean usesDurability, GuiSelectionRecipe[] recipes) {
+    public GuiSelectionRecipeCategory(String displayName, ArrayList<GuiSelectionRecipe> recipes) {
         this.displayName = displayName;
-        this.usesDurability = usesDurability;
         this.recipes = recipes;
     }
 }

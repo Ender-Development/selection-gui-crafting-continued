@@ -12,6 +12,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 public class ContainerSelectionGui extends Container {
 
@@ -22,13 +23,13 @@ public class ContainerSelectionGui extends Container {
         IItemHandler inventory = new IItemHandler() {
             @Override
             public int getSlots() {
-                return recipeCategory.recipes.length;
+                return recipeCategory.recipes.size();
             }
 
             @Nonnull
             @Override
             public ItemStack getStackInSlot(int slot) {
-                return recipeCategory.recipes[slot].outputs[0];
+                return recipeCategory.recipes.get(slot).outputs[0];
             }
 
             @Nonnull
@@ -53,7 +54,7 @@ public class ContainerSelectionGui extends Container {
         int maxItemsPerRow = GuiScreenCrafting.MAX_ITEMS_PER_ROW;
 
         int i = 0;
-        GuiSelectionRecipe[] recipesList = recipeCategory.recipes;
+        ArrayList<GuiSelectionRecipe> recipesList = recipeCategory.recipes;
         for (GuiSelectionRecipe recipe : recipesList) {
 
             int rowNumber = i / maxItemsPerRow;

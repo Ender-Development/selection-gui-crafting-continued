@@ -25,13 +25,13 @@ public class EventRightClick {
         EntityPlayer player = (EntityPlayer) event.getEntity();
 
         Item eventItemMainhand = player.getHeldItemMainhand().getItem();
-        Item eventItemOffhand = player.getHeldItemOffhand().getItem();
+        ItemStack eventStackOffhand = player.getHeldItemOffhand();
 
         for (GuiSelectionItemPair itemPair : CommonProxy.selectionCraftingItems) {
             for (Item itemTool : itemPair.tool) {
                 if (ItemStack.areItemStacksEqual(new ItemStack(itemTool), new ItemStack(eventItemMainhand))) {
-                    for (Item itemInput : itemPair.input) {
-                        if (ItemStack.areItemStacksEqual(new ItemStack(itemInput), new ItemStack(eventItemOffhand))) {
+                    for (ItemStack itemInput : itemPair.input) {
+                        if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), new ItemStack(eventStackOffhand.getItem(), 1, eventStackOffhand.getMetadata(), eventStackOffhand.getTagCompound()))) {
                             openSelectionGui();
                             event.setCanceled(true);
                             return;

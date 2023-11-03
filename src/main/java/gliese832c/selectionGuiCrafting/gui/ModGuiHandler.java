@@ -18,7 +18,7 @@ public class ModGuiHandler implements IGuiHandler {
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 
         Item heldItemMainhand = player.getHeldItemMainhand().getItem();
-        Item heldItemOffhand = player.getHeldItemOffhand().getItem();
+        ItemStack heldStackOffhand = player.getHeldItemOffhand();
 
         String recipeCategory = "invalid";
         //GuiSelectionItemPair pair = CommonProxy.selectionCraftingItems.get(0);
@@ -26,8 +26,8 @@ public class ModGuiHandler implements IGuiHandler {
         for (GuiSelectionItemPair itemPair : CommonProxy.selectionCraftingItems) {
             for (Item itemTool : itemPair.tool) {
                 if (ItemStack.areItemStacksEqual(new ItemStack(itemTool), (new ItemStack(heldItemMainhand)))) {
-                    for (Item itemInput : itemPair.input) {
-                        if (ItemStack.areItemStacksEqual(new ItemStack(itemInput), (new ItemStack(heldItemOffhand)))) {
+                    for (ItemStack itemInput : itemPair.input) {
+                        if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), (new ItemStack(heldStackOffhand.getItem(), 1, heldStackOffhand.getMetadata(), heldStackOffhand.getTagCompound())))) {
                             recipeCategory = itemPair.recipeCategory;
                             //pair = itemPair;
                         }
@@ -48,7 +48,7 @@ public class ModGuiHandler implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 
         Item heldItemMainhand = player.getHeldItemMainhand().getItem();
-        Item heldItemOffhand = player.getHeldItemOffhand().getItem();
+        ItemStack heldStackOffhand = player.getHeldItemOffhand();
 
         String recipeCategory = "invalid";
         //GuiSelectionItemPair pair = CommonProxy.selectionCraftingItems.get(0);
@@ -56,8 +56,8 @@ public class ModGuiHandler implements IGuiHandler {
         for (GuiSelectionItemPair itemPair : CommonProxy.selectionCraftingItems) {
             for (Item itemTool : itemPair.tool) {
                 if (ItemStack.areItemStacksEqual(new ItemStack(itemTool), (new ItemStack(heldItemMainhand)))) {
-                    for (Item itemInput : itemPair.input) {
-                        if (ItemStack.areItemStacksEqual(new ItemStack(itemInput), (new ItemStack(heldItemOffhand)))) {
+                    for (ItemStack itemInput : itemPair.input) {
+                        if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), (new ItemStack(heldStackOffhand.getItem(), 1, heldStackOffhand.getMetadata(), heldStackOffhand.getTagCompound())))) {
                             recipeCategory = itemPair.recipeCategory;
                             //pair = itemPair;
                         }

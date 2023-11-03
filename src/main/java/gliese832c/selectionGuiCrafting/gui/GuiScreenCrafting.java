@@ -11,7 +11,9 @@ package gliese832c.selectionGuiCrafting.gui;
 import gliese832c.SelectionGuiCrafting;
 import gliese832c.selectionGuiCrafting.gui.GuiScreenDynamic;
 import gliese832c.selectionGuiCrafting.network.SelectionMessageGiveItem;
+import gliese832c.selectionGuiCrafting.network.SelectionMessageProcessRecipe;
 import gliese832c.selectionGuiCrafting.network.SelectionPacketHandler;
+import gliese832c.selectionGuiCrafting.proxy.CommonProxy;
 import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipe;
 import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipeCategory;
 import net.minecraft.client.Minecraft;
@@ -40,7 +42,10 @@ import net.minecraft.world.World;
 
 import java.awt.*;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
 
 public class GuiScreenCrafting extends GuiScreenDynamic {
     private GuiButton buttonClose;
@@ -113,12 +118,14 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
         if (craftingProgress >= 1.0f) {
 
-            SelectionPacketHandler.SELECTION_NETWORK_WRAPPER.sendToServer(new SelectionMessageGiveItem(recipeCategory.recipes[recipeSelectedIndex].outputs, player.getName()));
+            //SelectionPacketHandler.SELECTION_NETWORK_WRAPPER.sendToServer(new SelectionMessageGiveItem(recipeCategory.recipes[recipeSelectedIndex].outputs, player.getName()));
 
-            for (ItemStack itemstack : recipeCategory.recipes[recipeSelectedIndex].outputs) {
+            SelectionPacketHandler.SELECTION_NETWORK_WRAPPER.sendToServer(new SelectionMessageProcessRecipe(Objects.requireNonNull(getKeyByValue(CommonProxy.recipeCategories, recipeCategory)), recipeSelectedIndex, player.getName()));
+
+            /*for (ItemStack itemstack : recipeCategory.recipes[recipeSelectedIndex].outputs) {
                 //giveItemToPlayer(itemstack.copy());
 
-                /*if (!world.isRemote) { // Make sure you are not on the client side
+                if (!world.isRemote) { // Make sure you are not on the client side
                     MinecraftServer server = world.getMinecraftServer();
 
                     if (server != null) {
@@ -136,9 +143,9 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                             System.out.println("Command execution failed with error code: " + result);
                         }
                     }
-                }*/
+                }
             }
-            player.getHeldItemOffhand().shrink(recipeCategory.recipes[recipeSelectedIndex].inputQuantity);
+            player.getHeldItemOffhand().shrink(recipeCategory.recipes[recipeSelectedIndex].inputQuantity);*/
 
             craftingProgress = 0.0f;
             recipeSelected = false;
@@ -198,7 +205,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
         slotCoordinates.clear();
         int i = 0;
-        GuiSelectionRecipe[] recipes = recipeCategory.recipes;
+        ArrayList<GuiSelectionRecipe> recipes = recipeCategory.recipes;
         for (GuiSelectionRecipe recipe : recipes) {
 
             int rowNumber = i / MAX_ITEMS_PER_ROW;
@@ -233,11 +240,17 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             GlStateManager.disableDepth();
 
             GlStateManager.colorMask(true, true, true, false);
-            if (!recipeSelected && player.getHeldItemOffhand().getCount() < recipe.inputQuantity) {
+            //if (!recipeSelected && player.getHeldItemOffhand().getCount() < recipe.inputQuantity) {
+            if (player.getHeldItemOffhand().getCount() < recipe.inputQuantity) {
                 assert Blocks.BARRIER != null;
                 itemRender.renderItemIntoGUI(new ItemStack(Item.getItemFromBlock(Blocks.BARRIER)), xPos, yPos);
-                fontRenderer.drawString(">= " + recipe.inputQuantity, (xPos + 9) - (fontRenderer.getStringWidth(">= " + recipe.inputQuantity) / 2), xPos + 4, Color.WHITE.getRGB());
-                fontRenderer.drawString(I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".needed") + recipe.inputQuantity, (xPos + 9) - (fontRenderer.getStringWidth(I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".needed")) / 2), xPos + 10, Color.WHITE.getRGB());
+                fontRenderer.drawString("§l" + String.valueOf(recipe.inputQuantity), (xPos + 13) - (fontRenderer.getStringWidth(String.valueOf(recipe.inputQuantity)) / 2), yPos - 2, Color.BLACK.getRGB());
+                fontRenderer.drawString("§l" + String.valueOf(recipe.inputQuantity), (xPos + 15) - (fontRenderer.getStringWidth(String.valueOf(recipe.inputQuantity)) / 2), yPos + 0, Color.BLACK.getRGB());
+                fontRenderer.drawString("§l" + String.valueOf(recipe.inputQuantity), (xPos + 14) - (fontRenderer.getStringWidth(String.valueOf(recipe.inputQuantity)) / 2), yPos - 1, Color.RED.getRGB());
+                //fontRenderer.drawString(">=" + recipe.inputQuantity, (xPos + 9) - (fontRenderer.getStringWidth(">=" + recipe.inputQuantity) / 2), yPos + 4, Color.green.getRGB());
+                //fontRenderer.drawString(I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".needed"), (xPos + 9) - (fontRenderer.getStringWidth(I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".needed")) / 2), yPos + 10, Color.black.getRGB());
+                //fontRenderer.drawString(">=" + recipe.inputQuantity, (xPos + 8) - (fontRenderer.getStringWidth(">=" + recipe.inputQuantity) / 2), yPos + 3, Color.white.getRGB());
+                //fontRenderer.drawString(I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".needed"), (xPos + 8) - (fontRenderer.getStringWidth(I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".needed")) / 2), yPos + 9, Color.white.getRGB());
                 //this.drawGradientRect(xPos, yPos, xPos + 16, yPos + 16, Color.BLACK.getRGB(), Color.BLACK.getRGB());
             } else if ((mouseX >= xPos) && (mouseX <= xPos + 16) && (mouseY >= yPos) && (mouseY <= yPos + 16)) {
                 // Highlight item if the mouse is over
@@ -246,6 +259,12 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 toolTipToRenderItem = recipeItem;
                 toolTipToRenderX = mouseX;
                 toolTipToRenderY = mouseY;
+            }
+
+            if (!(player.getHeldItemOffhand().getCount() < recipe.inputQuantity)) {
+                fontRenderer.drawString("§l" + String.valueOf(recipe.inputQuantity), (xPos + 13) - (fontRenderer.getStringWidth(String.valueOf(recipe.inputQuantity)) / 2), yPos - 2, Color.BLACK.getRGB());
+                fontRenderer.drawString("§l" + String.valueOf(recipe.inputQuantity), (xPos + 15) - (fontRenderer.getStringWidth(String.valueOf(recipe.inputQuantity)) / 2), yPos + 0, Color.BLACK.getRGB());
+                fontRenderer.drawString(String.valueOf(recipe.inputQuantity), (xPos + 14) - (fontRenderer.getStringWidth(String.valueOf(recipe.inputQuantity)) / 2), yPos - 1, Color.green.getRGB());
             }
 
             GlStateManager.colorMask(true, true, true, true);
@@ -290,7 +309,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                     System.out.println("i: " + i);
                     System.out.println("i / 4: " + i / 4);*/
 
-                    if (player.getHeldItemOffhand().getCount() >= recipeCategory.recipes[i / 4].inputQuantity) {
+                    if (player.getHeldItemOffhand().getCount() >= recipeCategory.recipes.get(i / 4).inputQuantity) {
                         recipeSelected = true;
                         recipeSelectedIndex = i / 4;
                         startTime = Minecraft.getSystemTime();
@@ -313,13 +332,13 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         String part3 = I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".title.recipe");
         String selectionguiTitle = part1 + " " + part2 + " " + part3;
 
-        GuiSelectionRecipe[] recipes = recipeCategory.recipes;
+        ArrayList<GuiSelectionRecipe> recipes = recipeCategory.recipes;
 
-        int width1 = recipes.length == 0 ? ICON_DISTANCE : recipes.length <= MAX_ITEMS_PER_ROW ? ((recipes.length % MAX_ITEMS_PER_ROW) * ICON_DISTANCE) : MAX_ITEMS_PER_ROW * ICON_DISTANCE;
+        int width1 = recipes.size() == 0 ? ICON_DISTANCE : recipes.size() <= MAX_ITEMS_PER_ROW ? ((recipes.size() % MAX_ITEMS_PER_ROW) * ICON_DISTANCE) : MAX_ITEMS_PER_ROW * ICON_DISTANCE;
         int width2 = ((fontRenderer.getStringWidth(selectionguiTitle)/ 4) * 4) + 8;
 
         // Update dynamic GUI size
-        super.updateContainerSize(GUI_BASE_WIDTH + Math.max(width1, width2), GUI_BASE_HEIGHT + (((recipes.length / MAX_ITEMS_PER_ROW) + 1) * ICON_DISTANCE));
+        super.updateContainerSize(GUI_BASE_WIDTH + Math.max(width1, width2), GUI_BASE_HEIGHT + (((recipes.size() / MAX_ITEMS_PER_ROW) + 1) * ICON_DISTANCE));
 
         // Add Close button
         buttonList.add(buttonClose = new GuiButton(
@@ -434,5 +453,18 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         GlStateManager.disableBlend();
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
+    }
+
+
+
+
+    // Get Key by value
+    public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
+        for (Map.Entry<T, E> entry : map.entrySet()) {
+            if (Objects.equals(value, entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 }

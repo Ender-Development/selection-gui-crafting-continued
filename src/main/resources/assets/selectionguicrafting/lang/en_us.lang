@@ -2,4 +2,6 @@ gui.selectionguicrafting.title.select=Select
 gui.selectionguicrafting.title.recipe=Recipe
 gui.selectionguicrafting.close=Close GUI
 
-gui.selectionguicrafting.needed=Needed
+gui.selectionguicrafting.needed=Min.
+
+jei.category.selection_recipe=Selection GUI Crafting
