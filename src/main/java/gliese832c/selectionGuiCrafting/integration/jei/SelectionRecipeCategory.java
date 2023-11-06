@@ -125,14 +125,19 @@ public class SelectionRecipeCategory implements IRecipeCategory<SelectionRecipeC
                 builder.add(inputStacks);
             }
 
-            List<Item> inputTools = recipe.pair.tool;
+            List<ItemStack> inputTools = recipe.pair.tool;
             if (inputTools == null) {
                 builder.add(Collections.singletonList(new ItemStack(Blocks.BARRIER)));
             } else {
                 List<ItemStack> inputToolsList = new ArrayList<>();
-                assert inputTools != null;
-                for (Item tool : inputTools) {
-                    inputToolsList.add(new ItemStack(tool));
+                int i = 0;
+                for (ItemStack tool : inputTools) {
+                    if (recipe.pair.durabilityMultipliers.get(i) == Float.MAX_VALUE) {
+                        inputToolsList.add(new ItemStack(tool.getItem(), tool.getCount(), tool.getMetadata(), tool.getTagCompound()));
+                    } else {
+                        inputToolsList.add(new ItemStack(tool.getItem(), 1, 0, tool.getTagCompound()));
+                    }
+                    i++;
                 }
                 builder.add(inputToolsList);
             }

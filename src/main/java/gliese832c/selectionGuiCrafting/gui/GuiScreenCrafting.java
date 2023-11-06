@@ -45,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
+import static gliese832c.selectionGuiCrafting.config.SelectionConfig.disableCloseGUIbutton;
+
 public class GuiScreenCrafting extends GuiScreenDynamic {
     private GuiButton buttonClose;
     private GuiLabel label;
@@ -68,6 +70,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     private final int CLOSE_BUTTON_OFFSET = 4;
 
     private GuiSelectionRecipeCategory recipeCategory;
+    private float timeMultiplier;
     private EntityPlayer player;
     private World world;
 
@@ -84,10 +87,11 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     private int recipeTime = -1;
     private long startTime = -1;
 
-    public GuiScreenCrafting(GuiSelectionRecipeCategory recipeCategory, EntityPlayer player, World world) {
+    public GuiScreenCrafting(GuiSelectionRecipeCategory recipeCategory, float timeMultiplier, EntityPlayer player, World world) {
         super();
 
         this.recipeCategory = recipeCategory;
+        this.timeMultiplier = timeMultiplier;
         this.player = player;
         this.world = world;
     }
@@ -260,9 +264,11 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             }
 
             if (!(player.getHeldItemOffhand().getCount() < recipe.inputQuantity)) {
-                fontRenderer.drawString("§l" + String.valueOf(recipe.inputQuantity), (xPos + 13) - (fontRenderer.getStringWidth(String.valueOf(recipe.inputQuantity)) / 2), yPos - 2, Color.BLACK.getRGB());
-                fontRenderer.drawString("§l" + String.valueOf(recipe.inputQuantity), (xPos + 15) - (fontRenderer.getStringWidth(String.valueOf(recipe.inputQuantity)) / 2), yPos + 0, Color.BLACK.getRGB());
-                fontRenderer.drawString(String.valueOf(recipe.inputQuantity), (xPos + 14) - (fontRenderer.getStringWidth(String.valueOf(recipe.inputQuantity)) / 2), yPos - 1, Color.green.getRGB());
+                if (recipe.inputQuantity > 1) {
+                    fontRenderer.drawString("§l" + String.valueOf(recipe.inputQuantity), (xPos + 13) - (fontRenderer.getStringWidth(String.valueOf(recipe.inputQuantity)) / 2), yPos - 2, Color.BLACK.getRGB());
+                    fontRenderer.drawString("§l" + String.valueOf(recipe.inputQuantity), (xPos + 15) - (fontRenderer.getStringWidth(String.valueOf(recipe.inputQuantity)) / 2), yPos + 0, Color.BLACK.getRGB());
+                    fontRenderer.drawString(String.valueOf(recipe.inputQuantity), (xPos + 14) - (fontRenderer.getStringWidth(String.valueOf(recipe.inputQuantity)) / 2), yPos - 1, Color.green.getRGB());
+                }
             }
 
             GlStateManager.colorMask(true, true, true, true);
@@ -279,7 +285,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 recipeTime = recipe.time;
 
 
-                craftingProgress = (float) (Minecraft.getSystemTime() - startTime) / (recipeTime * 50f);
+                craftingProgress = (float) (Minecraft.getSystemTime() - startTime) / ((recipeTime / timeMultiplier) * 50f);
 
                 int recipeProgress = (int) (18 * craftingProgress);
 
@@ -335,18 +341,27 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         int width1 = recipes.size() == 0 ? ICON_DISTANCE : recipes.size() <= MAX_ITEMS_PER_ROW ? ((recipes.size() % MAX_ITEMS_PER_ROW) * ICON_DISTANCE) : MAX_ITEMS_PER_ROW * ICON_DISTANCE;
         int width2 = ((fontRenderer.getStringWidth(selectionguiTitle)/ 4) * 4) + 8;
 
-        // Update dynamic GUI size
-        super.updateContainerSize(GUI_BASE_WIDTH + Math.max(width1, width2), GUI_BASE_HEIGHT + (((recipes.size() / MAX_ITEMS_PER_ROW) + 1) * ICON_DISTANCE));
+        int guiHeight;
+        if (disableCloseGUIbutton) {
+            guiHeight = GUI_BASE_HEIGHT - CLOSE_BUTTON_HEIGHT;
+        } else {
+            guiHeight = GUI_BASE_HEIGHT;
+        }
 
-        // Add Close button
-        buttonList.add(buttonClose = new GuiButton(
-                0,
-                (width / 2) - (CLOSE_BUTTON_WIDTH / 2),
-                bottom - CLOSE_BUTTON_HEIGHT - CLOSE_BUTTON_OFFSET,
-                CLOSE_BUTTON_WIDTH,
-                CLOSE_BUTTON_HEIGHT,
-                I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".close")
-        ));
+        // Update dynamic GUI size
+        super.updateContainerSize(GUI_BASE_WIDTH + Math.max(width1, width2), guiHeight + (((recipes.size() / MAX_ITEMS_PER_ROW) + 1) * ICON_DISTANCE));
+
+        if (!disableCloseGUIbutton) {
+            // Add Close button
+            buttonList.add(buttonClose = new GuiButton(
+                    0,
+                    (width / 2) - (CLOSE_BUTTON_WIDTH / 2),
+                    bottom - CLOSE_BUTTON_HEIGHT - CLOSE_BUTTON_OFFSET,
+                    CLOSE_BUTTON_WIDTH,
+                    CLOSE_BUTTON_HEIGHT,
+                    I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".close")
+            ));
+        }
 
         // Draw labels
         redrawLabels();

@@ -13,7 +13,6 @@ import gliese832c.selectionGuiCrafting.recipe.RecipePairPair;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -49,10 +48,9 @@ public class CommonProxy
 
         GuiSelectionRecipeCategory invalid = new GuiSelectionRecipeCategory("INVALID", invalidRecipes);
 
-        ArrayList<Item> barrierList = new ArrayList<Item>(Collections.singletonList(Item.getItemFromBlock(Blocks.BARRIER)));
-        ArrayList<ItemStack> barrierList2 = new ArrayList<ItemStack>(Collections.singletonList(new ItemStack(Item.getItemFromBlock(Blocks.BARRIER))));
+        ArrayList<ItemStack> barrierList = new ArrayList<ItemStack>(Collections.singletonList(new ItemStack(Item.getItemFromBlock(Blocks.BARRIER))));
 
-        selectionCraftingItems.add(new GuiSelectionItemPair(barrierList, new ArrayList<Float>(Collections.singletonList(1.0f)), barrierList2, "invalid"));
+        selectionCraftingItems.add(new GuiSelectionItemPair(barrierList, new ArrayList<Float>(Collections.singletonList(1.0f)), new ArrayList<Float>(Collections.singletonList(1.0f)), barrierList, "invalid"));
         recipeCategories.put("invalid", invalid);
     }
 
@@ -94,7 +92,7 @@ public class CommonProxy
         return null;
     }
 
-    public static ArrayList<Item> getToolFromCategory(String categoryName) {
+    public static ArrayList<ItemStack> getToolFromCategory(String categoryName) {
         for (GuiSelectionItemPair itemPair : selectionCraftingItems) {
             if (Objects.equals(itemPair.recipeCategory, categoryName)) {
                 return itemPair.tool;

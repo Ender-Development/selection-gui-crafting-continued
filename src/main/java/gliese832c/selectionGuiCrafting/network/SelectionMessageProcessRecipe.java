@@ -74,42 +74,52 @@ public class SelectionMessageProcessRecipe implements IMessage {
             if(player == null)
                 return null;
 
-            Item itemMainhand = player.getHeldItemMainhand().getItem();
+            ItemStack itemMainhand = player.getHeldItemMainhand();
             ItemStack stackOffhand = player.getHeldItemOffhand();
 
             int toolIndex = 0;
-            for (Item itemTool : getToolFromCategory(message.recipeCategory)) {
-                if (ItemStack.areItemStacksEqual(new ItemStack(itemTool), new ItemStack(itemMainhand))) {
-                    for (ItemStack itemInput : getItemFromCategory(message.recipeCategory)) {
-                        boolean valid = false;
-                        if (itemInput.getMetadata() == Short.MAX_VALUE) {
-                            if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, Short.MAX_VALUE, itemInput.getTagCompound()), (new ItemStack(stackOffhand.getItem(), 1, Short.MAX_VALUE, stackOffhand.getTagCompound())))) {
-                                valid = true;
-                            }
-                        } else {
-                            if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), new ItemStack(stackOffhand.getItem(), 1, stackOffhand.getMetadata(), stackOffhand.getTagCompound()))) {
-                                valid = true;
-                            }
+            for (ItemStack itemTool : getToolFromCategory(message.recipeCategory)) {
+                if (ItemStack.areItemStacksEqual(new ItemStack(itemTool.getItem(), 1, 0, itemTool.getTagCompound()), new ItemStack(itemMainhand.getItem(), 1, 0, itemMainhand.getTagCompound()))) {
+                    boolean validMeta = false;
+                    if (getPairFromCategory(message.recipeCategory).durabilityMultipliers.get(toolIndex) == Float.MAX_VALUE) {
+                        if (itemTool.getMetadata() == itemMainhand.getMetadata()) {
+                            validMeta = true;
                         }
-
-                        if (valid) {
-                            if (category.recipes.get(message.recipeIndex).inputQuantity <= player.getHeldItemOffhand().getCount()) {
-
-                                // If all requirements are met, do the actual recipe
-                                for (ItemStack itemStack : category.recipes.get(message.recipeIndex).outputs) {
-                                    //FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(message.playerName).addItemStackToInventory(itemStack.copy());
-                                    FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(message.playerName).dropItem(itemStack.copy(), false, true);
+                    } else {
+                        validMeta = true;
+                    }
+                    if (validMeta) {
+                        for (ItemStack itemInput : getItemFromCategory(message.recipeCategory)) {
+                            boolean valid = false;
+                            if (itemInput.getMetadata() == Short.MAX_VALUE) {
+                                if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, Short.MAX_VALUE, itemInput.getTagCompound()), (new ItemStack(stackOffhand.getItem(), 1, Short.MAX_VALUE, stackOffhand.getTagCompound())))) {
+                                    valid = true;
                                 }
-                                stackOffhand.shrink(category.recipes.get(message.recipeIndex).inputQuantity);
-
-                                float toolDurabilityMultiplier = getPairFromCategory(message.recipeCategory).durabilityMultipliers.get(toolIndex);
-                                if (toolDurabilityMultiplier == Float.MAX_VALUE) {
-                                    player.getHeldItemMainhand().shrink(1);
-                                } else {
-                                    player.getHeldItemMainhand().damageItem((int) (category.recipes.get(message.recipeIndex).durabilityUsage * toolDurabilityMultiplier), player);
+                            } else {
+                                if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), new ItemStack(stackOffhand.getItem(), 1, stackOffhand.getMetadata(), stackOffhand.getTagCompound()))) {
+                                    valid = true;
                                 }
+                            }
 
-                                return null;
+                            if (valid) {
+                                if (category.recipes.get(message.recipeIndex).inputQuantity <= player.getHeldItemOffhand().getCount()) {
+
+                                    // If all requirements are met, do the actual recipe
+                                    for (ItemStack itemStack : category.recipes.get(message.recipeIndex).outputs) {
+                                        //FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(message.playerName).addItemStackToInventory(itemStack.copy());
+                                        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(message.playerName).dropItem(itemStack.copy(), false, true);
+                                    }
+                                    stackOffhand.shrink(category.recipes.get(message.recipeIndex).inputQuantity);
+
+                                    float toolDurabilityMultiplier = getPairFromCategory(message.recipeCategory).durabilityMultipliers.get(toolIndex);
+                                    if (toolDurabilityMultiplier == Float.MAX_VALUE) {
+                                        player.getHeldItemMainhand().shrink(1);
+                                    } else {
+                                        player.getHeldItemMainhand().damageItem((int) (category.recipes.get(message.recipeIndex).durabilityUsage * toolDurabilityMultiplier), player);
+                                    }
+
+                                    return null;
+                                }
                             }
                         }
                     }
