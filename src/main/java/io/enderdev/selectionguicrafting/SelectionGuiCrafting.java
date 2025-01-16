@@ -1,22 +1,11 @@
-package gliese832c;
+package io.enderdev.selectionguicrafting;
 
-import gliese832c.selectionGuiCrafting.events.EventRightClick;
-import gliese832c.selectionGuiCrafting.gui.ModGuiHandler;
-import gliese832c.selectionGuiCrafting.proxy.CommonProxy;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipe;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipeCategory;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
+import io.enderdev.selectionguicrafting.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-
-import java.util.Map;
 
 @Mod(modid = SelectionGuiCrafting.MOD_ID, name = SelectionGuiCrafting.NAME, version = SelectionGuiCrafting.VERSION)
 public class SelectionGuiCrafting {

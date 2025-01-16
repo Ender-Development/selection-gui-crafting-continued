@@ -1,7 +1,6 @@
-package gliese832c.selectionGuiCrafting.recipe;
+package io.enderdev.selectionguicrafting.recipe;
 
-import gliese832c.selectionGuiCrafting.proxy.CommonProxy;
-import net.minecraft.item.Item;
+import io.enderdev.selectionguicrafting.proxy.CommonProxy;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;

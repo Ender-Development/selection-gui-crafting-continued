@@ -1,6 +1,6 @@
-package gliese832c.selectionGuiCrafting.config;
+package io.enderdev.selectionguicrafting.config;
 
-import gliese832c.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;

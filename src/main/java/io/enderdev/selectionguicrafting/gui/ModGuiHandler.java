@@ -1,9 +1,8 @@
-package gliese832c.selectionGuiCrafting.gui;
+package io.enderdev.selectionguicrafting.gui;
 
-import gliese832c.selectionGuiCrafting.proxy.CommonProxy;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionItemPair;
+import io.enderdev.selectionguicrafting.proxy.CommonProxy;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionItemPair;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;

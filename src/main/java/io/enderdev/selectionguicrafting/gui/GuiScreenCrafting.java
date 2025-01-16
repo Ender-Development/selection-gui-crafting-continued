@@ -6,14 +6,14 @@ COGNITOHAZARD
 This class contains some of the worst code I have ever written.
 */
 
-package gliese832c.selectionGuiCrafting.gui;
+package io.enderdev.selectionguicrafting.gui;
 
-import gliese832c.SelectionGuiCrafting;
-import gliese832c.selectionGuiCrafting.network.SelectionMessageProcessRecipe;
-import gliese832c.selectionGuiCrafting.network.SelectionPacketHandler;
-import gliese832c.selectionGuiCrafting.proxy.CommonProxy;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipe;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipeCategory;
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.network.SelectionMessageProcessRecipe;
+import io.enderdev.selectionguicrafting.network.SelectionPacketHandler;
+import io.enderdev.selectionguicrafting.proxy.CommonProxy;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionRecipe;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
@@ -25,27 +25,23 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.command.ICommandManager;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 import java.awt.*;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
-import static gliese832c.selectionGuiCrafting.config.SelectionConfig.disableCloseGUIbutton;
+import static io.enderdev.selectionguicrafting.config.SelectionConfig.disableCloseGUIbutton;
 
 public class GuiScreenCrafting extends GuiScreenDynamic {
     private GuiButton buttonClose;

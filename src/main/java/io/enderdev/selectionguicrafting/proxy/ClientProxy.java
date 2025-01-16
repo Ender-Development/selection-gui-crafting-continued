@@ -1,4 +1,4 @@
-package gliese832c.selectionGuiCrafting.proxy;
+package io.enderdev.selectionguicrafting.proxy;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

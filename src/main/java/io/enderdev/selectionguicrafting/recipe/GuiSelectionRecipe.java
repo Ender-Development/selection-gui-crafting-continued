@@ -1,4 +1,4 @@
-package gliese832c.selectionGuiCrafting.recipe;
+package io.enderdev.selectionguicrafting.recipe;
 
 import net.minecraft.item.ItemStack;
 

@@ -1,4 +1,4 @@
-package gliese832c.selectionGuiCrafting.recipe;
+package io.enderdev.selectionguicrafting.recipe;
 
 public class RecipePairPair {
     public GuiSelectionItemPair pair;

@@ -1,6 +1,6 @@
-package gliese832c.selectionGuiCrafting.network;
+package io.enderdev.selectionguicrafting.network;
 
-import gliese832c.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 

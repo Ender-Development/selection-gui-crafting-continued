@@ -1,9 +1,9 @@
-package gliese832c.selectionGuiCrafting.container;
+package io.enderdev.selectionguicrafting.container;
 
-import gliese832c.selectionGuiCrafting.gui.GuiScreenCrafting;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionItemPair;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipe;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipeCategory;
+import io.enderdev.selectionguicrafting.gui.GuiScreenCrafting;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionItemPair;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionRecipe;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionRecipeCategory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;

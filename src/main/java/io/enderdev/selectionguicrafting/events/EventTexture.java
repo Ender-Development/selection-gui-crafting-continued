@@ -1,6 +1,6 @@
-package gliese832c.selectionGuiCrafting.events;
+package io.enderdev.selectionguicrafting.events;
 
-import gliese832c.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;

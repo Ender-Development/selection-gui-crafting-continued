@@ -1,9 +1,9 @@
-package gliese832c.selectionGuiCrafting.events;
+package io.enderdev.selectionguicrafting.events;
 
-import gliese832c.SelectionGuiCrafting;
-import gliese832c.selectionGuiCrafting.gui.ModGuiHandler;
-import gliese832c.selectionGuiCrafting.proxy.CommonProxy;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionItemPair;
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.gui.ModGuiHandler;
+import io.enderdev.selectionguicrafting.proxy.CommonProxy;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionItemPair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

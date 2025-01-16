@@ -1,14 +1,13 @@
-package gliese832c.selectionGuiCrafting.integration.jei;
+package io.enderdev.selectionguicrafting.integration.jei;
 
-import gliese832c.selectionGuiCrafting.proxy.CommonProxy;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipe;
-import gliese832c.selectionGuiCrafting.recipe.RecipePairPair;
+import io.enderdev.selectionguicrafting.proxy.CommonProxy;
+import io.enderdev.selectionguicrafting.recipe.RecipePairPair;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 
-import static gliese832c.SelectionGuiCrafting.MOD_ID;
+import static io.enderdev.selectionguicrafting.SelectionGuiCrafting.MOD_ID;
 
 @JEIPlugin
 public final class JeiPlugin implements IModPlugin

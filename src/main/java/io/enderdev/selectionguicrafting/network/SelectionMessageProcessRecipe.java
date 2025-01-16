@@ -1,26 +1,18 @@
-package gliese832c.selectionGuiCrafting.network;
+package io.enderdev.selectionguicrafting.network;
 
-import gliese832c.selectionGuiCrafting.proxy.CommonProxy;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionItemPair;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipeCategory;
+import io.enderdev.selectionguicrafting.proxy.CommonProxy;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionRecipeCategory;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.command.ICommandManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.nio.charset.Charset;
-import java.util.Objects;
 
-import static gliese832c.selectionGuiCrafting.proxy.CommonProxy.*;
+import static io.enderdev.selectionguicrafting.proxy.CommonProxy.*;
 
 public class SelectionMessageProcessRecipe implements IMessage {
 

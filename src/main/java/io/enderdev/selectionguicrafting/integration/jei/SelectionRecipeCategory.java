@@ -1,10 +1,8 @@
-package gliese832c.selectionGuiCrafting.integration.jei;
+package io.enderdev.selectionguicrafting.integration.jei;
 
 import com.google.common.collect.ImmutableList;
-import gliese832c.SelectionGuiCrafting;
-import gliese832c.selectionGuiCrafting.proxy.CommonProxy;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipe;
-import gliese832c.selectionGuiCrafting.recipe.RecipePairPair;
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.recipe.RecipePairPair;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -14,13 +12,10 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -30,8 +25,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static gliese832c.SelectionGuiCrafting.MOD_ID;
-import static gliese832c.selectionGuiCrafting.integration.jei.JeiPlugin.SELECTION_UID;
+import static io.enderdev.selectionguicrafting.SelectionGuiCrafting.MOD_ID;
+import static io.enderdev.selectionguicrafting.integration.jei.JeiPlugin.SELECTION_UID;
 
 @ParametersAreNonnullByDefault
 public class SelectionRecipeCategory implements IRecipeCategory<SelectionRecipeCategory.Wrapper>

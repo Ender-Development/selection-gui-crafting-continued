@@ -1,6 +1,6 @@
-package gliese832c.selectionGuiCrafting.gui;
+package io.enderdev.selectionguicrafting.gui;
 
-import gliese832c.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;

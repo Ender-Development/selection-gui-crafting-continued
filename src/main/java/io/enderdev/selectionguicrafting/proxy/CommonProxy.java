@@ -1,15 +1,15 @@
-package gliese832c.selectionGuiCrafting.proxy;
+package io.enderdev.selectionguicrafting.proxy;
 
 
-import gliese832c.SelectionGuiCrafting;
-import gliese832c.selectionGuiCrafting.events.EventRightClick;
-import gliese832c.selectionGuiCrafting.gui.ModGuiHandler;
-import gliese832c.selectionGuiCrafting.network.SelectionMessageProcessRecipe;
-import gliese832c.selectionGuiCrafting.network.SelectionPacketHandler;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionItemPair;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipe;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipeCategory;
-import gliese832c.selectionGuiCrafting.recipe.RecipePairPair;
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.events.EventRightClick;
+import io.enderdev.selectionguicrafting.gui.ModGuiHandler;
+import io.enderdev.selectionguicrafting.network.SelectionMessageProcessRecipe;
+import io.enderdev.selectionguicrafting.network.SelectionPacketHandler;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionItemPair;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionRecipe;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionRecipeCategory;
+import io.enderdev.selectionguicrafting.recipe.RecipePairPair;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;

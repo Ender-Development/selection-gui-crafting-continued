@@ -1,14 +1,14 @@
-package gliese832c.selectionGuiCrafting.integration.crafttweaker;
+package io.enderdev.selectionguicrafting.integration.crafttweaker;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
-import gliese832c.selectionGuiCrafting.proxy.CommonProxy;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionItemPair;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipe;
-import gliese832c.selectionGuiCrafting.recipe.GuiSelectionRecipeCategory;
+import io.enderdev.selectionguicrafting.proxy.CommonProxy;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionItemPair;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionRecipe;
+import io.enderdev.selectionguicrafting.recipe.GuiSelectionRecipeCategory;
 import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
