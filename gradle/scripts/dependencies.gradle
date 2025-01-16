@@ -25,6 +25,9 @@ repositories {
             includeGroup 'maven.modrinth'
         }
     }
+    maven {
+        url = 'https://maven.blamejared.com/'
+    }
     mavenLocal() // Must be last for caching to work
 }
 
