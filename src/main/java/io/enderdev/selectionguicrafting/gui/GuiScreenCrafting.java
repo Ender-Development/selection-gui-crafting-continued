@@ -9,6 +9,7 @@ This class contains some of the worst code I have ever written.
 package io.enderdev.selectionguicrafting.gui;
 
 import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.network.SelectionMessageProcessRecipe;
 import io.enderdev.selectionguicrafting.network.SelectionPacketHandler;
 import io.enderdev.selectionguicrafting.proxy.CommonProxy;
@@ -216,7 +217,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             slotCoordinates.add((i*4) + 2, xPos + 16);
             slotCoordinates.add((i*4) + 3, yPos + 16);
 
-            ResourceLocation itemBackground = new ResourceLocation(SelectionGuiCrafting.MOD_ID, "gui/itembackground");
+            ResourceLocation itemBackground = new ResourceLocation(Tags.MOD_ID, "gui/itembackground");
             GlStateManager.color(1F, 1F, 1F);
             TextureAtlasSprite sprite = mc.getTextureMapBlocks().getAtlasSprite(itemBackground.toString());
             mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
@@ -327,9 +328,9 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     // Called when GUI is opened or resized
     @Override
     public void initGui() {
-        String part1 = I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".title.select");
+        String part1 = I18n.format("gui." + Tags.MOD_ID + ".title.select");
         String part2 = recipeCategory.displayName;
-        String part3 = I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".title.recipe");
+        String part3 = I18n.format("gui." + Tags.MOD_ID + ".title.recipe");
         String selectionguiTitle = part1 + " " + part2 + " " + part3;
 
         ArrayList<GuiSelectionRecipe> recipes = recipeCategory.recipes;
@@ -355,7 +356,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                     bottom - CLOSE_BUTTON_HEIGHT - CLOSE_BUTTON_OFFSET,
                     CLOSE_BUTTON_WIDTH,
                     CLOSE_BUTTON_HEIGHT,
-                    I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".close")
+                    I18n.format("gui." + Tags.MOD_ID + ".close")
             ));
         }
 
@@ -370,9 +371,9 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         labelList.clear();
 
         // Draw title
-        String part1 = I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".title.select");
+        String part1 = I18n.format("gui." + Tags.MOD_ID + ".title.select");
         String part2 = recipeCategory.displayName;
-        String part3 = I18n.format("gui." + SelectionGuiCrafting.MOD_ID + ".title.recipe");
+        String part3 = I18n.format("gui." + Tags.MOD_ID + ".title.recipe");
         String selectionguiTitle = part1 + " " + part2 + " " + part3;
 
         labelList.add(label = new GuiLabel(fontRenderer, 0, (width / 2) - (fontRenderer.getStringWidth(selectionguiTitle) / 2), top + TITLE_VERTICAL_OFFSET, 0, 0, 0xffffffff));

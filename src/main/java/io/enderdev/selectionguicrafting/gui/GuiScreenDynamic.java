@@ -1,6 +1,7 @@
 package io.enderdev.selectionguicrafting.gui;
 
 import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.Tags;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;
@@ -22,7 +23,7 @@ public abstract class GuiScreenDynamic extends GuiScreen {
     public int bottom = 0;
 
     // Container info
-    private final ResourceLocation GUI_BORDERS = new ResourceLocation(SelectionGuiCrafting.MOD_ID, "textures/gui/gui.png");
+    private final ResourceLocation GUI_BORDERS = new ResourceLocation(Tags.MOD_ID, "textures/gui/gui.png");
 
     // Update GUI size
     // Must be increment of 4!

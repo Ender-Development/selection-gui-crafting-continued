@@ -2,6 +2,7 @@ package io.enderdev.selectionguicrafting.integration.jei;
 
 import com.google.common.collect.ImmutableList;
 import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.recipe.RecipePairPair;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -25,14 +26,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static io.enderdev.selectionguicrafting.SelectionGuiCrafting.MOD_ID;
 import static io.enderdev.selectionguicrafting.integration.jei.JeiPlugin.SELECTION_UID;
 
 @ParametersAreNonnullByDefault
 public class SelectionRecipeCategory implements IRecipeCategory<SelectionRecipeCategory.Wrapper>
 {
     private static final String TRANSLATION_KEY = "jei.category.selection_recipe";
-    private static final ResourceLocation GUI_LOCATION = new ResourceLocation(MOD_ID, "textures/jei/selection.png");
+    private static final ResourceLocation GUI_LOCATION = new ResourceLocation(Tags.MOD_ID, "textures/jei/selection.png");
 
     private final IDrawable background;
     private final IDrawable icon;
@@ -62,7 +62,7 @@ public class SelectionRecipeCategory implements IRecipeCategory<SelectionRecipeC
     @Override
     public String getModName()
     {
-        return SelectionGuiCrafting.NAME;
+        return Tags.MOD_NAME;
     }
 
     @Nonnull

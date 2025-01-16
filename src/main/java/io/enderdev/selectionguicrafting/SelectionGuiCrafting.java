@@ -7,19 +7,13 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = SelectionGuiCrafting.MOD_ID, name = SelectionGuiCrafting.NAME, version = SelectionGuiCrafting.VERSION)
+@Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION)
 public class SelectionGuiCrafting {
 
-    public static final String MOD_ID = "selectionguicrafting";
-    public static final String NAME = "Selection GUI Crafting";
-    public static final String VERSION = "1.0.2";
-
-
-
-    @Mod.Instance(MOD_ID)
+    @Mod.Instance(Tags.MOD_ID)
     public static SelectionGuiCrafting instance;
 
-    @SidedProxy(clientSide = "gliese832c.selectionGuiCrafting.proxy.ClientProxy", serverSide = "gliese832c.selectionGuiCrafting.proxy.CommonProxy")
+    @SidedProxy(clientSide = "io.enderdev.selectionguicrafting.proxy.ClientProxy", serverSide = "io.enderdev.selectionguicrafting.proxy.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.EventHandler
