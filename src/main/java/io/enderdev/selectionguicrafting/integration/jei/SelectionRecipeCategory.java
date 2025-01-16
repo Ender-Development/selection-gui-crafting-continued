@@ -1,7 +1,6 @@
 package io.enderdev.selectionguicrafting.integration.jei;
 
 import com.google.common.collect.ImmutableList;
-import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.recipe.RecipePairPair;
 import mezz.jei.api.IGuiHelper;
@@ -78,6 +77,7 @@ public class SelectionRecipeCategory implements IRecipeCategory<SelectionRecipeC
         return icon;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, Wrapper wrapper, IIngredients ingredients)
     {
@@ -148,6 +148,7 @@ public class SelectionRecipeCategory implements IRecipeCategory<SelectionRecipeC
             output = builder.build();
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public void getIngredients(@Nonnull IIngredients ingredients)
         {
