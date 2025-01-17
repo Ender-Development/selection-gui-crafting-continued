@@ -181,6 +181,7 @@ public class SgcRecipe extends VirtualizedRegistry<GSRecipe> {
         }
 
         @Override
+        @RecipeBuilderRegistrationMethod
         public @Nullable GSRecipe register() {
             input.stream().map(IIngredient::toMcIngredient).forEach(recipe::addInput);
             if (!validate()) return null;
