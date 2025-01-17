@@ -112,8 +112,6 @@ public class SgcCategory extends VirtualizedRegistry<GSCategory> {
 
         @Override
         public void validate(GroovyLog.Msg msg) {
-            validateFluids(msg);
-            validateItems(msg);
             msg.add(category.getId() == null, "Category id cannot be null");
             msg.add(category.getDisplayName() == null, "Category display name cannot be null");
         }

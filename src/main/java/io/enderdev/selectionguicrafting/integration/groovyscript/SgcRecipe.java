@@ -173,8 +173,7 @@ public class SgcRecipe extends VirtualizedRegistry<GSRecipe> {
 
         @Override
         public void validate(GroovyLog.Msg msg) {
-            validateFluids(msg);
-            validateItems(msg);
+            validateItems(msg, 1, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
             msg.add(recipe.getCategory() == null, "Category is not set");
             msg.add(recipe.getInputs().isEmpty(), "Inputs are not set");
             msg.add(recipe.getOutputs().isEmpty(), "Outputs are not set");
@@ -183,8 +182,8 @@ public class SgcRecipe extends VirtualizedRegistry<GSRecipe> {
 
         @Override
         public @Nullable GSRecipe register() {
-            if (!validate()) return null;
             input.stream().map(IIngredient::toMcIngredient).forEach(recipe::addInput);
+            if (!validate()) return null;
             GSPlugin.instance.recipe.add(recipe);
             return recipe;
         }
