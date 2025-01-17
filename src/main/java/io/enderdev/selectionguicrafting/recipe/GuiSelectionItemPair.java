@@ -2,8 +2,10 @@ package io.enderdev.selectionguicrafting.recipe;
 
 import io.enderdev.selectionguicrafting.proxy.CommonProxy;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class GuiSelectionItemPair {
     public ArrayList<ItemStack> tool;
