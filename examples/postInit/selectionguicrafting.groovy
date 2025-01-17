@@ -37,7 +37,7 @@ mods.selectionguicrafting.selection_pair.pairBuilder()
 mods.selectionguicrafting.selection_pair.pairBuilder()
     .input(item('minecraft:wool'),item('minecraft:diamond'))
     .addTool(item('minecraft:golden_pickaxe'), 1.0f, 1.0f)
-    .addTool(item('minecraft:iron_pickaxe'), 1.0, 1.0)
+    .addTool(item('minecraft:iron_pickaxe'), 1.0f, 1.0f)
     .category('another_category')
     .register()
 

@@ -1,6 +1,16 @@
 # Changelog
 
-## [1.0.0] - 2023-09-15
 
-### Added
-- This is a default template changelog that follows the [KeepAChangelog Convention](https://keepachangelog.com/en/1.1.0/)
+## [1.1.0] - 2025-01-17
+
+### Changed
+- moved to latest CleanroomDevTemplate version
+- updated dependencies
+- redid the buildscripts
+- switched to new Tag system
+- added GroovyScript support
+
+## [1.0.2] - 2025-01-15
+
+### Changed
+- created the fork
