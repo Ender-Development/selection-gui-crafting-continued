@@ -86,7 +86,7 @@ public class SelectionPair extends VirtualizedRegistry<GuiSelectionItemPair> {
 
     @RecipeBuilderDescription(example = {
             @Example(".input(item('minecraft:dirt'),item('minecraft:cobblestone')).addTool(item('minecraft:stone_pickaxe'), 1.0f, 1.0f).category('test_category')"),
-            @Example(".input(item('minecraft:wool'),item('minecraft:diamond')).addTool(item('minecraft:golden_pickaxe'), 1.0f, 1.0f).addTool(item('minecraft:iron_pickaxe'), 1.0, 1.0).category('another_category')"),
+            @Example(".input(item('minecraft:wool'),item('minecraft:diamond')).addTool(item('minecraft:golden_pickaxe'), 1.0f, 1.0f).addTool(item('minecraft:iron_pickaxe'), 1.0f, 1.0f).category('another_category')"),
     })
     public static PairBuilder pairBuilder() {
         return new PairBuilder();
