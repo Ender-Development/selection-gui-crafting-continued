@@ -6,13 +6,14 @@ import org.jetbrains.annotations.NotNull;
 
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class GSRecipeRegistry {
-    public static final List<GSCategory> categories = new ArrayList<>();
-    public static final List<GSRecipe> recipes = new ArrayList<>();
+    public static final ArrayList<GSCategory> categories = new ArrayList<>();
+    public static final ArrayList<GSRecipe> recipes = new ArrayList<>();
 
+    public GSRecipeRegistry() {
+    }
 
     public static void registerCategory(@NotNull GSCategory category) {
         categories.add(category);
@@ -26,15 +27,19 @@ public class GSRecipeRegistry {
         return categories.stream().filter(category -> category.getId().equals(id)).findFirst().orElse(null);
     }
 
-    public static List<GSRecipe> getRecipesForCategory(@NotNull String category) {
-        return recipes.stream().filter(recipe -> recipe.getCategory().equals(category)).collect(Collectors.toList());
+    public static ArrayList<GSRecipe> getRecipesForCategory(@NotNull String category) {
+        return recipes.stream().filter(recipe -> recipe.getCategory().equals(category)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public static List<GSCategory> getCategories() {
+    public static ArrayList<GSRecipe> getRecipesForCategory(@NotNull GSCategory category) {
+        return getRecipesForCategory(category.getId());
+    }
+
+    public static ArrayList<GSCategory> getCategories() {
         return categories;
     }
 
-    public static List<GSRecipe> getRecipes() {
+    public static ArrayList<GSRecipe> getRecipes() {
         return recipes;
     }
 
