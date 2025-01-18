@@ -1,0 +1,63 @@
+mods.selectionguicrafting.sgc_recipe.createRecipe()
+        .category('dummy_category')
+        .input(item('minecraft:stone'))
+        .output(item('minecraft:diamond') * 5, 0.5f)
+        .tool(item('minecraft:wooden_pickaxe'), 1.0f)
+        .consume(64)
+        .time(200)
+        .xp(1)
+        .sound('minecraft:block.anvil.land')
+        .register()
+
+for (i in 0..15) {
+    mods.selectionguicrafting.sgc_recipe.createRecipe()
+            .category('dummy_category')
+            .input(item('minecraft:wool', i))
+            .output(item('minecraft:dye', i), 0.5f)
+            .tool(item('minecraft:wooden_pickaxe'), 1.0f)
+            .register()
+
+    mods.selectionguicrafting.sgc_recipe.createRecipe()
+            .category('dummy_category')
+            .input(item('minecraft:dye', i))
+            .output(item('minecraft:stained_glass', i), 0.5f)
+            .tool(item('minecraft:wooden_pickaxe'), 1.0f)
+            .register()
+
+    mods.selectionguicrafting.sgc_recipe.createRecipe()
+            .category('dummy_category')
+            .input(item('minecraft:stained_glass', i))
+            .output(item('minecraft:stained_hardened_clay', i), 0.5f)
+            .tool(item('minecraft:wooden_pickaxe'), 1.0f)
+            .register()
+
+
+    mods.selectionguicrafting.sgc_recipe.createRecipe()
+            .category('dummy_category')
+            .input(item('minecraft:stained_hardened_clay', i))
+            .output(item('minecraft:concrete', i), 0.5f)
+            .tool(item('minecraft:stone_pickaxe'), 1.0f)
+            .register()
+    mods.selectionguicrafting.sgc_recipe.createRecipe()
+            .category('dummy_category')
+            .input(item('minecraft:concrete', i))
+            .output(item('minecraft:concrete_powder', i), 0.5f)
+            .tool(item('minecraft:stone_pickaxe'), 1.0f)
+            .register()
+
+    mods.selectionguicrafting.sgc_recipe.createRecipe()
+            .category('dummy_category')
+            .input(item('minecraft:concrete_powder', i))
+            .output(item('minecraft:carpet', i), 0.5f)
+            .tool(item('minecraft:stone_pickaxe'), 1.0f)
+            .register()
+
+    mods.selectionguicrafting.sgc_recipe.createRecipe()
+            .category('dummy_category')
+            .input(item('minecraft:carpet', i))
+            .output(item('minecraft:stained_glass_pane', i), 0.5f)
+            .tool(item('minecraft:stone_pickaxe'), 1.0f)
+            .register()
+
+
+}
