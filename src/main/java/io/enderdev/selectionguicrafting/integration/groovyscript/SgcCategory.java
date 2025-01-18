@@ -58,7 +58,7 @@ public class SgcCategory extends VirtualizedRegistry<GSCategory> {
     }
 
     @RecipeBuilderDescription(example = {
-            @Example(".id('dummy_category').displayName('Dummy Category')")
+            @Example(".id('dummy_category').displayName('Dummy Category').background('selectionguicrafting:textures/gui/gui_wood.png')")
     })
     public CategoryBuilder createCategory() {
         return new CategoryBuilder();

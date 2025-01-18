@@ -13,6 +13,7 @@ log.info 'mod \'selectionguicrafting\' detected, running script'
 mods.selectionguicrafting.sgc_category.createCategory()
     .id('dummy_category')
     .displayName('Dummy Category')
+    .background('selectionguicrafting:textures/gui/gui_wood.png')
     .register()
 
 
@@ -33,6 +34,6 @@ mods.selectionguicrafting.sgc_recipe.createRecipe()
     .time(200)
     .xp(1)
     .sound('minecraft:block.anvil.land')
-
+    .register()
 
 
