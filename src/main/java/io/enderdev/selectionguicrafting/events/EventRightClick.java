@@ -1,93 +1,70 @@
 package io.enderdev.selectionguicrafting.events;
 
 import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.gui.ModGuiHandler;
-import io.enderdev.selectionguicrafting.proxy.CommonProxy;
-import io.enderdev.selectionguicrafting.recipe.GuiSelectionItemPair;
-import net.minecraft.client.Minecraft;
+import io.enderdev.selectionguicrafting.recipe.GSRecipeRegistry;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.Arrays;
+
+@Mod.EventBusSubscriber(modid = Tags.MOD_ID)
 public class EventRightClick {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    //@SideOnly(Side.CLIENT)
     public void rightClickItem(PlayerInteractEvent.RightClickItem event) {
 
         EntityPlayer player = (EntityPlayer) event.getEntity();
 
+        if (player == null) {
+            return;
+        }
+
         ItemStack eventItemMainhand = player.getHeldItemMainhand();
         ItemStack eventStackOffhand = player.getHeldItemOffhand();
 
-        for (GuiSelectionItemPair itemPair : CommonProxy.selectionCraftingItems) {
-            int i = 0;
-            for (ItemStack itemTool : itemPair.tool) {
-                if (ItemStack.areItemStacksEqual(new ItemStack(itemTool.getItem(), 1, 0, itemTool.getTagCompound()), new ItemStack(eventItemMainhand.getItem(), 1, 0, eventItemMainhand.getTagCompound()))) {
-                    boolean validMeta = false;
-                    if (itemPair.durabilityMultipliers.get(i) == Float.MAX_VALUE) {
-                        if (itemTool.getMetadata() == eventItemMainhand.getMetadata()) {
-                            validMeta = true;
-                        }
-                    } else {
-                        validMeta = true;
-                    }
-                    if (validMeta) {
-                        for (ItemStack itemInput : itemPair.input) {
-                            if (itemInput.getMetadata() == Short.MAX_VALUE) {
-                                if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, Short.MAX_VALUE, itemInput.getTagCompound()), (new ItemStack(eventStackOffhand.getItem(), 1, Short.MAX_VALUE, eventStackOffhand.getTagCompound())))) {
-                                    openSelectionGui();
-                                    event.setCanceled(true);
-                                    return;
-                                }
-                            } else {
-                                if (ItemStack.areItemStacksEqual(new ItemStack(itemInput.getItem(), 1, itemInput.getMetadata(), itemInput.getTagCompound()), new ItemStack(eventStackOffhand.getItem(), 1, eventStackOffhand.getMetadata(), eventStackOffhand.getTagCompound()))) {
-                                    openSelectionGui();
-                                    event.setCanceled(true);
-                                    return;
-                                }
-                            }
-                        }
+        GSRecipeRegistry.getRecipes().forEach((recipe) -> {
+            Item itemMainhand = eventItemMainhand.getItem();
+            Item itemOffhand = eventStackOffhand.getItem();
+            if (recipe.getTools().stream().map(ItemStack::getItem).anyMatch((item) -> item == itemMainhand)) {
+                if (recipe.getInputs().stream().map(Ingredient::getMatchingStacks)
+                        .anyMatch(stacks -> Arrays.stream(stacks).anyMatch((stack) -> stack.getItem() == itemOffhand))) {
+                    event.setCanceled(true);
+                    if (player.getEntityWorld().isRemote) {
+                        player.openGui(SelectionGuiCrafting.instance, ModGuiHandler.CRAFTING_GUI_ID, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
                     }
                 }
-                i++;
             }
-        }
+
+        });
     }
 
-    /*@SubscribeEvent(priority = EventPriority.HIGH)
-    public void rightClickBlock(BlockEvent.PlaceEvent event) {
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void rightClickBlock(PlayerInteractEvent.RightClickBlock event) {
 
         EntityPlayer player = (EntityPlayer) event.getEntity();
+
+        if (player == null) {
+            return;
+        }
 
         Item eventItemMainhand = player.getHeldItemMainhand().getItem();
         Item eventItemOffhand = player.getHeldItemOffhand().getItem();
 
-        for (GuiSelectionItemPair itemPair : CommonProxy.selectionCraftingItems) {
-            for (Item itemTool : itemPair.tool) {
-                if (ItemStack.areItemStacksEqual(new ItemStack(itemTool), new ItemStack(eventItemMainhand))) {
-                    for (Item itemInput : itemPair.input) {
-                        if (ItemStack.areItemStacksEqual(new ItemStack(itemInput), new ItemStack(eventItemOffhand))) {
-                            event.setCanceled(true);
-                            return;
-                        }
-                    }
+        GSRecipeRegistry.getRecipes().forEach((recipe) -> {
+            if (recipe.getTools().stream().map(ItemStack::getItem).anyMatch((item) -> item == eventItemMainhand)) {
+                if (recipe.getInputs().stream().map(Ingredient::getMatchingStacks)
+                        .anyMatch(stacks -> Arrays.stream(stacks).anyMatch((stack) -> stack.getItem() == eventItemOffhand))) {
+                    event.setCanceled(true);
                 }
             }
-        }
-    }*/
-
-
-    //@SideOnly(Side.CLIENT)
-    private void openSelectionGui() {
-        // Get data
-        EntityPlayer player = Minecraft.getMinecraft().player;
-        World world = Minecraft.getMinecraft().world;
-
-        // Open GUI
-        player.openGui(SelectionGuiCrafting.instance, ModGuiHandler.CRAFTING_GUI_ID, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+        });
     }
 }
