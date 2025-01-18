@@ -3,5 +3,7 @@ gui.selectionguicrafting.title.recipe=Recipe
 gui.selectionguicrafting.close=Close GUI
 
 gui.selectionguicrafting.needed=Min.
+gui.selectionguicrafting.wrong_input=§cRequires %s
+gui.selectionguicrafting.wrong_amount=§cNeeds %s, but got %s
 
 jei.category.selection_recipe=Selection GUI Crafting
