@@ -1,5 +1,6 @@
 package io.enderdev.selectionguicrafting.recipe;
 
+import io.enderdev.selectionguicrafting.Tags;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -87,7 +88,7 @@ public class GSCategory {
 
     @NotNull
     public ResourceLocation getBackground() {
-        return background == null ? new ResourceLocation("selectionguicrafting", "textures/gui/gui.png") : background;
+        return background == null ? new ResourceLocation(Tags.MOD_ID, "textures/gui/gui_default.png") : background;
     }
 
     @NotNull
