@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class GsRegistry {
-    public static final ArrayList<GsCategory> categories = new ArrayList<>();
-    public static final ArrayList<GsRecipe> recipes = new ArrayList<>();
+    private static final ArrayList<GsCategory> categories = new ArrayList<>();
+    private static final ArrayList<GsRecipe> recipes = new ArrayList<>();
 
     public GsRegistry() {
     }
