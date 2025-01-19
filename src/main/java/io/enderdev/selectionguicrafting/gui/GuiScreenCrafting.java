@@ -14,6 +14,7 @@ import io.enderdev.selectionguicrafting.network.SelectionPacketHandler;
 import io.enderdev.selectionguicrafting.registry.GsRecipe;
 import io.enderdev.selectionguicrafting.registry.GsCategory;
 import io.enderdev.selectionguicrafting.registry.GsRegistry;
+import io.enderdev.selectionguicrafting.registry.GsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -98,7 +99,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         this.player = player;
         this.world = world;
 
-        this.validRecipes = GsRegistry.getRecipesForCategory(recipeCategory).stream().filter(recipe -> recipe.getTools().stream().anyMatch(itemStack -> itemStack.isItemEqualIgnoreDurability(player.getHeldItemMainhand()))).collect(Collectors.toCollection(ArrayList::new));
+        this.validRecipes = GsRegistry.getRecipesForCategory(recipeCategory).stream().filter(recipe -> recipe.getTools().stream().map(GsTool::getItemStack).anyMatch(itemStack -> itemStack.isItemEqualIgnoreDurability(player.getHeldItemMainhand()))).collect(Collectors.toCollection(ArrayList::new));
         calculateRowsCols();
     }
 
