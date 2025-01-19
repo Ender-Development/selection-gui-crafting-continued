@@ -1,7 +1,6 @@
 package io.enderdev.selectionguicrafting.registry;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -47,7 +46,7 @@ public class GsRegistry {
         return categories.removeIf(category -> category.getId().equals(id));
     }
 
-    public static boolean removeRecipe(@NotNull String category, @NotNull ArrayList<ItemStack> output) {
+    public static boolean removeRecipe(@NotNull String category, @NotNull ArrayList<GsOutput> output) {
         return recipes.removeIf(recipe -> recipe.getCategory().equals(category) && recipe.getOutputs().equals(output));
     }
 

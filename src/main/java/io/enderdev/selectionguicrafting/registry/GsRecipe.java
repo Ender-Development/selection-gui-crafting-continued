@@ -16,7 +16,7 @@ public class GsRecipe {
     // Required
     private String category;
     private final ArrayList<Ingredient> inputs = new ArrayList<>();
-    private final Map<ItemStack, Float> outputs = new HashMap<>();
+    private final ArrayList<GsOutput> outputs = new ArrayList<>();
     private final ArrayList<GsTool> tools = new ArrayList<>();
 
     // Optional
@@ -111,17 +111,17 @@ public class GsRecipe {
      * @return The recipe
      */
     public GsRecipe addOutput(@NotNull ItemStack output, float chance) {
-        outputs.put(output, chance);
+        outputs.add(new GsOutput(output, chance));
         return this;
     }
 
     public GsRecipe addOutput(@NotNull Block output, float chance) {
-        outputs.put(new ItemStack(output), chance);
+        outputs.add(new GsOutput(new ItemStack(output), chance));
         return this;
     }
 
-    public GsRecipe addOutput(@NotNull Map<ItemStack, Float> output) {
-        outputs.putAll(output);
+    public GsRecipe addOutput(@NotNull ArrayList<GsOutput> output) {
+        outputs.addAll(output);
         return this;
     }
 
@@ -134,12 +134,12 @@ public class GsRecipe {
      * @return The recipe
      */
     public GsRecipe addTool(@NotNull ItemStack tool, float damageMultiplier, float timeMultiplier) {
-        tools.add(new GsTool().setItem(tool).setDamageMultiplier(damageMultiplier).setTimeMultiplier(timeMultiplier));
+        tools.add(new GsTool(tool, damageMultiplier, timeMultiplier));
         return this;
     }
 
     public GsRecipe addTool(@NotNull Block tool, float damageMultiplier, float timeMultiplier) {
-        tools.add(new GsTool().setItem(new ItemStack(tool)).setDamageMultiplier(damageMultiplier).setTimeMultiplier(timeMultiplier));
+        tools.add(new GsTool(new ItemStack(tool), damageMultiplier, timeMultiplier));
         return this;
     }
 
@@ -197,8 +197,8 @@ public class GsRecipe {
     }
 
     @NotNull
-    public ArrayList<ItemStack> getOutputs() {
-        return new ArrayList<>(outputs.keySet());
+    public ArrayList<GsOutput> getOutputs() {
+        return outputs;
     }
 
     /**
@@ -207,8 +207,8 @@ public class GsRecipe {
      * @param output The output to get the chance for
      * @return The chance of the output
      */
-    public float getOutputChance(ItemStack output) {
-        return outputs.get(output);
+    public float getOutputChance(GsOutput output) {
+        return output.getChance();
     }
 
     /**
