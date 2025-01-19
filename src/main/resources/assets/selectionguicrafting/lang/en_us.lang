@@ -6,4 +6,6 @@ gui.selectionguicrafting.needed=Min.
 gui.selectionguicrafting.wrong_input=§cRequires %s
 gui.selectionguicrafting.wrong_amount=§cNeeds %s, but got %s
 
-jei.category.selection_recipe=Selection GUI Crafting
+jei.selectionguicrafting.category=Selection GUI Crafting
+
+config.selectionguicrafting.client=Client
