@@ -11,7 +11,9 @@ package io.enderdev.selectionguicrafting.gui;
 import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.network.SelectionMessageProcessRecipe;
 import io.enderdev.selectionguicrafting.network.SelectionPacketHandler;
-import io.enderdev.selectionguicrafting.recipe.*;
+import io.enderdev.selectionguicrafting.registry.GsRecipe;
+import io.enderdev.selectionguicrafting.registry.GsCategory;
+import io.enderdev.selectionguicrafting.registry.GsRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -68,7 +70,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     private int toolTipToRenderY = 32000;
 
     private final ArrayList<Integer> slotCoordinates = new ArrayList<>();
-    private final ArrayList<GSRecipe> validRecipes;
+    private final ArrayList<GsRecipe> validRecipes;
 
     private float craftingProgress = 0.0f;
     private boolean recipeSelected = false;
@@ -82,12 +84,12 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
     private int final_width_offset;
 
-    private GSRecipe hoveredRecipe;
+    private GsRecipe hoveredRecipe;
 
     private boolean wrongInput = false;
     private boolean wrongAmount = false;
 
-    public GuiScreenCrafting(GSCategory recipeCategory, float timeMultiplier, EntityPlayer player, World world) {
+    public GuiScreenCrafting(GsCategory recipeCategory, float timeMultiplier, EntityPlayer player, World world) {
         super();
 
         this.recipeCategory = recipeCategory.getDisplayName();
@@ -96,7 +98,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         this.player = player;
         this.world = world;
 
-        this.validRecipes = GSRecipeRegistry.getRecipesForCategory(recipeCategory).stream().filter(recipe -> recipe.getTools().stream().anyMatch(itemStack -> itemStack.isItemEqualIgnoreDurability(player.getHeldItemMainhand()))).collect(Collectors.toCollection(ArrayList::new));
+        this.validRecipes = GsRegistry.getRecipesForCategory(recipeCategory).stream().filter(recipe -> recipe.getTools().stream().anyMatch(itemStack -> itemStack.isItemEqualIgnoreDurability(player.getHeldItemMainhand()))).collect(Collectors.toCollection(ArrayList::new));
         calculateRowsCols();
     }
 
@@ -211,7 +213,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
         int OFFSET = (final_width_offset + 8 - (cols * ICON_DISTANCE)) / 2;
 
-        for (GSRecipe recipe : this.validRecipes) {
+        for (GsRecipe recipe : this.validRecipes) {
 
             int rowNumber = i / cols;
 

@@ -1,4 +1,4 @@
-package io.enderdev.selectionguicrafting.recipe;
+package io.enderdev.selectionguicrafting.registry;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GSRecipe {
+public class GsRecipe {
     // Required
     private String category;
     private final ArrayList<Ingredient> inputs = new ArrayList<>();
@@ -27,10 +27,10 @@ public class GSRecipe {
 
     // Override category
     private final ArrayList<ResourceLocation> sounds = new ArrayList<>();
-    private GSEnum.OutputType outputType;
-    private GSEnum.QueueType queueable;
+    private GsEnum.OutputType outputType;
+    private GsEnum.QueueType queueable;
 
-    public GSRecipe() {
+    public GsRecipe() {
     }
 
     /**
@@ -39,7 +39,7 @@ public class GSRecipe {
      * @param category The category
      * @return The recipe
      */
-    public GSRecipe setCategory(@NotNull String category) {
+    public GsRecipe setCategory(@NotNull String category) {
         this.category = category;
         return this;
     }
@@ -50,7 +50,7 @@ public class GSRecipe {
      * @param outputType The output type
      * @return The recipe
      */
-    public GSRecipe setOutputType(@NotNull GSEnum.OutputType outputType) {
+    public GsRecipe setOutputType(@NotNull GsEnum.OutputType outputType) {
         this.outputType = outputType;
         return this;
     }
@@ -61,7 +61,7 @@ public class GSRecipe {
      * @param queueable The queueable type
      * @return The recipe
      */
-    public GSRecipe setQueueable(@NotNull GSEnum.QueueType queueable) {
+    public GsRecipe setQueueable(@NotNull GsEnum.QueueType queueable) {
         this.queueable = queueable;
         return this;
     }
@@ -72,22 +72,22 @@ public class GSRecipe {
      * @param input The input to add
      * @return The recipe
      */
-    public GSRecipe addInput(@NotNull Ingredient input) {
+    public GsRecipe addInput(@NotNull Ingredient input) {
         inputs.add(input);
         return this;
     }
 
-    public GSRecipe addInput(@NotNull ItemStack input) {
+    public GsRecipe addInput(@NotNull ItemStack input) {
         inputs.add(Ingredient.fromStacks(input));
         return this;
     }
 
-    public GSRecipe addInput(@NotNull Block input) {
+    public GsRecipe addInput(@NotNull Block input) {
         inputs.add(Ingredient.fromItems(Item.getItemFromBlock(input)));
         return this;
     }
 
-    public GSRecipe addInput(@NotNull ArrayList<Ingredient> input) {
+    public GsRecipe addInput(@NotNull ArrayList<Ingredient> input) {
         inputs.addAll(input);
         return this;
     }
@@ -98,7 +98,7 @@ public class GSRecipe {
      * @param sound The sound to add
      * @return The recipe
      */
-    public GSRecipe addSound(@NotNull ResourceLocation sound) {
+    public GsRecipe addSound(@NotNull ResourceLocation sound) {
         sounds.add(sound);
         return this;
     }
@@ -110,17 +110,17 @@ public class GSRecipe {
      * @param chance The chance of the output
      * @return The recipe
      */
-    public GSRecipe addOutput(@NotNull ItemStack output, float chance) {
+    public GsRecipe addOutput(@NotNull ItemStack output, float chance) {
         outputs.put(output, chance);
         return this;
     }
 
-    public GSRecipe addOutput(@NotNull Block output, float chance) {
+    public GsRecipe addOutput(@NotNull Block output, float chance) {
         outputs.put(new ItemStack(output), chance);
         return this;
     }
 
-    public GSRecipe addOutput(@NotNull Map<ItemStack, Float> output) {
+    public GsRecipe addOutput(@NotNull Map<ItemStack, Float> output) {
         outputs.putAll(output);
         return this;
     }
@@ -132,12 +132,12 @@ public class GSRecipe {
      * @param damageMultiplier The damage multiplier for the tool
      * @return The recipe
      */
-    public GSRecipe addTool(@NotNull ItemStack tool, float damageMultiplier) {
+    public GsRecipe addTool(@NotNull ItemStack tool, float damageMultiplier) {
         tools.put(tool, damageMultiplier);
         return this;
     }
 
-    public GSRecipe addTool(@NotNull Block tool, float damageMultiplier) {
+    public GsRecipe addTool(@NotNull Block tool, float damageMultiplier) {
         tools.put(new ItemStack(tool), damageMultiplier);
         return this;
     }
@@ -148,7 +148,7 @@ public class GSRecipe {
      * @param time The time the recipe will take
      * @return The recipe
      */
-    public GSRecipe setTime(int time) {
+    public GsRecipe setTime(int time) {
         this.time = time;
         return this;
     }
@@ -159,7 +159,7 @@ public class GSRecipe {
      * @param xp The experience the recipe will give
      * @return The recipe
      */
-    public GSRecipe setXp(int xp) {
+    public GsRecipe setXp(int xp) {
         this.xp = xp;
         return this;
     }
@@ -170,7 +170,7 @@ public class GSRecipe {
      * @param durability The durability the recipe will consume
      * @return The recipe
      */
-    public GSRecipe setDurability(int durability) {
+    public GsRecipe setDurability(int durability) {
         this.durability = durability;
         return this;
     }
@@ -181,7 +181,7 @@ public class GSRecipe {
      * @param amount The amount of inputs to be consumed
      * @return The recipe
      */
-    public GSRecipe setAmount(int amount) {
+    public GsRecipe setAmount(int amount) {
         this.amount = amount;
         return this;
     }
@@ -271,12 +271,12 @@ public class GSRecipe {
     }
 
     @Nullable
-    public GSEnum.OutputType getOutputType() {
+    public GsEnum.OutputType getOutputType() {
         return outputType;
     }
 
     @Nullable
-    public GSEnum.QueueType getQueueable() {
+    public GsEnum.QueueType getQueueable() {
         return queueable;
     }
 }

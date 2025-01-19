@@ -1,7 +1,7 @@
 package io.enderdev.selectionguicrafting.gui;
 
-import io.enderdev.selectionguicrafting.recipe.GSRecipe;
-import io.enderdev.selectionguicrafting.recipe.GSRecipeRegistry;
+import io.enderdev.selectionguicrafting.registry.GsRecipe;
+import io.enderdev.selectionguicrafting.registry.GsRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -30,15 +30,15 @@ public class ModGuiHandler implements IGuiHandler {
 
         float timeMultiplier = 0.0f;
 
-        String recipeCategory = GSRecipeRegistry.getRecipes().stream()
+        String recipeCategory = GsRegistry.getRecipes().stream()
                 .filter(recipe -> recipe.getTools().stream().map(ItemStack::getItem).anyMatch(item -> item == heldItemMainhand.getItem()))
                 .filter(recipe -> recipe.getInputs().stream().map(Ingredient::getMatchingStacks)
                         .anyMatch(stacks -> Arrays.stream(stacks).anyMatch(stack -> stack.getItem() == heldStackOffhand.getItem())))
-                .map(GSRecipe::getCategory)
+                .map(GsRecipe::getCategory)
                 .findFirst().orElse("invalid");
 
         if (ID == CRAFTING_GUI_ID) {
-            return craftingGui = new GuiScreenCrafting(GSRecipeRegistry.getCategory(recipeCategory), timeMultiplier, player, world);
+            return craftingGui = new GuiScreenCrafting(GsRegistry.getCategory(recipeCategory), timeMultiplier, player, world);
         }
 
         return null;

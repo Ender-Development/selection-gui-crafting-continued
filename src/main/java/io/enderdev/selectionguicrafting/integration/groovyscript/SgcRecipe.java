@@ -8,30 +8,30 @@ import com.cleanroommc.groovyscript.helper.SimpleObjectStream;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import io.enderdev.selectionguicrafting.Tags;
-import io.enderdev.selectionguicrafting.recipe.GSEnum;
-import io.enderdev.selectionguicrafting.recipe.GSRecipe;
-import io.enderdev.selectionguicrafting.recipe.GSRecipeRegistry;
+import io.enderdev.selectionguicrafting.registry.GsEnum;
+import io.enderdev.selectionguicrafting.registry.GsRecipe;
+import io.enderdev.selectionguicrafting.registry.GsRegistry;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
-public class SgcRecipe extends VirtualizedRegistry<GSRecipe> {
+public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
     @Override
     @GroovyBlacklist
     public void onReload() {
-        GSRecipeRegistry.getRecipes().removeAll(removeScripted());
-        GSRecipeRegistry.getRecipes().addAll(restoreFromBackup());
+        GsRegistry.getRecipes().removeAll(removeScripted());
+        GsRegistry.getRecipes().addAll(restoreFromBackup());
     }
 
-    public void add(GSRecipe recipe) {
+    public void add(GsRecipe recipe) {
         if (recipe != null) {
             addScripted(recipe);
-            GSRecipeRegistry.registerRecipe(recipe);
+            GsRegistry.registerRecipe(recipe);
         }
     }
 
-    public boolean remove(GSRecipe recipe) {
-        if (GSRecipeRegistry.removeRecipe(recipe.getCategory(), recipe.getOutputs())) {
+    public boolean remove(GsRecipe recipe) {
+        if (GsRegistry.removeRecipe(recipe.getCategory(), recipe.getOutputs())) {
             addBackup(recipe);
             return true;
         }
@@ -40,7 +40,7 @@ public class SgcRecipe extends VirtualizedRegistry<GSRecipe> {
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example(value = "'dummy_category'",commented = true), description = "sgc.groovyscript.recipe.remove_by_category")
     public boolean removeByCategory(String category) {
-        return GSRecipeRegistry.getRecipes().removeIf(recipe -> {
+        return GsRegistry.getRecipes().removeIf(recipe -> {
             if (recipe.getCategory().equals(category)) {
                 addBackup(recipe);
                 return true;
@@ -51,7 +51,7 @@ public class SgcRecipe extends VirtualizedRegistry<GSRecipe> {
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example("item('minecraft:stone')"))
     public boolean removeByOutput(IIngredient output) {
-        return GSRecipeRegistry.getRecipes().removeIf(recipe -> {
+        return GsRegistry.getRecipes().removeIf(recipe -> {
             if (recipe.getOutputs().stream().anyMatch(output)) {
                 addBackup(recipe);
                 return true;
@@ -62,7 +62,7 @@ public class SgcRecipe extends VirtualizedRegistry<GSRecipe> {
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example("item('minecraft:cobblestone')"))
     public boolean removeByInput(IIngredient input) {
-        return GSRecipeRegistry.getRecipes().removeIf(recipe -> {
+        return GsRegistry.getRecipes().removeIf(recipe -> {
             if (recipe.getInputs().contains(input.toMcIngredient())) {
                 addBackup(recipe);
                 return true;
@@ -73,7 +73,7 @@ public class SgcRecipe extends VirtualizedRegistry<GSRecipe> {
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example("item('minecraft:wool')"), description = "sgc.groovyscript.recipe.remove_by_tool")
     public boolean removeByTool(IIngredient tool) {
-        return GSRecipeRegistry.getRecipes().removeIf(recipe -> {
+        return GsRegistry.getRecipes().removeIf(recipe -> {
             if (recipe.getTools().stream().anyMatch(tool)) {
                 addBackup(recipe);
                 return true;
@@ -83,14 +83,14 @@ public class SgcRecipe extends VirtualizedRegistry<GSRecipe> {
     }
 
     @MethodDescription(type = MethodDescription.Type.QUERY)
-    public SimpleObjectStream<GSRecipe> streamRecipes() {
-        return new SimpleObjectStream<>(GSRecipeRegistry.getRecipes()).setRemover(this::remove);
+    public SimpleObjectStream<GsRecipe> streamRecipes() {
+        return new SimpleObjectStream<>(GsRegistry.getRecipes()).setRemover(this::remove);
     }
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, priority = 2000, example = @Example(commented = true))
     public void removeAll() {
-        GSRecipeRegistry.getRecipes().forEach(this::addBackup);
-        GSRecipeRegistry.getRecipes().clear();
+        GsRegistry.getRecipes().forEach(this::addBackup);
+        GsRegistry.getRecipes().clear();
     }
 
     @RecipeBuilderDescription(example = {
@@ -101,10 +101,10 @@ public class SgcRecipe extends VirtualizedRegistry<GSRecipe> {
     }
 
     @Property(property = "input", comp = @Comp(gte = 1))
-    public static class RecipeBuilder extends AbstractRecipeBuilder<GSRecipe> {
+    public static class RecipeBuilder extends AbstractRecipeBuilder<GsRecipe> {
 
         @Property
-        private final GSRecipe recipe = new GSRecipe();
+        private final GsRecipe recipe = new GsRecipe();
 
         @RecipeBuilderMethodDescription(field = "recipe")
         public RecipeBuilder category(String category) {
@@ -156,13 +156,13 @@ public class SgcRecipe extends VirtualizedRegistry<GSRecipe> {
 
         @RecipeBuilderMethodDescription(field = "recipe")
         public RecipeBuilder queueable(String queueable) {
-            recipe.setQueueable(GSEnum.QueueType.valueOf(queueable));
+            recipe.setQueueable(GsEnum.QueueType.valueOf(queueable));
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "recipe")
         public RecipeBuilder outputType(String outputType) {
-            recipe.setOutputType(GSEnum.OutputType.valueOf(outputType));
+            recipe.setOutputType(GsEnum.OutputType.valueOf(outputType));
             return this;
         }
 
@@ -182,7 +182,7 @@ public class SgcRecipe extends VirtualizedRegistry<GSRecipe> {
 
         @Override
         @RecipeBuilderRegistrationMethod
-        public @Nullable GSRecipe register() {
+        public @Nullable GsRecipe register() {
             input.stream().map(IIngredient::toMcIngredient).forEach(recipe::addInput);
             if (!validate()) return null;
             GSPlugin.instance.recipe.add(recipe);

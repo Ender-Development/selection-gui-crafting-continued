@@ -1,6 +1,6 @@
-package io.enderdev.selectionguicrafting.recipe;
+package io.enderdev.selectionguicrafting.registry;
 
-public class GSEnum {
+public class GsEnum {
     /**
      * How the output of the recipe should be handled
      */

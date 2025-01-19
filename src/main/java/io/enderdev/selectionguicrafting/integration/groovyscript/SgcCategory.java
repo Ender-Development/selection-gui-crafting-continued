@@ -7,30 +7,30 @@ import com.cleanroommc.groovyscript.helper.SimpleObjectStream;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import io.enderdev.selectionguicrafting.Tags;
-import io.enderdev.selectionguicrafting.recipe.GSCategory;
-import io.enderdev.selectionguicrafting.recipe.GSEnum;
-import io.enderdev.selectionguicrafting.recipe.GSRecipeRegistry;
+import io.enderdev.selectionguicrafting.registry.GsCategory;
+import io.enderdev.selectionguicrafting.registry.GsEnum;
+import io.enderdev.selectionguicrafting.registry.GsRegistry;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
-public class SgcCategory extends VirtualizedRegistry<GSCategory> {
+public class SgcCategory extends VirtualizedRegistry<GsCategory> {
     @Override
     @GroovyBlacklist
     public void onReload() {
-        GSRecipeRegistry.getCategories().removeAll(removeScripted());
-        GSRecipeRegistry.getCategories().addAll(restoreFromBackup());
+        GsRegistry.getCategories().removeAll(removeScripted());
+        GsRegistry.getCategories().addAll(restoreFromBackup());
     }
 
-    public void add(GSCategory category) {
+    public void add(GsCategory category) {
         if (category != null) {
             addScripted(category);
-            GSRecipeRegistry.registerCategory(category);
+            GsRegistry.registerCategory(category);
         }
     }
 
-    public boolean remove(GSCategory category) {
-        if (GSRecipeRegistry.removeCategory(category.getId())) {
+    public boolean remove(GsCategory category) {
+        if (GsRegistry.removeCategory(category.getId())) {
             addBackup(category);
             return true;
         }
@@ -39,22 +39,22 @@ public class SgcCategory extends VirtualizedRegistry<GSCategory> {
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example(value = "'dummy_category'",commented = true), description = "sgc.groovyscript.category.remove_by_name")
     public boolean removeByName(String name) {
-        if (GSRecipeRegistry.removeCategory(name)) {
-            addBackup(GSRecipeRegistry.getCategory(name));
+        if (GsRegistry.removeCategory(name)) {
+            addBackup(GsRegistry.getCategory(name));
             return true;
         }
         return false;
     }
 
     @MethodDescription(type = MethodDescription.Type.QUERY)
-    public SimpleObjectStream<GSCategory> streamCategories() {
-        return new SimpleObjectStream<>(GSRecipeRegistry.getCategories()).setRemover(this::remove);
+    public SimpleObjectStream<GsCategory> streamCategories() {
+        return new SimpleObjectStream<>(GsRegistry.getCategories()).setRemover(this::remove);
     }
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, priority = 2000, example = @Example(commented = true))
     public void removeAll() {
-        GSRecipeRegistry.getCategories().forEach(this::addBackup);
-        GSRecipeRegistry.getCategories().clear();
+        GsRegistry.getCategories().forEach(this::addBackup);
+        GsRegistry.getCategories().clear();
     }
 
     @RecipeBuilderDescription(example = {
@@ -64,10 +64,10 @@ public class SgcCategory extends VirtualizedRegistry<GSCategory> {
         return new CategoryBuilder();
     }
 
-    public static class CategoryBuilder extends AbstractRecipeBuilder<GSCategory> {
+    public static class CategoryBuilder extends AbstractRecipeBuilder<GsCategory> {
 
         @Property
-        private final GSCategory category = new GSCategory();
+        private final GsCategory category = new GsCategory();
 
         @RecipeBuilderMethodDescription(field = "category")
         public CategoryBuilder id(String id) {
@@ -95,13 +95,13 @@ public class SgcCategory extends VirtualizedRegistry<GSCategory> {
 
         @RecipeBuilderMethodDescription(field = "category")
         public CategoryBuilder setOutputType(String outputType) {
-            category.setOutputType(GSEnum.OutputType.valueOf(outputType));
+            category.setOutputType(GsEnum.OutputType.valueOf(outputType));
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "category")
         public CategoryBuilder setQueueable(String queueable) {
-            category.setQueueable(GSEnum.QueueType.valueOf(queueable));
+            category.setQueueable(GsEnum.QueueType.valueOf(queueable));
             return this;
         }
 
@@ -118,7 +118,7 @@ public class SgcCategory extends VirtualizedRegistry<GSCategory> {
 
         @Override
         @RecipeBuilderRegistrationMethod
-        public @Nullable GSCategory register() {
+        public @Nullable GsCategory register() {
             if (!validate()) {
                 return null;
             }

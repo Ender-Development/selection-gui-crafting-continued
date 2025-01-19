@@ -1,4 +1,4 @@
-package io.enderdev.selectionguicrafting.recipe;
+package io.enderdev.selectionguicrafting.registry;
 
 import io.enderdev.selectionguicrafting.Tags;
 import net.minecraft.util.ResourceLocation;
@@ -6,16 +6,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class GSCategory {
+public class GsCategory {
     private final ArrayList<ResourceLocation> sounds = new ArrayList<>();
 
     private String id;
     private String displayName;
     private ResourceLocation background;
-    private GSEnum.OutputType outputType;
-    private GSEnum.QueueType queueable;
+    private GsEnum.OutputType outputType;
+    private GsEnum.QueueType queueable;
 
-    public GSCategory() {
+    public GsCategory() {
     }
 
     /**
@@ -23,7 +23,7 @@ public class GSCategory {
      * @param id The id
      * @return The category
      */
-    public GSCategory setId(@NotNull String id) {
+    public GsCategory setId(@NotNull String id) {
         this.id = id;
         return this;
     }
@@ -33,7 +33,7 @@ public class GSCategory {
      * @param displayName The display name
      * @return The category
      */
-    public GSCategory setDisplayName(@NotNull String displayName) {
+    public GsCategory setDisplayName(@NotNull String displayName) {
         this.displayName = displayName;
         return this;
     }
@@ -43,7 +43,7 @@ public class GSCategory {
      * @param sound The sound to add
      * @return The category
      */
-    public GSCategory addSound(@NotNull ResourceLocation sound) {
+    public GsCategory addSound(@NotNull ResourceLocation sound) {
         sounds.add(sound);
         return this;
     }
@@ -53,7 +53,7 @@ public class GSCategory {
      * @param background The background
      * @return The category
      */
-    public GSCategory setBackground(@NotNull ResourceLocation background) {
+    public GsCategory setBackground(@NotNull ResourceLocation background) {
         this.background = background;
         return this;
     }
@@ -63,7 +63,7 @@ public class GSCategory {
      * @param outputType The output type
      * @return The category
      */
-    public GSCategory setOutputType(@NotNull GSEnum.OutputType outputType) {
+    public GsCategory setOutputType(@NotNull GsEnum.OutputType outputType) {
         this.outputType = outputType;
         return this;
     }
@@ -73,7 +73,7 @@ public class GSCategory {
      * @param queueable The queueable type
      * @return The category
      */
-    public GSCategory setQueueable(@NotNull GSEnum.QueueType queueable) {
+    public GsCategory setQueueable(@NotNull GsEnum.QueueType queueable) {
         this.queueable = queueable;
         return this;
     }
@@ -100,13 +100,13 @@ public class GSCategory {
     }
 
     @NotNull
-    public GSEnum.OutputType getOutputType() {
-        return outputType == null ? GSEnum.OutputType.DROP : outputType;
+    public GsEnum.OutputType getOutputType() {
+        return outputType == null ? GsEnum.OutputType.DROP : outputType;
     }
 
     @NotNull
-    public GSEnum.QueueType getQueueable() {
-        return queueable == null ? GSEnum.QueueType.YES : queueable;
+    public GsEnum.QueueType getQueueable() {
+        return queueable == null ? GsEnum.QueueType.YES : queueable;
     }
 
 }

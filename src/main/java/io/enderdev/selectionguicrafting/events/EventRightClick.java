@@ -3,7 +3,7 @@ package io.enderdev.selectionguicrafting.events;
 import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.gui.ModGuiHandler;
-import io.enderdev.selectionguicrafting.recipe.GSRecipeRegistry;
+import io.enderdev.selectionguicrafting.registry.GsRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,7 +30,7 @@ public class EventRightClick {
         ItemStack eventItemMainhand = player.getHeldItemMainhand();
         ItemStack eventStackOffhand = player.getHeldItemOffhand();
 
-        GSRecipeRegistry.getRecipes().forEach((recipe) -> {
+        GsRegistry.getRecipes().forEach((recipe) -> {
             Item itemMainhand = eventItemMainhand.getItem();
             Item itemOffhand = eventStackOffhand.getItem();
             if (recipe.getTools().stream().map(ItemStack::getItem).anyMatch((item) -> item == itemMainhand)) {
@@ -58,7 +58,7 @@ public class EventRightClick {
         Item eventItemMainhand = player.getHeldItemMainhand().getItem();
         Item eventItemOffhand = player.getHeldItemOffhand().getItem();
 
-        GSRecipeRegistry.getRecipes().forEach((recipe) -> {
+        GsRegistry.getRecipes().forEach((recipe) -> {
             if (recipe.getTools().stream().map(ItemStack::getItem).anyMatch((item) -> item == eventItemMainhand)) {
                 if (recipe.getInputs().stream().map(Ingredient::getMatchingStacks)
                         .anyMatch(stacks -> Arrays.stream(stacks).anyMatch((stack) -> stack.getItem() == eventItemOffhand))) {
