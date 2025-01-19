@@ -12,6 +12,9 @@ public class GsCategory {
     private String id;
     private String displayName;
     private ResourceLocation background;
+    private ResourceLocation border;
+    private ResourceLocation decoration;
+    private GsEnum.BackgroundType backgroundType;
     private GsEnum.OutputType outputType;
     private GsEnum.QueueType queueable;
 
@@ -59,6 +62,26 @@ public class GsCategory {
     }
 
     /**
+     * Set the border of the category
+     * @param border The border
+     * @return The category
+     */
+    public GsCategory setBorder(@NotNull ResourceLocation border) {
+        this.border = border;
+        return this;
+    }
+
+    /**
+     * Set the decoration of the category
+     * @param decoration The decoration
+     * @return The category
+     */
+    public GsCategory setDecoration(@NotNull ResourceLocation decoration) {
+        this.decoration = decoration;
+        return this;
+    }
+
+    /**
      * Set the output type of the category
      * @param outputType The output type
      * @return The category
@@ -78,6 +101,16 @@ public class GsCategory {
         return this;
     }
 
+    /**
+     * Set the background type of the category
+     * @param backgroundType The background type
+     * @return The category
+     */
+    public GsCategory setBackgroundType(@NotNull GsEnum.BackgroundType backgroundType) {
+        this.backgroundType = backgroundType;
+        return this;
+    }
+
     public String getId() {
         return id;
     }
@@ -89,6 +122,16 @@ public class GsCategory {
     @NotNull
     public ResourceLocation getBackground() {
         return background == null ? new ResourceLocation(Tags.MOD_ID, "textures/gui/gui_default.png") : background;
+    }
+
+    @NotNull
+    public ResourceLocation getBorder() {
+        return border == null ? new ResourceLocation(Tags.MOD_ID, "textures/gui/gui_default.png") : border;
+    }
+
+    @NotNull
+    public ResourceLocation getDecoration() {
+        return decoration == null ? new ResourceLocation(Tags.MOD_ID, "textures/gui/gui_decor.png") : decoration;
     }
 
     @NotNull
@@ -107,6 +150,11 @@ public class GsCategory {
     @NotNull
     public GsEnum.QueueType getQueueable() {
         return queueable == null ? GsEnum.QueueType.YES : queueable;
+    }
+
+    @NotNull
+    public GsEnum.BackgroundType getBackgroundType() {
+        return backgroundType == null ? GsEnum.BackgroundType.TILE : backgroundType;
     }
 
 }

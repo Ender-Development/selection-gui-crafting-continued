@@ -20,4 +20,12 @@ public class GsEnum {
             return this == YES;
         }
     }
+
+    /**
+     * How the background should be rendered
+     */
+    public enum BackgroundType {
+        SINGLE,
+        TILE
+    }
 }
