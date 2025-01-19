@@ -105,6 +105,12 @@ public class SgcCategory extends VirtualizedRegistry<GsCategory> {
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "category")
+        public CategoryBuilder setBackgroundType(String backgroundType) {
+            category.setBackgroundType(GsEnum.BackgroundType.valueOf(backgroundType));
+            return this;
+        }
+
         @Override
         public String getErrorMsg() {
             return "Encountered an error while building a category for " + Tags.MOD_ID;
