@@ -9,6 +9,7 @@ This class contains some of the worst code I have ever written.
 package io.enderdev.selectionguicrafting.gui;
 
 import io.enderdev.selectionguicrafting.Tags;
+import io.enderdev.selectionguicrafting.config.SelectionConfig;
 import io.enderdev.selectionguicrafting.network.SelectionMessageProcessRecipe;
 import io.enderdev.selectionguicrafting.network.SelectionPacketHandler;
 import io.enderdev.selectionguicrafting.registry.GsRecipe;
@@ -47,21 +48,18 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.enderdev.selectionguicrafting.config.SelectionConfig.disableCloseGUIbutton;
-
 public class GuiScreenCrafting extends GuiScreenDynamic {
     private GuiButton buttonClose;
     private GuiLabel label;
-    private final ResourceLocation guiBackground;
 
     public static final int ICON_DISTANCE = 24;
 
     // Close button position
     private final int CLOSE_BUTTON_WIDTH = 70;
     private final int CLOSE_BUTTON_HEIGHT = 20;
-    private final int CLOSE_BUTTON_OFFSET = 6;
+    private final int CLOSE_BUTTON_OFFSET = 12;
 
-    private final String recipeCategory;
+    private final GsCategory recipeCategory;
     private final float timeMultiplier;
     private final EntityPlayer player;
     private World world;
@@ -93,8 +91,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     public GuiScreenCrafting(GsCategory recipeCategory, float timeMultiplier, EntityPlayer player, World world) {
         super();
 
-        this.recipeCategory = recipeCategory.getDisplayName();
-        this.guiBackground = recipeCategory.getBackground();
+        this.recipeCategory = recipeCategory;
         this.timeMultiplier = timeMultiplier;
         this.player = player;
         this.world = world;
@@ -339,23 +336,20 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     // Called when GUI is opened or resized
     @Override
     public void initGui() {
-        String part1 = I18n.format("gui." + Tags.MOD_ID + ".title.select");
-        String part3 = I18n.format("gui." + Tags.MOD_ID + ".title.recipe");
-        String selectionguiTitle = part1 + " " + recipeCategory + " " + part3;
-
         int width1 = validRecipes.isEmpty() ? ICON_DISTANCE : ((cols * ICON_DISTANCE) + 16);
-        int width2 = ((fontRenderer.getStringWidth(selectionguiTitle) / 16) * 16) + 16;
+        int width2 = (int) (fontRenderer.getStringWidth(recipeCategory.getDisplayName()) * 1.5);
 
-        int guiHeight = 56 - (disableCloseGUIbutton ? CLOSE_BUTTON_HEIGHT : 0);
+        int guiBorder = 8;
+        int guiHeight = 56 - (SelectionConfig.CLIENT.disableCloseGUIbutton ? CLOSE_BUTTON_HEIGHT + 4 : 0);
         int final_height = guiHeight + rows * ICON_DISTANCE;
-        int final_height_offset = (final_height - 8) % 16 == 0 ? final_height : final_height + (final_height - 8) % 16;
+        int final_height_offset = (final_height - guiBorder*2) % 16 == 0 ? final_height : final_height + (final_height - guiBorder*2) % 16;
         int final_width = Math.max(width1, width2);
-        final_width_offset = (final_width - 8) % 16 == 0 ? final_width : final_width + (final_width - 8) % 16;
+        final_width_offset = (final_width - guiBorder*2) % 16 == 0 ? final_width : final_width + (final_width - guiBorder*2) % 16;
 
         // Update dynamic GUI size
-        super.updateContainerSize(final_width_offset, final_height_offset, guiBackground);
+        super.updateContainerSize(final_width_offset, final_height_offset, recipeCategory);
 
-        if (!disableCloseGUIbutton) {
+        if (!SelectionConfig.CLIENT.disableCloseGUIbutton) {
             // Add Close button
             int buttonX = (width / 2) - (CLOSE_BUTTON_WIDTH / 2);
             int buttonY = bottom - CLOSE_BUTTON_HEIGHT - CLOSE_BUTTON_OFFSET;
@@ -373,14 +367,9 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         // Clear existing labels
         labelList.clear();
 
-        // Draw title
-        String part1 = I18n.format("gui." + Tags.MOD_ID + ".title.select");
-        String part3 = I18n.format("gui." + Tags.MOD_ID + ".title.recipe");
-        String selectionguiTitle = part1 + " " + recipeCategory + " " + part3;
-
         // Title
-        labelList.add(label = new GuiLabel(fontRenderer, 0, (width / 2) - (fontRenderer.getStringWidth(selectionguiTitle) / 2), top + 12, 0, 0, 0xffffffff));
-        label.addLine(selectionguiTitle);
+        labelList.add(label = new GuiLabel(fontRenderer, 0, (width / 2) - (fontRenderer.getStringWidth(recipeCategory.getDisplayName()) / 2), top + 16, 0, 0, 0xffffffff));
+        label.addLine(recipeCategory.getDisplayName());
     }
 
     // Called when button/element is clicked
