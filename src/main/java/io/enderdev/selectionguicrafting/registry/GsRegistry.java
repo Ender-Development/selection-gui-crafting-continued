@@ -1,6 +1,5 @@
 package io.enderdev.selectionguicrafting.registry;
 
-import net.minecraft.init.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -48,11 +47,5 @@ public class GsRegistry {
 
     public static boolean removeRecipe(@NotNull String category, @NotNull ArrayList<GsOutput> output) {
         return recipes.removeIf(recipe -> recipe.getCategory().equals(category) && recipe.getOutputs().equals(output));
-    }
-
-    static {
-        // create the category and placeholder recipe for invalid recipes
-        registerCategory(new GsCategory().setId("invalid").setDisplayName("INVALID"));
-        registerRecipe(new GsRecipe().setCategory("invalid").addInput(Blocks.BARRIER).addTool(Blocks.BARRIER, 1.0f, 1.0f).addOutput(Blocks.BARRIER, 1.0f));
     }
 }
