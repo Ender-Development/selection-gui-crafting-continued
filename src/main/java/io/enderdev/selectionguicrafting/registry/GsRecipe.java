@@ -17,7 +17,7 @@ public class GsRecipe {
     private String category;
     private final ArrayList<Ingredient> inputs = new ArrayList<>();
     private final Map<ItemStack, Float> outputs = new HashMap<>();
-    private final Map<ItemStack, Float> tools = new HashMap<>();
+    private final ArrayList<GsTool> tools = new ArrayList<>();
 
     // Optional
     private Integer time;
@@ -130,15 +130,16 @@ public class GsRecipe {
      *
      * @param tool             The tool to add
      * @param damageMultiplier The damage multiplier for the tool
+     * @param timeMultiplier   The time multiplier for the tool
      * @return The recipe
      */
-    public GsRecipe addTool(@NotNull ItemStack tool, float damageMultiplier) {
-        tools.put(tool, damageMultiplier);
+    public GsRecipe addTool(@NotNull ItemStack tool, float damageMultiplier, float timeMultiplier) {
+        tools.add(new GsTool().setItem(tool).setDamageMultiplier(damageMultiplier).setTimeMultiplier(timeMultiplier));
         return this;
     }
 
-    public GsRecipe addTool(@NotNull Block tool, float damageMultiplier) {
-        tools.put(new ItemStack(tool), damageMultiplier);
+    public GsRecipe addTool(@NotNull Block tool, float damageMultiplier, float timeMultiplier) {
+        tools.add(new GsTool().setItem(new ItemStack(tool)).setDamageMultiplier(damageMultiplier).setTimeMultiplier(timeMultiplier));
         return this;
     }
 
@@ -215,8 +216,8 @@ public class GsRecipe {
      *
      * @return The valid tools for the recipe
      */
-    public ArrayList<ItemStack> getTools() {
-        return new ArrayList<>(tools.keySet());
+    public ArrayList<GsTool> getTools() {
+        return tools;
     }
 
     /**
@@ -225,8 +226,18 @@ public class GsRecipe {
      * @param tool The tool to get the damage multiplier for
      * @return The damage multiplier for the tool
      */
-    public float getDamageMultiplier(ItemStack tool) {
-        return tools.get(tool);
+    public float getDamageMultiplier(GsTool tool) {
+        return tool.getDamageMultiplier();
+    }
+
+    /**
+     * Get the time multiplier for a tool
+     *
+     * @param tool The tool to get the time multiplier for
+     * @return The time multiplier for the tool
+     */
+    public float getTimeMultiplier(GsTool tool) {
+        return tool.getTimeMultiplier();
     }
 
     /**

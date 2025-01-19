@@ -2,6 +2,7 @@ package io.enderdev.selectionguicrafting.gui;
 
 import io.enderdev.selectionguicrafting.registry.GsRecipe;
 import io.enderdev.selectionguicrafting.registry.GsRegistry;
+import io.enderdev.selectionguicrafting.registry.GsTool;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -31,7 +32,7 @@ public class ModGuiHandler implements IGuiHandler {
         float timeMultiplier = 0.0f;
 
         String recipeCategory = GsRegistry.getRecipes().stream()
-                .filter(recipe -> recipe.getTools().stream().map(ItemStack::getItem).anyMatch(item -> item == heldItemMainhand.getItem()))
+                .filter(recipe -> recipe.getTools().stream().map(GsTool::getItemStack).map(ItemStack::getItem).anyMatch(item -> item == heldItemMainhand.getItem()))
                 .filter(recipe -> recipe.getInputs().stream().map(Ingredient::getMatchingStacks)
                         .anyMatch(stacks -> Arrays.stream(stacks).anyMatch(stack -> stack.getItem() == heldStackOffhand.getItem())))
                 .map(GsRecipe::getCategory)

@@ -11,6 +11,7 @@ import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.registry.GsEnum;
 import io.enderdev.selectionguicrafting.registry.GsRecipe;
 import io.enderdev.selectionguicrafting.registry.GsRegistry;
+import io.enderdev.selectionguicrafting.registry.GsTool;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,7 +75,7 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
     @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example("item('minecraft:wool')"), description = "sgc.groovyscript.recipe.remove_by_tool")
     public boolean removeByTool(IIngredient tool) {
         return GsRegistry.getRecipes().removeIf(recipe -> {
-            if (recipe.getTools().stream().anyMatch(tool)) {
+            if (recipe.getTools().stream().map(GsTool::getItemStack).anyMatch(tool)) {
                 addBackup(recipe);
                 return true;
             }
@@ -131,8 +132,20 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
         }
 
         @RecipeBuilderMethodDescription(field = "recipe")
+        public RecipeBuilder tool(IIngredient tool, float damageMultiplier, float timeMultiplier) {
+            recipe.addTool(tool.getMatchingStacks()[0], damageMultiplier, timeMultiplier);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "recipe")
         public RecipeBuilder tool(IIngredient tool, float damageMultiplier) {
-            recipe.addTool(tool.getMatchingStacks()[0], damageMultiplier);
+            recipe.addTool(tool.getMatchingStacks()[0], damageMultiplier, 1.0f);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "recipe")
+        public RecipeBuilder tool(IIngredient tool) {
+            recipe.addTool(tool.getMatchingStacks()[0], 1.0f, 1.0f);
             return this;
         }
 

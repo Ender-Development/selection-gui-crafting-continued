@@ -54,6 +54,6 @@ public class GsRegistry {
     static {
         // create the category and placeholder recipe for invalid recipes
         registerCategory(new GsCategory().setId("invalid").setDisplayName("INVALID"));
-        registerRecipe(new GsRecipe().setCategory("invalid").addInput(Blocks.BARRIER).addTool(Blocks.BARRIER, 1.0f).addOutput(Blocks.BARRIER, 1.0f));
+        registerRecipe(new GsRecipe().setCategory("invalid").addInput(Blocks.BARRIER).addTool(Blocks.BARRIER, 1.0f, 1.0f).addOutput(Blocks.BARRIER, 1.0f));
     }
 }
