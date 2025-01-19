@@ -233,7 +233,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             drawTexturedModalRect(xPos - 3, yPos - 3, sprite, 32, 32);
 
 
-            ItemStack recipeItem = recipe.getOutputs().get(0);
+            ItemStack recipeItem = recipe.getOutputs().get(0).getItemStack();
             RenderHelper.enableGUIStandardItemLighting();
             itemRender.renderItemIntoGUI(recipeItem, xPos, yPos);
             itemRender.renderItemOverlayIntoGUI(this.fontRenderer, recipeItem, xPos, yPos, null);
@@ -326,7 +326,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                         recipeSelectedIndex = i / 4;
                         startTime = Minecraft.getSystemTime();
 
-                        System.out.println("Selected recipe: " + validRecipes.get(i / 4).getOutputs().get(0).getDisplayName());
+                        System.out.println("Selected recipe: " + validRecipes.get(i / 4).getOutputs().get(0).getItemStack().getDisplayName());
                         System.out.println("Start time: " + Minecraft.getSystemTime());
                         break;
                     }

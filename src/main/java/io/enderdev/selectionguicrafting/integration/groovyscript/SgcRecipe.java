@@ -8,10 +8,7 @@ import com.cleanroommc.groovyscript.helper.SimpleObjectStream;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import io.enderdev.selectionguicrafting.Tags;
-import io.enderdev.selectionguicrafting.registry.GsEnum;
-import io.enderdev.selectionguicrafting.registry.GsRecipe;
-import io.enderdev.selectionguicrafting.registry.GsRegistry;
-import io.enderdev.selectionguicrafting.registry.GsTool;
+import io.enderdev.selectionguicrafting.registry.*;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,7 +50,7 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
     @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example("item('minecraft:stone')"))
     public boolean removeByOutput(IIngredient output) {
         return GsRegistry.getRecipes().removeIf(recipe -> {
-            if (recipe.getOutputs().stream().anyMatch(output)) {
+            if (recipe.getOutputs().stream().map(GsOutput::getItemStack).anyMatch(output)) {
                 addBackup(recipe);
                 return true;
             }
