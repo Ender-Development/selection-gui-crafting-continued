@@ -32,7 +32,6 @@ public abstract class GuiScreenDynamic extends GuiScreen {
     private ResourceLocation decorationTexture;
     private GsEnum.BackgroundType backgroundType;
 
-    // Update GUI size
     // Must be increment of 16!
     void updateContainerSize(int guiWidth, int guiHeight, GsCategory category) {
         // Update container size
@@ -109,9 +108,11 @@ public abstract class GuiScreenDynamic extends GuiScreen {
                 }
             }
         }
-        if (backgroundType == GsEnum.BackgroundType.SINGLE) {
-            // Draw center tiles
+        if (backgroundType == GsEnum.BackgroundType.SINGLE_STRETCH) {
             drawScaledCustomSizeModalRect(left + 8, top + 8, 0, 0, textureWidth, textureHeight, guiWidth - 16, guiHeight - 16, textureWidth, textureHeight);
+        }
+        if (backgroundType == GsEnum.BackgroundType.SINGLE_CUT) {
+            // TODO: Implement
         }
         GlStateManager.popMatrix();
 

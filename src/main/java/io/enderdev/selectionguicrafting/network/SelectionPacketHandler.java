@@ -1,6 +1,5 @@
 package io.enderdev.selectionguicrafting.network;
 
-import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import io.enderdev.selectionguicrafting.Tags;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;

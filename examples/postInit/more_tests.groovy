@@ -16,7 +16,7 @@ mods.selectionguicrafting.sgc_category.createCategory()
         .id('blub')
         .displayName('Pick your recipe')
         .background('selectionguicrafting:textures/gui/gui_full.png')
-        .setBackgroundType('SINGLE')
+        .setBackgroundType('SINGLE_STRETCH')
         .register()
 
 mods.selectionguicrafting.sgc_recipe.createRecipe()

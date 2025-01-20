@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-public class ClientProxy extends CommonProxy {
+public class ClientProxy extends CommonProxy implements IProxy {
 
     @Override
     public void preInit(FMLPreInitializationEvent preEvent) {
@@ -22,7 +22,6 @@ public class ClientProxy extends CommonProxy {
     public void postInit(FMLPostInitializationEvent postEvent) {
         super.postInit(postEvent);
     }
-
 
     @Override
     public EntityPlayer getPlayerClient() {

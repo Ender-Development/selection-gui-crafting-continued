@@ -25,7 +25,8 @@ public class GsEnum {
      * How the background should be rendered
      */
     public enum BackgroundType {
-        SINGLE,
+        SINGLE_STRETCH,
+        SINGLE_CUT,
         TILE
     }
 

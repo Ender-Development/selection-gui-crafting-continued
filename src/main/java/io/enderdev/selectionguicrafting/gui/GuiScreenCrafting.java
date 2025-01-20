@@ -22,8 +22,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -133,19 +131,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         }
 
         if (craftingProgress >= 1.0f) {
-
-            //SelectionPacketHandler.SELECTION_NETWORK_WRAPPER.sendToServer(new SelectionMessageGiveItem(recipeCategory.recipes[recipeSelectedIndex].outputs, player.getName()));
-
             SelectionPacketHandler.SELECTION_NETWORK_WRAPPER.sendToServer(new SelectionMessageProcessRecipe(validRecipes.get(0).getCategory(), recipeSelectedIndex, player.getName()));
-
-            craftingProgress = 0.0f;
-            recipeSelected = false;
-            recipeSelectedIndex = -1;
-            lineCoordX = 32000;
-            lineCoordY = 32000;
-            lineHeight = 32000;
-            recipeTime = -1;
-            startTime = -1;
 
             List<GsSound> sounds = selectedRecipe.getSounds() == null || selectedRecipe.getSounds().isEmpty() ? recipeCategory.getSounds() : selectedRecipe.getSounds();
             GsEnum.SoundType soundType = selectedRecipe.getSoundType() != null ? selectedRecipe.getSoundType() : recipeCategory.getSoundType();
@@ -161,6 +147,16 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             if (mc.currentScreen == null) {
                 mc.setIngameFocus();
             }
+
+            selectedRecipe = null;
+            craftingProgress = 0.0f;
+            recipeSelected = false;
+            recipeSelectedIndex = -1;
+            lineCoordX = 32000;
+            lineCoordY = 32000;
+            lineHeight = 32000;
+            recipeTime = -1;
+            startTime = -1;
         }
     }
 
@@ -200,11 +196,9 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             slotCoordinates.add((i * 4) + 2, xPos + 16);
             slotCoordinates.add((i * 4) + 3, yPos + 16);
 
-            ResourceLocation itemBackground = new ResourceLocation(Tags.MOD_ID, "gui/itembackground");
-            GlStateManager.color(1F, 1F, 1F);
-            TextureAtlasSprite sprite = mc.getTextureMapBlocks().getAtlasSprite(itemBackground.toString());
-            mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            drawTexturedModalRect(xPos - 3, yPos - 3, sprite, 32, 32);
+            ResourceLocation itemBackground = new ResourceLocation(Tags.MOD_ID, "textures/gui/itembackground.png");
+            mc.getTextureManager().bindTexture(itemBackground);
+            drawScaledCustomSizeModalRect(xPos - 3, yPos - 3, 0, 0, 32, 32, 32, 32, 32, 32);
 
 
             ItemStack recipeItem = recipe.getOutputs().get(0).getItemStack();
@@ -273,7 +267,6 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 Color color = new Color(0, Math.min(craftingProgress * 0.8f + 0.2f, 1.0f), 0);
                 drawGradientRectHorizontal(lineCoordX, lineCoordY, lineCoordX + recipeProgress, lineHeight, Color.BLACK.getRGB(), /*endColorG*/ color.getRGB());
             }
-
             i++;
         }
     }
@@ -299,6 +292,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                         recipeSelected = true;
                         recipeSelectedIndex = i / 4;
                         startTime = Minecraft.getSystemTime();
+
                         selectedRecipe = validRecipes.get(recipeSelectedIndex);
                         GsTool tool = selectedRecipe.getTool(player.getHeldItemMainhand());
                         timeMultiplier = tool != null ? tool.getTimeMultiplier() : 1.0f;
@@ -319,9 +313,9 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         int guiBorder = 8;
         int guiHeight = 56 - (SelectionConfig.CLIENT.disableCloseGUIbutton ? CLOSE_BUTTON_HEIGHT + 4 : 0);
         int final_height = guiHeight + rows * ICON_DISTANCE;
-        int final_height_offset = (final_height - guiBorder*2) % 16 == 0 ? final_height : final_height + (final_height - guiBorder*2) % 16;
+        int final_height_offset = (final_height - guiBorder * 2) % 16 == 0 ? final_height : final_height + (final_height - guiBorder * 2) % 16;
         int final_width = Math.max(width1, width2);
-        final_width_offset = (final_width - guiBorder*2) % 16 == 0 ? final_width : final_width + (final_width - guiBorder*2) % 16;
+        final_width_offset = (final_width - guiBorder * 2) % 16 == 0 ? final_width : final_width + (final_width - guiBorder * 2) % 16;
 
         // Update dynamic GUI size
         super.updateContainerSize(final_width_offset, final_height_offset, recipeCategory);
@@ -415,16 +409,5 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         GlStateManager.disableBlend();
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
-    }
-
-
-    // Get Key by value
-    public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
-        for (Map.Entry<T, E> entry : map.entrySet()) {
-            if (Objects.equals(value, entry.getValue())) {
-                return entry.getKey();
-            }
-        }
-        return null;
     }
 }
