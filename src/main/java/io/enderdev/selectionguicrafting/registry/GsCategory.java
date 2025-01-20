@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class GsCategory {
-    private final ArrayList<ResourceLocation> sounds = new ArrayList<>();
+    private final ArrayList<GsSound> sounds = new ArrayList<>();
 
     private String id;
     private String displayName;
@@ -17,6 +17,7 @@ public class GsCategory {
     private GsEnum.BackgroundType backgroundType;
     private GsEnum.OutputType outputType;
     private GsEnum.QueueType queueable;
+    private GsEnum.SoundType soundType;
 
     public GsCategory() {
     }
@@ -46,8 +47,8 @@ public class GsCategory {
      * @param sound The sound to add
      * @return The category
      */
-    public GsCategory addSound(@NotNull ResourceLocation sound) {
-        sounds.add(sound);
+    public GsCategory addSound(@NotNull ResourceLocation sound, float volume, float pitch) {
+        sounds.add(new GsSound(sound, volume, pitch));
         return this;
     }
 
@@ -111,6 +112,16 @@ public class GsCategory {
         return this;
     }
 
+    /**
+     * Set the sound type of the category
+     * @param soundType The sound type
+     * @return The category
+     */
+    public GsCategory setSoundType(@NotNull GsEnum.SoundType soundType) {
+        this.soundType = soundType;
+        return this;
+    }
+
     public String getId() {
         return id;
     }
@@ -135,9 +146,9 @@ public class GsCategory {
     }
 
     @NotNull
-    public ArrayList<ResourceLocation> getSounds() {
+    public ArrayList<GsSound> getSounds() {
         if (sounds.isEmpty()) {
-            sounds.add(new ResourceLocation("minecraft", "ui.button.click"));
+            sounds.add(new GsSound(new ResourceLocation("minecraft", "block.anvil.place"), 0.1f, 1));
         }
         return sounds;
     }
@@ -155,6 +166,11 @@ public class GsCategory {
     @NotNull
     public GsEnum.BackgroundType getBackgroundType() {
         return backgroundType == null ? GsEnum.BackgroundType.TILE : backgroundType;
+    }
+
+    @NotNull
+    public GsEnum.SoundType getSoundType() {
+        return soundType == null ? GsEnum.SoundType.RANDOM : soundType;
     }
 
 }

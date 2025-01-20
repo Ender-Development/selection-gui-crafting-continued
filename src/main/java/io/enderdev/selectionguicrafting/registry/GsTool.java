@@ -3,6 +3,8 @@ package io.enderdev.selectionguicrafting.registry;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class GsTool {
     private final ItemStack item;
     private final float damageMultiplier;
@@ -25,5 +27,15 @@ public class GsTool {
 
     public float getTimeMultiplier() {
         return timeMultiplier == 0 ? 1.0f : timeMultiplier;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof GsTool && item.isItemEqual(((GsTool) obj).item) && damageMultiplier == ((GsTool) obj).damageMultiplier && timeMultiplier == ((GsTool) obj).timeMultiplier;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(item, damageMultiplier, timeMultiplier);
     }
 }

@@ -1,14 +1,17 @@
 package io.enderdev.selectionguicrafting.registry;
 
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GsRecipe {
     // Required
@@ -24,9 +27,10 @@ public class GsRecipe {
     private Integer amount;
 
     // Override category
-    private final ArrayList<ResourceLocation> sounds = new ArrayList<>();
+    private final ArrayList<GsSound> sounds = new ArrayList<>();
     private GsEnum.OutputType outputType;
     private GsEnum.QueueType queueable;
+    private GsEnum.SoundType soundType;
 
     public GsRecipe() {
     }
@@ -65,6 +69,17 @@ public class GsRecipe {
     }
 
     /**
+     * Set the sound type of the recipe
+     *
+     * @param soundType The sound type
+     * @return The recipe
+     */
+    public GsRecipe setSoundType(@NotNull GsEnum.SoundType soundType) {
+        this.soundType = soundType;
+        return this;
+    }
+
+    /**
      * Add an input to the recipe
      *
      * @param input The input to add
@@ -96,8 +111,8 @@ public class GsRecipe {
      * @param sound The sound to add
      * @return The recipe
      */
-    public GsRecipe addSound(@NotNull ResourceLocation sound) {
-        sounds.add(sound);
+    public GsRecipe addSound(@NotNull ResourceLocation sound, float volume, float pitch) {
+        sounds.add(new GsSound(sound, volume, pitch));
         return this;
     }
 
@@ -132,12 +147,16 @@ public class GsRecipe {
      * @return The recipe
      */
     public GsRecipe addTool(@NotNull ItemStack tool, float damageMultiplier, float timeMultiplier) {
+        if (tools.stream().anyMatch(gsTool -> gsTool.getItemStack().isItemEqual(tool))) {
+            SelectionGuiCrafting.LOGGER.warn("Tool {} was already added to recipe", tool);
+            return this;
+        }
         tools.add(new GsTool(tool, damageMultiplier, timeMultiplier));
         return this;
     }
 
     public GsRecipe addTool(@NotNull Block tool, float damageMultiplier, float timeMultiplier) {
-        tools.add(new GsTool(new ItemStack(tool), damageMultiplier, timeMultiplier));
+        addTool(new ItemStack(tool), damageMultiplier, timeMultiplier);
         return this;
     }
 
@@ -219,6 +238,22 @@ public class GsRecipe {
     }
 
     /**
+     * Get a tool by item stack
+     *
+     * @param itemStack The item stack to get the tool for
+     * @return The tool for the item stack
+     */
+    @Nullable
+    public GsTool getTool(ItemStack itemStack) {
+        return tools.stream().filter(tool -> {
+            Item item = tool.getItemStack().getItem();
+            int meta = tool.getItemStack().getMetadata();
+            NBTTagCompound tag = tool.getItemStack().getTagCompound();
+            return item == itemStack.getItem() && (tool.getItemStack().isItemStackDamageable() || meta == itemStack.getMetadata()) && tag == itemStack.getTagCompound();
+        }).findFirst().orElse(null);
+    }
+
+    /**
      * Get the damage multiplier for a tool
      *
      * @param tool The tool to get the damage multiplier for
@@ -275,7 +310,7 @@ public class GsRecipe {
     }
 
     @Nullable
-    public ArrayList<ResourceLocation> getSounds() {
+    public ArrayList<GsSound> getSounds() {
         return sounds;
     }
 
@@ -287,5 +322,49 @@ public class GsRecipe {
     @Nullable
     public GsEnum.QueueType getQueueable() {
         return queueable;
+    }
+
+    @Nullable
+    public GsEnum.SoundType getSoundType() {
+        return soundType;
+    }
+
+    /**
+     * Check if a tool is valid for the recipe, it checks the item, metadata and tag are the same as well as
+     * if the durability ({@link #setDurability(int)}) is less than the remaining durability of the tool.
+     * If the tool is not a damageable item, it also checks the stack size.
+     *
+     * @param itemStack The tool to check
+     * @return If the tool is valid for the recipe
+     */
+    public boolean isToolValid(ItemStack itemStack) {
+        return tools.stream().map(GsTool::getItemStack).anyMatch(tool -> {
+            Item item = tool.getItem();
+            int meta = tool.getMetadata();
+            int stackSize = tool.getCount();
+            NBTTagCompound tag = tool.getTagCompound();
+            if (itemStack.isItemStackDamageable()) {
+                int remainingDurability = itemStack.getMaxDamage() - itemStack.getItemDamage();
+                return item == itemStack.getItem() && getDurability() <= remainingDurability && stackSize == 1 && tag == itemStack.getTagCompound();
+            } else {
+                return item == itemStack.getItem() && meta == itemStack.getMetadata() && stackSize <= itemStack.getCount() && tag == itemStack.getTagCompound();
+            }
+        });
+    }
+
+    /**
+     * Check if an input is valid for the recipe, it checks the item, metadata and tag a re the same as well as if the
+     * stack size is more than the amount set with {@link #setAmount(int)}.
+     *
+     * @param itemStack The input to check
+     * @return If the input is valid for the recipe
+     */
+    public boolean isInputValid(ItemStack itemStack) {
+        return inputs.stream().map(Ingredient::getMatchingStacks).flatMap(Arrays::stream).anyMatch(input -> {
+            Item item = input.getItem();
+            int meta = input.getMetadata();
+            NBTTagCompound tag = input.getTagCompound();
+            return item == itemStack.getItem() && meta == itemStack.getMetadata() && getAmount() <= itemStack.getCount() && tag == itemStack.getTagCompound();
+        });
     }
 }

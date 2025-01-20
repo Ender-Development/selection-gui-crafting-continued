@@ -1,5 +1,6 @@
 package io.enderdev.selectionguicrafting.registry;
 
+import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -39,6 +40,10 @@ public class GsRegistry {
 
     public static ArrayList<GsRecipe> getRecipes() {
         return recipes;
+    }
+
+    public static ArrayList<GsRecipe> getValidRecipes(@NotNull GsCategory category, @NotNull ItemStack tool) {
+        return GsRegistry.getRecipesForCategory(category).stream().filter(recipe -> recipe.getTools().stream().map(GsTool::getItemStack).anyMatch(itemStack -> itemStack.isItemEqualIgnoreDurability(tool))).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static boolean removeCategory(@NotNull String id) {
