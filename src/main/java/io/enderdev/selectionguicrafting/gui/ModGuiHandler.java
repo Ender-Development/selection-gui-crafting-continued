@@ -29,8 +29,6 @@ public class ModGuiHandler implements IGuiHandler {
         ItemStack heldItemMainhand = player.getHeldItemMainhand();
         ItemStack heldStackOffhand = player.getHeldItemOffhand();
 
-        float timeMultiplier = 0.0f;
-
         String recipeCategory = GsRegistry.getRecipes().stream()
                 .filter(recipe -> recipe.getTools().stream().map(GsTool::getItemStack).map(ItemStack::getItem).anyMatch(item -> item == heldItemMainhand.getItem()))
                 .filter(recipe -> recipe.getInputs().stream().map(Ingredient::getMatchingStacks)
@@ -39,7 +37,7 @@ public class ModGuiHandler implements IGuiHandler {
                 .findFirst().orElse("invalid");
 
         if (ID == CRAFTING_GUI_ID) {
-            return craftingGui = new GuiScreenCrafting(GsRegistry.getCategory(recipeCategory), timeMultiplier, player, world);
+            return craftingGui = new GuiScreenCrafting(GsRegistry.getCategory(recipeCategory), player, world);
         }
 
         return null;
