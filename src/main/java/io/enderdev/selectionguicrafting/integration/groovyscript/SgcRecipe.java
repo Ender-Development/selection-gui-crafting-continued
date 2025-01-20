@@ -160,7 +160,19 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
 
         @RecipeBuilderMethodDescription(field = "recipe")
         public RecipeBuilder sound(String sound) {
-            recipe.addSound(new ResourceLocation(sound));
+            recipe.addSound(new ResourceLocation(sound), 1, 1);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "recipe")
+        public RecipeBuilder sound(String sound, float volume) {
+            recipe.addSound(new ResourceLocation(sound), volume, 1);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "recipe")
+        public RecipeBuilder sound(String sound, float volume, float pitch) {
+            recipe.addSound(new ResourceLocation(sound), volume, pitch);
             return this;
         }
 

@@ -28,4 +28,12 @@ public class GsEnum {
         SINGLE,
         TILE
     }
+
+    /**
+     * How the sound should be played
+     */
+    public enum SoundType {
+        RANDOM,
+        COMBINED
+    }
 }

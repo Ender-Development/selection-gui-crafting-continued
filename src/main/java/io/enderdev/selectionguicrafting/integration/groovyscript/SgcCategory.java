@@ -89,7 +89,19 @@ public class SgcCategory extends VirtualizedRegistry<GsCategory> {
 
         @RecipeBuilderMethodDescription(field = "category")
         public CategoryBuilder addSound(String sound) {
-            category.addSound(new ResourceLocation(sound));
+            category.addSound(new ResourceLocation(sound), 1, 1);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "category")
+        public CategoryBuilder addSound(String sound, float volume) {
+            category.addSound(new ResourceLocation(sound),volume, 1);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "category")
+        public CategoryBuilder addSound(String sound, float volume, float pitch) {
+            category.addSound(new ResourceLocation(sound), volume, pitch);
             return this;
         }
 
