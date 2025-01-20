@@ -12,10 +12,7 @@ import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.config.SelectionConfig;
 import io.enderdev.selectionguicrafting.network.SelectionMessageProcessRecipe;
 import io.enderdev.selectionguicrafting.network.SelectionPacketHandler;
-import io.enderdev.selectionguicrafting.registry.GsRecipe;
-import io.enderdev.selectionguicrafting.registry.GsCategory;
-import io.enderdev.selectionguicrafting.registry.GsRegistry;
-import io.enderdev.selectionguicrafting.registry.GsTool;
+import io.enderdev.selectionguicrafting.registry.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -29,16 +26,14 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,7 +41,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GuiScreenCrafting extends GuiScreenDynamic {
     private GuiButton buttonClose;
@@ -60,7 +54,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     private final int CLOSE_BUTTON_OFFSET = 12;
 
     private final GsCategory recipeCategory;
-    private final float timeMultiplier;
+    private float timeMultiplier;
     private final EntityPlayer player;
     private World world;
 
@@ -84,19 +78,20 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     private int final_width_offset;
 
     private GsRecipe hoveredRecipe;
+    private GsRecipe selectedRecipe;
+    private Random random = new Random();
 
     private boolean wrongInput = false;
     private boolean wrongAmount = false;
 
-    public GuiScreenCrafting(GsCategory recipeCategory, float timeMultiplier, EntityPlayer player, World world) {
+    public GuiScreenCrafting(GsCategory recipeCategory, EntityPlayer player, World world) {
         super();
 
         this.recipeCategory = recipeCategory;
-        this.timeMultiplier = timeMultiplier;
         this.player = player;
         this.world = world;
 
-        this.validRecipes = GsRegistry.getRecipesForCategory(recipeCategory).stream().filter(recipe -> recipe.getTools().stream().map(GsTool::getItemStack).anyMatch(itemStack -> itemStack.isItemEqualIgnoreDurability(player.getHeldItemMainhand()))).collect(Collectors.toCollection(ArrayList::new));
+        this.validRecipes = GsRegistry.getValidRecipes(recipeCategory, player.getHeldItemMainhand());
         calculateRowsCols();
     }
 
@@ -152,6 +147,15 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             recipeTime = -1;
             startTime = -1;
 
+            List<GsSound> sounds = selectedRecipe.getSounds() == null || selectedRecipe.getSounds().isEmpty() ? recipeCategory.getSounds() : selectedRecipe.getSounds();
+            GsEnum.SoundType soundType = selectedRecipe.getSoundType() != null ? selectedRecipe.getSoundType() : recipeCategory.getSoundType();
+            if (soundType == GsEnum.SoundType.RANDOM) {
+                GsSound sound = sounds.get(random.nextInt(sounds.size()));
+                player.playSound(new SoundEvent(sound.getSound()), sound.getVolume(), sound.getPitch());
+            } else {
+                sounds.forEach(sound -> player.playSound(new SoundEvent(sound.getSound()), sound.getVolume(), sound.getPitch()));
+            }
+
             // Close GUI
             mc.player.closeScreen();
             if (mc.currentScreen == null) {
@@ -172,33 +176,6 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         }
         super.drawHoveringText(textLines, x, y, font);
     }
-
-
-    private void giveItemToPlayer(ItemStack itemstack) {
-        boolean flag = player.inventory.addItemStackToInventory(itemstack);
-
-        if (flag) {
-            player.world.playSound(player, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-            player.inventoryContainer.detectAndSendChanges();
-        }
-
-        if (flag && itemstack.isEmpty()) {
-            itemstack.setCount(1);
-            EntityItem entityitem1 = player.dropItem(itemstack, false);
-
-            if (entityitem1 != null) {
-                entityitem1.makeFakeItem();
-            }
-        } else {
-            EntityItem entityitem = player.dropItem(itemstack, false);
-
-            if (entityitem != null) {
-                entityitem.setNoPickupDelay();
-                entityitem.setOwner(player.getName());
-            }
-        }
-    }
-
 
     private void drawRecipes(int mouseX, int mouseY) {
 
@@ -322,9 +299,9 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                         recipeSelected = true;
                         recipeSelectedIndex = i / 4;
                         startTime = Minecraft.getSystemTime();
-
-                        System.out.println("Selected recipe: " + validRecipes.get(i / 4).getOutputs().get(0).getItemStack().getDisplayName());
-                        System.out.println("Start time: " + Minecraft.getSystemTime());
+                        selectedRecipe = validRecipes.get(recipeSelectedIndex);
+                        GsTool tool = selectedRecipe.getTool(player.getHeldItemMainhand());
+                        timeMultiplier = tool != null ? tool.getTimeMultiplier() : 1.0f;
                         break;
                     }
                 }
