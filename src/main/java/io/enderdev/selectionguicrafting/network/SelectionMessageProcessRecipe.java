@@ -107,7 +107,7 @@ public class SelectionMessageProcessRecipe implements IMessage {
                 }
             });
 
-            stackOffhand.shrink(recipe.getAmount());
+            stackOffhand.shrink(recipe.getInputStackSize(stackOffhand));
 
             if (itemMainhand.isItemStackDamageable()) {
                 int toolDamage = (int) (recipe.getDurability() * tool.getDamageMultiplier());

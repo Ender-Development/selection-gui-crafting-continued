@@ -92,7 +92,7 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
     }
 
     @RecipeBuilderDescription(example = {
-            @Example(".category('dummy_category').input(item('minecraft:stone')).output(item('minecraft:cobblestone'), 0.5f).tool(item('minecraft:wooden_pickaxe'), 1.0f).time(200).xp(1).sound('minecraft:block.anvil.land')")
+            @Example(".category('dummy_category').input(item('minecraft:stone') * 3).output(item('minecraft:cobblestone') * 2, 0.5f).tool(item('minecraft:wooden_pickaxe'), 1.0f).time(200).xp(1).sound('minecraft:block.anvil.land')")
     })
     public RecipeBuilder createRecipe() {
         return new RecipeBuilder();
@@ -113,12 +113,6 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
         @RecipeBuilderMethodDescription(field = "recipe")
         public RecipeBuilder durability(int durability) {
             recipe.setDurability(durability);
-            return this;
-        }
-
-        @RecipeBuilderMethodDescription(field = "recipe")
-        public RecipeBuilder consume(int amount) {
-            recipe.setAmount(amount);
             return this;
         }
 

@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 @SuppressWarnings("UnusedReturnValue")
 public class GsRecipe {
@@ -26,7 +27,6 @@ public class GsRecipe {
     private Integer time;
     private Integer xp;
     private Integer durability;
-    private Integer amount;
 
     // Override category
     private final ArrayList<GsSound> sounds = new ArrayList<>();
@@ -221,17 +221,6 @@ public class GsRecipe {
         return this;
     }
 
-    /**
-     * Set the amount of inputs to be consumed
-     *
-     * @param amount The amount of inputs to be consumed
-     * @return The recipe
-     */
-    public GsRecipe setAmount(int amount) {
-        this.amount = amount;
-        return this;
-    }
-
     public String getCategory() {
         return category;
     }
@@ -239,6 +228,15 @@ public class GsRecipe {
     @NotNull
     public ArrayList<Ingredient> getInputs() {
         return inputs;
+    }
+
+    @Nullable
+    public Ingredient getInput(ItemStack itemStack) {
+        return inputs.stream().filter(ingredient -> ingredient.apply(itemStack)).findFirst().orElse(null);
+    }
+
+    public int getInputStackSize(ItemStack itemStack) {
+        return Objects.requireNonNull(getInput(itemStack)).getMatchingStacks()[0].getCount();
     }
 
     @NotNull
@@ -328,15 +326,6 @@ public class GsRecipe {
         return durability == null ? 0 : durability;
     }
 
-    /**
-     * Get the amount of inputs to be consumed
-     *
-     * @return The amount of inputs to be consumed
-     */
-    public int getAmount() {
-        return amount == null ? 1 : amount;
-    }
-
     @Nullable
     public ArrayList<GsSound> getSounds() {
         return sounds;
@@ -407,7 +396,7 @@ public class GsRecipe {
             Item item = input.getItem();
             int meta = input.getMetadata();
             NBTTagCompound tag = input.getTagCompound();
-            return item == itemStack.getItem() && meta == itemStack.getMetadata() && getAmount() <= itemStack.getCount() && tag == itemStack.getTagCompound();
+            return item == itemStack.getItem() && meta == itemStack.getMetadata() && input.getCount() <= itemStack.getCount() && tag == itemStack.getTagCompound();
         });
     }
 }

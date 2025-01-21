@@ -49,7 +49,7 @@ public class GsGuiWrapper implements IRecipeWrapper {
 
         input = recipe.getInputs().stream().map(Ingredient::getMatchingStacks).flatMap(Arrays::stream).map(itemStack -> {
             ItemStack stack = new ItemStack(itemStack.getItem());
-            stack.setCount(recipe.getAmount());
+            stack.setCount(itemStack.getCount());
             stack.setItemDamage(itemStack.getItemDamage());
             stack.setTagCompound(itemStack.getTagCompound());
             return stack;
