@@ -8,3 +8,37 @@ gui.selectionguicrafting.correct_amount=§a§oConsume: %s
 jei.selectionguicrafting.category=Selection GUI Crafting
 
 config.selectionguicrafting.client=Client
+
+groovyscript.wiki.selectionguicrafting.sgc_category.title=Crafting Categrory
+groovyscript.wiki.selectionguicrafting.sgc_category.description=All recipes in the mod are divided into categories. Each category has its own set of recipes.
+groovyscript.wiki.selectionguicrafting.sgc_category.id.value=The Category ID, must be unique.
+groovyscript.wiki.selectionguicrafting.sgc_category.frame.value=The path to the frame texture.
+groovyscript.wiki.selectionguicrafting.sgc_category.border.value=The path to the border texture.
+groovyscript.wiki.selectionguicrafting.sgc_category.sounds.value=The sounds that will be played when the recipe is crafted.
+groovyscript.wiki.selectionguicrafting.sgc_category.particles.value=The particles that will be spawned when the recipe is crafted.
+groovyscript.wiki.selectionguicrafting.sgc_category.queueable.value=If the recipe can be queued.
+groovyscript.wiki.selectionguicrafting.sgc_category.soundType.value=How the sounds will be played.
+groovyscript.wiki.selectionguicrafting.sgc_category.background.value=The path to the background texture.
+groovyscript.wiki.selectionguicrafting.sgc_category.decoration.value=The path to the decoration texture.
+groovyscript.wiki.selectionguicrafting.sgc_category.outputType.value=How the output will be handed to the player.
+groovyscript.wiki.selectionguicrafting.sgc_category.displayName.value=The display name of the category.
+groovyscript.wiki.selectionguicrafting.sgc_category.progressBar.value=The path to the progress bar texture.
+groovyscript.wiki.selectionguicrafting.sgc_category.backgroundType.value=How the background will be rendered.
+groovyscript.wiki.selectionguicrafting.sgc_category.streamCategories=A stream of all categories.
+
+groovyscript.wiki.selectionguicrafting.sgc_recipe.title=Crafting Recipe
+groovyscript.wiki.selectionguicrafting.sgc_recipe.description=The recipe that will be displayed in the GUI.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.xp.value=The amount of XP that will be consumed. Overrides the category XP.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.time.value=The time it takes to craft the recipe.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.tool.value=The tool that will be used to craft the recipe.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.frame.value=The path to the frame texture.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.input.value=The input items that are required to craft the recipe.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.output.value=The output items that will be given to the player.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.sounds.value=The sounds that will be played when the recipe is crafted. Overrides the category sounds.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.category.value=The category that the recipe belongs to.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.particles.value=The particles that will be spawned when the recipe is crafted. Overrides the category particles.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.queueable.value=If the recipe can be queued. Overrides the category queueable.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.soundType.value=How the sounds will be played. Overrides the category soundType.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.durability.value=The durability that will be consumed. Tools can be tweaked individually with the multiplier.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.outputType.value=How the output will be handed to the player. Overrides the category outputType.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.progressBar.value=The path to the progress bar texture. Overrides the category progressBar.

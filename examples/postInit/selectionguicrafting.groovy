@@ -4,8 +4,8 @@
 
 log.info 'mod \'selectionguicrafting\' detected, running script'
 
-// groovyscript.wiki.selectionguicrafting.sgc_category.title:
-// groovyscript.wiki.selectionguicrafting.sgc_category.description.
+// Crafting Categrory:
+// All recipes in the mod are divided into categories. Each category has its own set of recipes.
 
 mods.selectionguicrafting.sgc_category.removeByName('dummy_category_1')
 // mods.selectionguicrafting.sgc_category.removeAll()
@@ -24,8 +24,8 @@ mods.selectionguicrafting.sgc_category.newCategory()
     .register()
 
 
-// groovyscript.wiki.selectionguicrafting.sgc_recipe.title:
-// groovyscript.wiki.selectionguicrafting.sgc_recipe.description.
+// Crafting Recipe:
+// The recipe that will be displayed in the GUI.
 
 // mods.selectionguicrafting.sgc_recipe.removeByCategory('dummy_category')
 mods.selectionguicrafting.sgc_recipe.removeByInput(item('minecraft:cobblestone'))
