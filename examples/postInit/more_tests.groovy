@@ -1,7 +1,7 @@
 mods.selectionguicrafting.sgc_recipe.createRecipe()
         .category('dummy_category')
         .input(item('minecraft:stone') * 32)
-        .output(item('minecraft:diamond') * 5, 0.5f)
+        .output(item('minecraft:diamond') * 50, 0.5f)
         .output(item('minecraft:clay') * 2, 0.1f)
         .tool(item('minecraft:wooden_pickaxe'), 1.0f)
         .tool(item('minecraft:diamond_pickaxe'), 10.0f, 10.0f)
