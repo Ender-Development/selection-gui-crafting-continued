@@ -81,6 +81,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
     private boolean wrongInput = false;
     private boolean wrongAmount = false;
+    private boolean correctAmount = false;
 
     public GuiScreenCrafting(GsCategory recipeCategory, EntityPlayer player, World world) {
         super();
@@ -177,8 +178,12 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             wrongInput = false;
         }
         if (wrongAmount) {
-            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_amount", hoveredRecipe.getAmount(), player.getHeldItemOffhand().getCount()));
+            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_amount", hoveredRecipe.getInputStackSize(player.getHeldItemOffhand()), player.getHeldItemOffhand().getCount()));
             wrongAmount = false;
+        }
+        if (correctAmount) {
+            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".correct_amount", hoveredRecipe.getInputStackSize(player.getHeldItemOffhand())));
+            correctAmount = false;
         }
         super.drawHoveringText(textLines, x, y, font);
     }
@@ -221,7 +226,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             GlStateManager.disableDepth();
 
             GlStateManager.colorMask(true, true, true, false);
-            boolean isHovered = (mouseX >= xPos) && (mouseX <= xPos + 16) && (mouseY >= yPos) && (mouseY <= yPos + 16);
+            boolean isHovered = isMouseOverSlot(mouseX, mouseY, xPos, xPos + 16, yPos, yPos + 16);
             if (recipe.getInputs().stream().map(Ingredient::getMatchingStacks).noneMatch(itemStacks -> Arrays.stream(itemStacks).anyMatch(stack -> stack.isItemEqual(player.getHeldItemOffhand())))) {
                 GlStateManager.scale(0.5, 0.5, 1);
                 itemRender.renderItemIntoGUI(new ItemStack(Item.getItemFromBlock(Blocks.BARRIER)), xPos * 2, yPos * 2);
@@ -231,7 +236,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                     wrongInput = true;
                 }
 
-            } else if (player.getHeldItemOffhand().getCount() < recipe.getAmount()) {
+            } else if (!recipe.isInputValid(player.getHeldItemOffhand())) {
                 GlStateManager.scale(0.5, 0.5, 1);
                 itemRender.renderItemIntoGUI(new ItemStack(Item.getItemFromBlock(Blocks.BARRIER)), xPos * 2, yPos * 2);
                 itemRender.renderItemIntoGUI(new ItemStack(Items.CHEST_MINECART), xPos * 2, yPos * 2 + 16);
@@ -240,8 +245,8 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                     wrongAmount = true;
                 }
             } else if (isHovered) {
-                // Highlight item if the mouse is over
-                this.drawGradientRect(xPos, yPos, xPos + 16, yPos + 16, -2130706433, -2130706433);
+                drawGradientRect(xPos, yPos, xPos + 16, yPos + 16, -2130706433, -2130706433);
+                correctAmount = true;
             }
 
             if (isHovered) {
@@ -251,15 +256,9 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 toolTipToRenderY = mouseY;
             }
 
-            if (!(player.getHeldItemOffhand().getCount() < recipe.getAmount())) {
-                if (recipe.getAmount() > 1) {
-                    renderRecipeText(String.valueOf(recipe.getAmount()), xPos, yPos, Color.BLACK.getRGB(), Color.green.getRGB());
-                }
-            }
-
             if (queue.contains(i)) {
                 int finalI = i;
-                renderRecipeText(String.valueOf(queue.stream().filter(j -> j == finalI).count()), xPos + 16, yPos, Color.BLACK.getRGB(), Color.green.getRGB());
+                renderRecipeText(String.valueOf(queue.stream().filter(j -> j == finalI).count()), xPos + 14, yPos, Color.green.getRGB());
             }
 
             GlStateManager.colorMask(true, true, true, true);
@@ -273,14 +272,14 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 lineCoordY = yPos + 14;
                 lineHeight = lineCoordY + 4;
 
-                craftingProgress = (float) (Minecraft.getSystemTime() - timeRecipeStart) / (recipeTime / timeMultiplier * 50);
+                craftingProgress = selectedRecipe.isInputValid(player.getHeldItemOffhand()) ? (float) (Minecraft.getSystemTime() - timeRecipeStart) / (recipeTime / timeMultiplier * 50) : 1.0f;
 
                 float remainingCraftingTime = totalCraftingTime - (Minecraft.getSystemTime() - timeQueueStart);
                 if (remainingCraftingTime < 0) {
                     remainingCraftingTime = 0;
                 }
                 String renderTime = String.format("%.1f", (remainingCraftingTime) / 1000);
-                renderRecipeText(renderTime, right - fontRenderer.getStringWidth(renderTime) - 4, top + 10, Color.BLACK.getRGB(), Color.green.getRGB());
+                renderRecipeText(renderTime, right - fontRenderer.getStringWidth(renderTime) - 4, top + 10, Color.green.getRGB());
 
                 GlStateManager.pushMatrix();
                 ResourceLocation progressBar = recipe.getProgressBar() == null ? GsRegistry.getCategory(recipe.getCategory()).getProgressBar() : recipe.getProgressBar();
@@ -296,7 +295,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         }
     }
 
-    private void renderRecipeText(String text, int x, int y, int background, int foreground) {
+    private void renderRecipeText(String text, int x, int y, int foreground) {
         int size = text.startsWith("§") ? fontRenderer.getStringWidth(text.substring(2)) / 2 : fontRenderer.getStringWidth(text) / 2;
         fontRenderer.drawStringWithShadow(text, x - size, y, foreground);
     }
@@ -311,8 +310,8 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             int slotYmin = slotCoordinates.get(i + 1);
             int slotXmax = slotCoordinates.get(i + 2);
             int slotYmax = slotCoordinates.get(i + 3);
-            if ((mouseX >= slotXmin) && (mouseX <= slotXmax) && (mouseY >= slotYmin) && (mouseY <= slotYmax)) {
-                if (player.getHeldItemOffhand().getCount() >= validRecipes.get(i / 4).getAmount()) {
+            if (isMouseOverSlot(mouseX, mouseY, slotXmin, slotXmax, slotYmin, slotYmax)) {
+                if (validRecipes.get(i / 4).isInputValid(player.getHeldItemOffhand())) {
                     queue.add(i / 4);
                     timeQueueStart = timeQueueStart == -1 ? Minecraft.getSystemTime() : timeQueueStart;
                     totalCraftingTime += (validRecipes.get(i / 4).getTime() / Objects.requireNonNull(validRecipes.get(i / 4).getTool(player.getHeldItemMainhand())).getTimeMultiplier()) * 50;
@@ -393,5 +392,9 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     @Override
     public void updateScreen() {
         redrawLabels();
+    }
+
+    private boolean isMouseOverSlot(int mouseX, int mouseY, int lowerX, int upperX, int lowerY, int upperY) {
+        return mouseX >= lowerX && mouseX <= upperX && mouseY >= lowerY && mouseY <= upperY;
     }
 }
