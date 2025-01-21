@@ -22,7 +22,7 @@ public class GsTool {
     }
 
     public float getDamageMultiplier() {
-        return damageMultiplier == 0 ? 1.0f : damageMultiplier;
+        return damageMultiplier;
     }
 
     public float getTimeMultiplier() {
