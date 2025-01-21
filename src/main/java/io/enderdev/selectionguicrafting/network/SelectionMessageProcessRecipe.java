@@ -4,12 +4,15 @@ import io.enderdev.selectionguicrafting.registry.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Random;
 
 public class SelectionMessageProcessRecipe implements IMessage {
@@ -114,6 +117,14 @@ public class SelectionMessageProcessRecipe implements IMessage {
             }
 
             player.addExperience(recipe.getXp());
+
+            List<GsParticle> particles = recipe.getParticles() == null ? category.getParticles() : recipe.getParticles();
+            particles.forEach(particle -> {
+                double offsetX = random.nextGaussian();
+                double offsetY = random.nextGaussian();
+                double offsetZ = random.nextGaussian();
+                ((WorldServer) player.getEntityWorld()).spawnParticle(particle.getType(), player.posX, player.posY, player.posZ, particle.getCount(), offsetX, offsetY, offsetZ, particle.getSpeed());
+            });
 
             return null;
         }
