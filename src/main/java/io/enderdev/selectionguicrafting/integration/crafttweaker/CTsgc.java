@@ -67,7 +67,7 @@ public final class CTsgc {
     }
 
     @ZenRegister
-    @ZenClass("mods.selectionguicrafting.sgc_category.builder")
+    @ZenClass("mods.selectionguicrafting.sgc_category")
     public static class CTCategoryBuilder {
         private final GsCategory category;
 
@@ -189,7 +189,7 @@ public final class CTsgc {
     }
 
     @ZenRegister
-    @ZenClass("mods.selectionguicrafting.sgc_recipe.builder")
+    @ZenClass("mods.selectionguicrafting.sgc_recipe")
     public static class CTRecipeBuilder {
         private final GsRecipe recipe;
 
