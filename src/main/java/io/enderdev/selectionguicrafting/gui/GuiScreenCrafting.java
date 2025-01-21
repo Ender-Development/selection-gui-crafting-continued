@@ -286,7 +286,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                     remainingCraftingTime = 0;
                 }
                 String renderTime = String.format("%.1f", (remainingCraftingTime) / 1000);
-                fontRenderer.drawStringWithShadow(renderTime, right - fontRenderer.getStringWidth(renderTime) - 10, top + 10, Color.white.getRGB());
+                fontRenderer.drawStringWithShadow(I18n.format("gui.selectionguicrafting.crafting_time", renderTime), right - fontRenderer.getStringWidth(renderTime) - 10, top + 10, Color.white.getRGB());
 
                 GlStateManager.pushMatrix();
                 ResourceLocation progressBar = recipe.getProgressBar() == null ? GsRegistry.getCategory(recipe.getCategory()).getProgressBar() : recipe.getProgressBar();
