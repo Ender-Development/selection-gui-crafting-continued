@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@SuppressWarnings("UnusedReturnValue")
 public class GsRecipe {
     // Required
     private String category;
@@ -28,6 +30,7 @@ public class GsRecipe {
 
     // Override category
     private final ArrayList<GsSound> sounds = new ArrayList<>();
+    private final ArrayList<GsParticle> particles = new ArrayList<>();
     private GsEnum.OutputType outputType;
     private GsEnum.QueueType queueable;
     private GsEnum.SoundType soundType;
@@ -113,6 +116,19 @@ public class GsRecipe {
      */
     public GsRecipe addSound(@NotNull ResourceLocation sound, float volume, float pitch) {
         sounds.add(new GsSound(sound, volume, pitch));
+        return this;
+    }
+
+    /**
+     * Add a particle to the recipe
+     *
+     * @param particle The particle to add
+     * @param count The count of the particle
+     * @param speed The speed of the particle
+     * @return The recipe
+     */
+    public GsRecipe addParticle(@NotNull EnumParticleTypes particle, int count, float speed) {
+        particles.add(new GsParticle(particle, count, speed));
         return this;
     }
 
@@ -312,6 +328,11 @@ public class GsRecipe {
     @Nullable
     public ArrayList<GsSound> getSounds() {
         return sounds;
+    }
+
+    @Nullable
+    public ArrayList<GsParticle> getParticles() {
+        return particles;
     }
 
     @Nullable

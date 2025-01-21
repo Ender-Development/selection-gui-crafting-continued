@@ -1,13 +1,16 @@
 package io.enderdev.selectionguicrafting.registry;
 
 import io.enderdev.selectionguicrafting.Tags;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("UnusedReturnValue")
 public class GsCategory {
     private final ArrayList<GsSound> sounds = new ArrayList<>();
+    private final ArrayList<GsParticle> particles = new ArrayList<>();
 
     private String id;
     private String displayName;
@@ -49,6 +52,16 @@ public class GsCategory {
      */
     public GsCategory addSound(@NotNull ResourceLocation sound, float volume, float pitch) {
         sounds.add(new GsSound(sound, volume, pitch));
+        return this;
+    }
+
+    /**
+     * Add a particle to the category
+     * @param particle The particle to add
+     * @return The category
+     */
+    public GsCategory addParticle(@NotNull EnumParticleTypes particle, int count, float speed) {
+        particles.add(new GsParticle(particle, count, speed));
         return this;
     }
 
@@ -151,6 +164,14 @@ public class GsCategory {
             sounds.add(new GsSound(new ResourceLocation("minecraft", "block.anvil.place"), 0.1f, 1));
         }
         return sounds;
+    }
+
+    @NotNull
+    public ArrayList<GsParticle> getParticles() {
+        if (particles.isEmpty()) {
+            particles.add(new GsParticle(EnumParticleTypes.VILLAGER_HAPPY, 10, 0.5f));
+        }
+        return particles;
     }
 
     @NotNull
