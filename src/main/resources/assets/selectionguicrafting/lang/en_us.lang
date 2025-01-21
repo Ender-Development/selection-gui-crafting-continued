@@ -1,7 +1,7 @@
 gui.selectionguicrafting.close=Close GUI
 
 gui.selectionguicrafting.wrong_input=§c§oRequires %s
-gui.selectionguicrafting.wrong_amount=§c§oNeeds %s, but got %s
+gui.selectionguicrafting.wrong_amount=§c§oNeeds %s %s, but got %s
 gui.selectionguicrafting.wrong_durability=§c§o%s doesn't have enough durability
 gui.selectionguicrafting.correct_amount=§a§oConsume: %s
 

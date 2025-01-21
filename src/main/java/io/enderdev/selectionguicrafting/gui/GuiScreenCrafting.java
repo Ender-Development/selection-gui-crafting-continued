@@ -167,20 +167,26 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
     @Override
     public void drawHoveringText(@NotNull List<String> textLines, int x, int y, @NotNull FontRenderer font) {
+        ItemStack mainHand = player.getHeldItemMainhand();
+        ItemStack offHand = player.getHeldItemOffhand();
         if (wrongInput) {
             textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_input", hoveredRecipe.getInput().get(0).getMatchingStacks()[0].getDisplayName()));
             wrongInput = false;
         }
         if (wrongAmount) {
-            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_amount", hoveredRecipe.getInputStackSize(player.getHeldItemOffhand()), player.getHeldItemOffhand().getCount()));
+            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_amount", hoveredRecipe.getInputStackSize(offHand), offHand.getDisplayName(), offHand.getCount()));
             wrongAmount = false;
         }
         if (correctAmount) {
-            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".correct_amount", hoveredRecipe.getInputStackSize(player.getHeldItemOffhand())));
+            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".correct_amount", hoveredRecipe.getInputStackSize(offHand)));
             correctAmount = false;
         }
         if (wrongDurability) {
-            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_durability", player.getHeldItemMainhand().getDisplayName()));
+            if (player.getHeldItemMainhand().isItemStackDamageable()) {
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_durability", mainHand.getDisplayName()));
+            } else {
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_amount", Objects.requireNonNull(hoveredRecipe.getTool(mainHand)).getItemStack().getCount(), mainHand.getDisplayName(), mainHand.getCount()));
+            }
             wrongDurability = false;
         }
         super.drawHoveringText(textLines, x, y, font);
@@ -334,7 +340,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         int guiHeight = 56 - (SelectionConfig.CLIENT.disableCloseGUIbutton ? CLOSE_BUTTON_HEIGHT + 4 : 0);
         int final_height = guiHeight + rows * ICON_DISTANCE;
         int final_height_offset = (final_height - guiBorder * 2) % 16 == 0 ? final_height : final_height + (final_height - guiBorder * 2) % 16;
-        int final_width = Math.max(width1, width2 + 16);
+        int final_width = Math.max(width1, width2 + 64);
         final_width_offset = (final_width - guiBorder * 2) % 16 == 0 ? final_width : final_width + (final_width - guiBorder * 2) % 16;
 
         // Update dynamic GUI size
