@@ -31,6 +31,8 @@ public class GsRecipe {
     // Override category
     private final ArrayList<GsSound> sounds = new ArrayList<>();
     private final ArrayList<GsParticle> particles = new ArrayList<>();
+    private ResourceLocation frame;
+    private ResourceLocation progressBar;
     private GsEnum.OutputType outputType;
     private GsEnum.QueueType queueable;
     private GsEnum.SoundType soundType;
@@ -46,6 +48,16 @@ public class GsRecipe {
      */
     public GsRecipe setCategory(@NotNull String category) {
         this.category = category;
+        return this;
+    }
+
+    public GsRecipe setFrame(@NotNull ResourceLocation frame) {
+        this.frame = frame;
+        return this;
+    }
+
+    public GsRecipe setProgressBar(@NotNull ResourceLocation progressBar) {
+        this.progressBar = progressBar;
         return this;
     }
 
@@ -348,6 +360,16 @@ public class GsRecipe {
     @Nullable
     public GsEnum.SoundType getSoundType() {
         return soundType;
+    }
+
+    @Nullable
+    public ResourceLocation getFrame() {
+        return frame;
+    }
+
+    @Nullable
+    public ResourceLocation getProgressBar() {
+        return progressBar;
     }
 
     /**

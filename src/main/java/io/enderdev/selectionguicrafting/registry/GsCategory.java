@@ -17,6 +17,8 @@ public class GsCategory {
     private ResourceLocation background;
     private ResourceLocation border;
     private ResourceLocation decoration;
+    private ResourceLocation frame;
+    private ResourceLocation progressBar;
     private GsEnum.BackgroundType backgroundType;
     private GsEnum.OutputType outputType;
     private GsEnum.QueueType queueable;
@@ -96,6 +98,26 @@ public class GsCategory {
     }
 
     /**
+     * Set the frame of the category
+     * @param frame The frame
+     * @return The category
+     */
+    public GsCategory setFrame(@NotNull ResourceLocation frame) {
+        this.frame = frame;
+        return this;
+    }
+
+    /**
+     * Set the progress bar of the category
+     * @param progressBar The progress bar
+     * @return The category
+     */
+    public GsCategory setProgressBar(@NotNull ResourceLocation progressBar) {
+        this.progressBar = progressBar;
+        return this;
+    }
+
+    /**
      * Set the output type of the category
      * @param outputType The output type
      * @return The category
@@ -156,6 +178,16 @@ public class GsCategory {
     @NotNull
     public ResourceLocation getDecoration() {
         return decoration == null ? new ResourceLocation(Tags.MOD_ID, "textures/gui/gui_decor.png") : decoration;
+    }
+
+    @NotNull
+    public ResourceLocation getFrame() {
+        return frame == null ? new ResourceLocation(Tags.MOD_ID, "textures/gui/itembackground.png") : frame;
+    }
+
+    @NotNull
+    public ResourceLocation getProgressBar() {
+        return progressBar == null ? new ResourceLocation(Tags.MOD_ID, "textures/gui/progress.png") : progressBar;
     }
 
     @NotNull
