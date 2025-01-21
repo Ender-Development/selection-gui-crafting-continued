@@ -1,5 +1,6 @@
 package io.enderdev.selectionguicrafting.registry;
 
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +16,10 @@ public class GsRegistry {
     }
 
     public static void registerCategory(@NotNull GsCategory category) {
+        if (categories.stream().anyMatch(gsCategory -> gsCategory.getId().equals(category.getId()))) {
+            SelectionGuiCrafting.LOGGER.warn("Category with id {} already exists", category.getId());
+            return;
+        }
         categories.add(category);
     }
 
