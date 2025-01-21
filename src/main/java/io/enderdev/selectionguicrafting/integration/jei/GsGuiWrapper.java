@@ -35,7 +35,7 @@ public class GsGuiWrapper implements IRecipeWrapper {
 
     @Override
     public void getIngredients(@NotNull IIngredients iIngredients) {
-        tool = recipe.getTools().stream().map(GsTool::getItemStack).map(itemStack -> {
+        tool = recipe.getTool().stream().map(GsTool::getItemStack).map(itemStack -> {
             ItemStack stack = new ItemStack(itemStack.getItem());
             if (itemStack.isItemStackDamageable()) {
                 stack.setCount(1);
@@ -47,7 +47,7 @@ public class GsGuiWrapper implements IRecipeWrapper {
             return stack;
         }).collect(Collectors.toList());
 
-        input = recipe.getInputs().stream().map(Ingredient::getMatchingStacks).flatMap(Arrays::stream).map(itemStack -> {
+        input = recipe.getInput().stream().map(Ingredient::getMatchingStacks).flatMap(Arrays::stream).map(itemStack -> {
             ItemStack stack = new ItemStack(itemStack.getItem());
             stack.setCount(itemStack.getCount());
             stack.setItemDamage(itemStack.getItemDamage());
@@ -57,8 +57,8 @@ public class GsGuiWrapper implements IRecipeWrapper {
 
         secondary = Collections.emptyList(); // TODO: Implement secondary output
 
-        output = recipe.getOutputs().stream().map(GsOutput::getItemStack).collect(Collectors.toList());
-        outputChance = recipe.getOutputs().stream().map(GsOutput::getChance).collect(Collectors.toList());
+        output = recipe.getOutput().stream().map(GsOutput::getItemStack).collect(Collectors.toList());
+        outputChance = recipe.getOutput().stream().map(GsOutput::getChance).collect(Collectors.toList());
 
         List<List<ItemStack>> inputs = Arrays.asList(tool, input, secondary);
         List<List<ItemStack>> outputs = Collections.singletonList(output);

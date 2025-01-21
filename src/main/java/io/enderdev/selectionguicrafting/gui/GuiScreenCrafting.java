@@ -168,7 +168,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     @Override
     public void drawHoveringText(@NotNull List<String> textLines, int x, int y, @NotNull FontRenderer font) {
         if (wrongInput) {
-            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_input", hoveredRecipe.getInputs().get(0).getMatchingStacks()[0].getDisplayName()));
+            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_input", hoveredRecipe.getInput().get(0).getMatchingStacks()[0].getDisplayName()));
             wrongInput = false;
         }
         if (wrongAmount) {
@@ -215,7 +215,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             drawScaledCustomSizeModalRect(xPos - 8, yPos - 8, 0, 0, 32, 32, 32, 32, 32, 32);
 
 
-            ItemStack recipeItem = recipe.getOutputs().get(0).getItemStack();
+            ItemStack recipeItem = recipe.getOutput().get(0).getItemStack();
             RenderHelper.enableGUIStandardItemLighting();
             itemRender.renderItemIntoGUI(recipeItem, xPos, yPos);
             itemRender.renderItemOverlayIntoGUI(this.fontRenderer, recipeItem, xPos, yPos, null);
@@ -227,7 +227,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             mc.getTextureManager().bindTexture(new ResourceLocation(Tags.MOD_ID, "textures/gui/icon.png"));
             GlStateManager.pushMatrix();
             boolean isHovered = isMouseOverSlot(mouseX, mouseY, xPos, xPos + 16, yPos, yPos + 16);
-            if (recipe.getInputs().stream().map(Ingredient::getMatchingStacks).noneMatch(itemStacks -> Arrays.stream(itemStacks).anyMatch(stack -> stack.isItemEqual(player.getHeldItemOffhand())))) {
+            if (recipe.getInput().stream().map(Ingredient::getMatchingStacks).noneMatch(itemStacks -> Arrays.stream(itemStacks).anyMatch(stack -> stack.isItemEqual(player.getHeldItemOffhand())))) {
                 drawScaledCustomSizeModalRect(xPos, yPos + 8, 16, 0, 16, 16, 8, 8, 32, 32);
                 drawScaledCustomSizeModalRect(xPos + 8, yPos + 8, 0, 16, 16, 16, 8, 8, 32, 32);
                 if (isHovered) {

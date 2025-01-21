@@ -19,9 +19,9 @@ import java.util.Objects;
 public class GsRecipe {
     // Required
     private String category;
-    private final ArrayList<Ingredient> inputs = new ArrayList<>();
-    private final ArrayList<GsOutput> outputs = new ArrayList<>();
-    private final ArrayList<GsTool> tools = new ArrayList<>();
+    private final ArrayList<Ingredient> input = new ArrayList<>();
+    private final ArrayList<GsOutput> output = new ArrayList<>();
+    private final ArrayList<GsTool> tool = new ArrayList<>();
 
     // Optional
     private Integer time;
@@ -101,22 +101,22 @@ public class GsRecipe {
      * @return The recipe
      */
     public GsRecipe addInput(@NotNull Ingredient input) {
-        inputs.add(input);
+        this.input.add(input);
         return this;
     }
 
     public GsRecipe addInput(@NotNull ItemStack input) {
-        inputs.add(Ingredient.fromStacks(input));
+        this.input.add(Ingredient.fromStacks(input));
         return this;
     }
 
     public GsRecipe addInput(@NotNull Block input) {
-        inputs.add(Ingredient.fromItems(Item.getItemFromBlock(input)));
+        this.input.add(Ingredient.fromItems(Item.getItemFromBlock(input)));
         return this;
     }
 
     public GsRecipe addInput(@NotNull ArrayList<Ingredient> input) {
-        inputs.addAll(input);
+        this.input.addAll(input);
         return this;
     }
 
@@ -152,17 +152,17 @@ public class GsRecipe {
      * @return The recipe
      */
     public GsRecipe addOutput(@NotNull ItemStack output, float chance) {
-        outputs.add(new GsOutput(output, chance));
+        this.output.add(new GsOutput(output, chance));
         return this;
     }
 
     public GsRecipe addOutput(@NotNull Block output, float chance) {
-        outputs.add(new GsOutput(new ItemStack(output), chance));
+        this.output.add(new GsOutput(new ItemStack(output), chance));
         return this;
     }
 
     public GsRecipe addOutput(@NotNull ArrayList<GsOutput> output) {
-        outputs.addAll(output);
+        this.output.addAll(output);
         return this;
     }
 
@@ -175,11 +175,11 @@ public class GsRecipe {
      * @return The recipe
      */
     public GsRecipe addTool(@NotNull ItemStack tool, float damageMultiplier, float timeMultiplier) {
-        if (tools.stream().anyMatch(gsTool -> gsTool.getItemStack().isItemEqual(tool))) {
+        if (this.tool.stream().anyMatch(gsTool -> gsTool.getItemStack().isItemEqual(tool))) {
             SelectionGuiCrafting.LOGGER.warn("Tool {} was already added to recipe", tool);
             return this;
         }
-        tools.add(new GsTool(tool, damageMultiplier, timeMultiplier));
+        this.tool.add(new GsTool(tool, damageMultiplier, timeMultiplier));
         return this;
     }
 
@@ -226,13 +226,13 @@ public class GsRecipe {
     }
 
     @NotNull
-    public ArrayList<Ingredient> getInputs() {
-        return inputs;
+    public ArrayList<Ingredient> getInput() {
+        return input;
     }
 
     @Nullable
     public Ingredient getInput(ItemStack itemStack) {
-        return inputs.stream().filter(ingredient -> ingredient.apply(itemStack)).findFirst().orElse(null);
+        return input.stream().filter(ingredient -> ingredient.apply(itemStack)).findFirst().orElse(null);
     }
 
     public int getInputStackSize(ItemStack itemStack) {
@@ -240,8 +240,8 @@ public class GsRecipe {
     }
 
     @NotNull
-    public ArrayList<GsOutput> getOutputs() {
-        return outputs;
+    public ArrayList<GsOutput> getOutput() {
+        return output;
     }
 
     /**
@@ -259,8 +259,8 @@ public class GsRecipe {
      *
      * @return The valid tools for the recipe
      */
-    public ArrayList<GsTool> getTools() {
-        return tools;
+    public ArrayList<GsTool> getTool() {
+        return tool;
     }
 
     /**
@@ -271,7 +271,7 @@ public class GsRecipe {
      */
     @Nullable
     public GsTool getTool(ItemStack itemStack) {
-        return tools.stream().filter(tool -> {
+        return tool.stream().filter(tool -> {
             Item item = tool.getItemStack().getItem();
             int meta = tool.getItemStack().getMetadata();
             NBTTagCompound tag = tool.getItemStack().getTagCompound();
@@ -370,7 +370,7 @@ public class GsRecipe {
      * @return If the tool is valid for the recipe
      */
     public boolean isToolValid(ItemStack itemStack) {
-        return tools.stream().map(GsTool::getItemStack).anyMatch(tool -> {
+        return tool.stream().map(GsTool::getItemStack).anyMatch(tool -> {
             Item item = tool.getItem();
             int meta = tool.getMetadata();
             int stackSize = tool.getCount();
@@ -392,7 +392,7 @@ public class GsRecipe {
      * @return If the input is valid for the recipe
      */
     public boolean isInputValid(ItemStack itemStack) {
-        return inputs.stream().map(Ingredient::getMatchingStacks).flatMap(Arrays::stream).anyMatch(input -> {
+        return input.stream().map(Ingredient::getMatchingStacks).flatMap(Arrays::stream).anyMatch(input -> {
             Item item = input.getItem();
             int meta = input.getMetadata();
             NBTTagCompound tag = input.getTagCompound();

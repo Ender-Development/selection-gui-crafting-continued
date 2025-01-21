@@ -34,8 +34,8 @@ public class EventRightClick {
         GsRegistry.getRecipes().forEach((recipe) -> {
             Item itemMainhand = eventItemMainhand.getItem();
             Item itemOffhand = eventStackOffhand.getItem();
-            if (recipe.getTools().stream().map(GsTool::getItemStack).map(ItemStack::getItem).anyMatch((item) -> item == itemMainhand)) {
-                if (recipe.getInputs().stream().map(Ingredient::getMatchingStacks)
+            if (recipe.getTool().stream().map(GsTool::getItemStack).map(ItemStack::getItem).anyMatch((item) -> item == itemMainhand)) {
+                if (recipe.getInput().stream().map(Ingredient::getMatchingStacks)
                         .anyMatch(stacks -> Arrays.stream(stacks).anyMatch((stack) -> stack.getItem() == itemOffhand))) {
                     event.setCanceled(true);
                     if (player.getEntityWorld().isRemote) {
@@ -60,8 +60,8 @@ public class EventRightClick {
         Item eventItemOffhand = player.getHeldItemOffhand().getItem();
 
         GsRegistry.getRecipes().forEach((recipe) -> {
-            if (recipe.getTools().stream().map(GsTool::getItemStack).map(ItemStack::getItem).anyMatch((item) -> item == eventItemMainhand)) {
-                if (recipe.getInputs().stream().map(Ingredient::getMatchingStacks)
+            if (recipe.getTool().stream().map(GsTool::getItemStack).map(ItemStack::getItem).anyMatch((item) -> item == eventItemMainhand)) {
+                if (recipe.getInput().stream().map(Ingredient::getMatchingStacks)
                         .anyMatch(stacks -> Arrays.stream(stacks).anyMatch((stack) -> stack.getItem() == eventItemOffhand))) {
                     event.setCanceled(true);
                 }

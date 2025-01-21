@@ -30,8 +30,8 @@ public class ModGuiHandler implements IGuiHandler {
         ItemStack heldStackOffhand = player.getHeldItemOffhand();
 
         String recipeCategory = GsRegistry.getRecipes().stream()
-                .filter(recipe -> recipe.getTools().stream().map(GsTool::getItemStack).map(ItemStack::getItem).anyMatch(item -> item == heldItemMainhand.getItem()))
-                .filter(recipe -> recipe.getInputs().stream().map(Ingredient::getMatchingStacks)
+                .filter(recipe -> recipe.getTool().stream().map(GsTool::getItemStack).map(ItemStack::getItem).anyMatch(item -> item == heldItemMainhand.getItem()))
+                .filter(recipe -> recipe.getInput().stream().map(Ingredient::getMatchingStacks)
                         .anyMatch(stacks -> Arrays.stream(stacks).anyMatch(stack -> stack.getItem() == heldStackOffhand.getItem())))
                 .map(GsRecipe::getCategory)
                 .findFirst().orElse("invalid");

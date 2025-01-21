@@ -4,7 +4,6 @@ import io.enderdev.selectionguicrafting.registry.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -93,7 +92,7 @@ public class SelectionMessageProcessRecipe implements IMessage {
 
             // If we got here, the recipe is valid and can be processed
             Random random = new Random();
-            recipe.getOutputs().forEach(output -> {
+            recipe.getOutput().forEach(output -> {
                 ItemStack stack = output.getItemStack().copy();
                 GsEnum.OutputType outputType = recipe.getOutputType() != null ? recipe.getOutputType() : category.getOutputType();
                 if (random.nextFloat() < output.getChance()) {

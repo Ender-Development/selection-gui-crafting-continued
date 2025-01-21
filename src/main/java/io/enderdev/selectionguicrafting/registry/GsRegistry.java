@@ -43,7 +43,7 @@ public class GsRegistry {
     }
 
     public static ArrayList<GsRecipe> getValidRecipes(@NotNull GsCategory category, @NotNull ItemStack tool) {
-        return GsRegistry.getRecipesForCategory(category).stream().filter(recipe -> recipe.getTools().stream().map(GsTool::getItemStack).anyMatch(itemStack -> itemStack.isItemEqualIgnoreDurability(tool))).collect(Collectors.toCollection(ArrayList::new));
+        return GsRegistry.getRecipesForCategory(category).stream().filter(recipe -> recipe.getTool().stream().map(GsTool::getItemStack).anyMatch(itemStack -> itemStack.isItemEqualIgnoreDurability(tool))).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static boolean removeCategory(@NotNull String id) {
@@ -51,6 +51,6 @@ public class GsRegistry {
     }
 
     public static boolean removeRecipe(@NotNull String category, @NotNull ArrayList<GsOutput> output) {
-        return recipes.removeIf(recipe -> recipe.getCategory().equals(category) && recipe.getOutputs().equals(output));
+        return recipes.removeIf(recipe -> recipe.getCategory().equals(category) && recipe.getOutput().equals(output));
     }
 }
