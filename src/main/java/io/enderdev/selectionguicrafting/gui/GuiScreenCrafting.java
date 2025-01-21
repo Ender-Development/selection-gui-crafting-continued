@@ -327,13 +327,14 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     @Override
     public void initGui() {
         int width1 = validRecipes.isEmpty() ? ICON_DISTANCE : ((cols * ICON_DISTANCE) + 16);
-        int width2 = (int) (fontRenderer.getStringWidth(recipeCategory.getDisplayName()) * 1.5) + 16;
+        int font_width = fontRenderer.getStringWidth(recipeCategory.getDisplayName());
+        int width2 = font_width % 16 == 0 ? font_width : font_width + (16 - font_width % 16);
 
         int guiBorder = 8;
         int guiHeight = 56 - (SelectionConfig.CLIENT.disableCloseGUIbutton ? CLOSE_BUTTON_HEIGHT + 4 : 0);
         int final_height = guiHeight + rows * ICON_DISTANCE;
         int final_height_offset = (final_height - guiBorder * 2) % 16 == 0 ? final_height : final_height + (final_height - guiBorder * 2) % 16;
-        int final_width = Math.max(width1, width2);
+        int final_width = Math.max(width1, width2 + 16);
         final_width_offset = (final_width - guiBorder * 2) % 16 == 0 ? final_width : final_width + (final_width - guiBorder * 2) % 16;
 
         // Update dynamic GUI size

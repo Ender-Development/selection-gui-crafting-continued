@@ -57,13 +57,39 @@ public abstract class GuiScreenDynamic extends GuiScreen {
     private void drawBackground() {
         // Init
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f); // Reset color
+        drawDynamicBackground();
+        drawDynamicBorder();
+        drawDynamicDecoration();
+    }
+
+    // Draw labels and buttons (replacing super.drawScreen() call)
+    // Can be called after background drawing, for proper layering
+    public void drawLabels(int mouseX, int mouseY) {
+        // Labels
+        for (GuiButton aButtonList : this.buttonList)
+            aButtonList.drawButton(this.mc, mouseX, mouseY, 0);
+
+        // Buttons
+        for (GuiLabel aLabelList : this.labelList)
+            aLabelList.drawLabel(this.mc, mouseX, mouseY);
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    protected void drawHoveringText(@NotNull List<String> textLines, int x, int y, @NotNull FontRenderer font) {
+        super.drawHoveringText(textLines, x, y, font);
+    }
+
+    private void drawDynamicBorder() {
+        GlStateManager.pushMatrix();
         mc.getTextureManager().bindTexture(borderTexture); // Fetch texture
         int textureWidth  = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
         int textureHeight = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
         int border = (textureHeight - 16) / 2;
-
-        GlStateManager.pushMatrix();
-
 
         // Top left corner
         drawScaledCustomSizeModalRect(left, top, 0, 0, border, border, border, border, textureWidth, textureHeight);
@@ -94,10 +120,13 @@ public abstract class GuiScreenDynamic extends GuiScreen {
             drawScaledCustomSizeModalRect(left + 8 + i, bottom - border, 8, 24, 16, border, 16, border, textureWidth, textureHeight);
 
         GlStateManager.popMatrix();
+    }
+
+    private void drawDynamicBackground() {
         mc.getTextureManager().bindTexture(backgroundTexture); // Fetch texture
-        textureWidth  = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
-        textureHeight = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
-        border = (textureHeight - 16) / 2;
+        int textureWidth  = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
+        int textureHeight = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
+        int border = (textureHeight - 16) / 2;
         GlStateManager.pushMatrix();
 
         if (backgroundType == GsEnum.BackgroundType.TILE) {
@@ -115,10 +144,12 @@ public abstract class GuiScreenDynamic extends GuiScreen {
             // TODO: Implement
         }
         GlStateManager.popMatrix();
+    }
 
+    private void drawDynamicDecoration() {
         mc.getTextureManager().bindTexture(decorationTexture);
-        textureWidth  = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
-        textureHeight = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
+        int textureWidth  = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
+        int textureHeight = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
 
         // Draw decoration
         int posX = left + (guiWidth / 2) - (textureWidth / 2);
@@ -126,27 +157,5 @@ public abstract class GuiScreenDynamic extends GuiScreen {
         drawScaledCustomSizeModalRect(posX, top, 0, 0, textureWidth, textureHeight/2, textureWidth, textureHeight/2, textureWidth, textureHeight);
         drawScaledCustomSizeModalRect(posX, bottom - textureHeight/2, 0, textureHeight/2, textureWidth, textureHeight/2, textureWidth, textureHeight/2, textureWidth, textureHeight);
         GlStateManager.popMatrix();
-    }
-
-    // Draw labels and buttons (replacing super.drawScreen() call)
-    // Can be called after background drawing, for proper layering
-    public void drawLabels(int mouseX, int mouseY) {
-        // Labels
-        for (GuiButton aButtonList : this.buttonList)
-            aButtonList.drawButton(this.mc, mouseX, mouseY, 0);
-
-        // Buttons
-        for (GuiLabel aLabelList : this.labelList)
-            aLabelList.drawLabel(this.mc, mouseX, mouseY);
-    }
-
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-    }
-
-    @Override
-    protected void drawHoveringText(@NotNull List<String> textLines, int x, int y, @NotNull FontRenderer font) {
-        super.drawHoveringText(textLines, x, y, font);
     }
 }
