@@ -35,4 +35,8 @@ public enum Assets {
     public ResourceLocation get() {
         return new ResourceLocation(Tags.MOD_ID, this.path);
     }
+
+    public String path() {
+        return get().toString();
+    }
 }

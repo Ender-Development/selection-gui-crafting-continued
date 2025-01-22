@@ -105,6 +105,7 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
     @Property(property = "input", comp = @Comp(gte = 1))
     @Property(property = "output", comp = @Comp(gte = 1))
     @Property(property = "tool", comp = @Comp(gte = 1))
+    @Property(property = "catalyst", comp = @Comp(gte = 0, lte = 1))
     @Property(property = "time", comp = @Comp(gte = 0))
     @Property(property = "xp", comp = @Comp(gte = 0))
     @Property(property = "durability", comp = @Comp(gte = 0))
@@ -144,6 +145,16 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
         @RecipeBuilderMethodDescription(field = "queueable")
         public RecipeBuilder queueable(String queueable) {
             super.setQueueable(GsEnum.QueueType.valueOf(queueable));
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "queueable")
+        public RecipeBuilder queueType(boolean queueable) {
+            if (queueable) {
+                super.setQueueable(GsEnum.QueueType.YES);
+            } else {
+                super.setQueueable(GsEnum.QueueType.NO);
+            }
             return this;
         }
 
@@ -198,6 +209,18 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
         @RecipeBuilderMethodDescription(field = "tool")
         public RecipeBuilder tool(IIngredient tool) {
             super.addTool(tool.getMatchingStacks()[0], 1, 1);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "catalyst")
+        public RecipeBuilder catalyst(IIngredient catalyst, float chance) {
+            super.setCatalyst(catalyst.toMcIngredient(), chance);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "catalyst")
+        public RecipeBuilder catalyst(IIngredient catalyst) {
+            super.setCatalyst(catalyst.toMcIngredient(), 1);
             return this;
         }
 

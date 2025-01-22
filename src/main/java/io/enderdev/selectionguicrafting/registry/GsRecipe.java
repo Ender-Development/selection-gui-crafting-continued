@@ -2,6 +2,7 @@ package io.enderdev.selectionguicrafting.registry;
 
 import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -24,6 +25,7 @@ public class GsRecipe {
     private final ArrayList<GsTool> tool = new ArrayList<>();
 
     // Optional
+    private GsCatalyst catalyst;
     private Integer time;
     private Integer xp;
     private Integer durability;
@@ -91,6 +93,18 @@ public class GsRecipe {
      */
     public GsRecipe setSoundType(@NotNull GsEnum.SoundType soundType) {
         this.soundType = soundType;
+        return this;
+    }
+
+    /**
+     * Set the catalyst of the recipe
+     *
+     * @param ingredient The catalyst
+     * @param chance The chance of the catalyst being consumed
+     * @return The recipe
+     */
+    public GsRecipe setCatalyst(Ingredient ingredient, float chance) {
+        this.catalyst = new GsCatalyst(ingredient, chance);
         return this;
     }
 
@@ -326,6 +340,16 @@ public class GsRecipe {
         return durability == null ? 0 : durability;
     }
 
+    /**
+     * Get the catalyst of the recipe
+     *
+     * @return The catalyst of the recipe
+     */
+    @Nullable
+    public GsCatalyst getCatalyst() {
+        return catalyst;
+    }
+
     @Nullable
     public ArrayList<GsSound> getSounds() {
         return sounds;
@@ -364,7 +388,8 @@ public class GsRecipe {
     /**
      * Check if a tool is valid for the recipe, it checks the item, metadata and tag are the same as well as
      * if the durability ({@link #setDurability(int)}) is less than the remaining durability of the tool.
-     * If the tool is not a damageable item, it also checks the stack size.
+     * If the tool is not a damageable item, it also checks the stack size. (The +1 is to account that tool durability
+     * is 0 based)
      *
      * @param itemStack The tool to check
      * @return If the tool is valid for the recipe
@@ -377,9 +402,15 @@ public class GsRecipe {
             NBTTagCompound tag = tool.getTagCompound();
             if (itemStack.isItemStackDamageable()) {
                 int remainingDurability = itemStack.getMaxDamage() - itemStack.getItemDamage();
-                return item == itemStack.getItem() && getDurability() <= remainingDurability && stackSize == 1 && tag == itemStack.getTagCompound();
+                return item == itemStack.getItem()
+                        && getDurability() <= remainingDurability + 1
+                        && stackSize == 1
+                        && tag == itemStack.getTagCompound();
             } else {
-                return item == itemStack.getItem() && meta == itemStack.getMetadata() && stackSize <= itemStack.getCount() && tag == itemStack.getTagCompound();
+                return item == itemStack.getItem()
+                        && meta == itemStack.getMetadata()
+                        && stackSize <= itemStack.getCount()
+                        && tag == itemStack.getTagCompound();
             }
         });
     }
@@ -396,7 +427,31 @@ public class GsRecipe {
             Item item = input.getItem();
             int meta = input.getMetadata();
             NBTTagCompound tag = input.getTagCompound();
-            return item == itemStack.getItem() && meta == itemStack.getMetadata() && input.getCount() <= itemStack.getCount() && tag == itemStack.getTagCompound();
+            return item == itemStack.getItem()
+                    && meta == itemStack.getMetadata()
+                    && input.getCount() <= itemStack.getCount()
+                    && tag == itemStack.getTagCompound();
         });
+    }
+
+    /**
+     * Check if a catalyst is valid for the recipe, it checks the item, metadata and tag are the same as well as
+     * if the stack size is more than the size of the catalyst stack.
+     *
+     * @param player The player to check the catalyst for
+     * @return If the catalyst is valid for the recipe
+     */
+    public boolean isCatalystValid(EntityPlayer player) {
+        if (catalyst == null) return true;
+        return player.inventory.mainInventory.stream().anyMatch(itemStack -> Arrays.stream(catalyst.getIngredient().getMatchingStacks()).anyMatch(ingredient -> {
+            Item item = ingredient.getItem();
+            int meta = ingredient.getMetadata();
+            int stackSize = ingredient.getCount();
+            NBTTagCompound tag = ingredient.getTagCompound();
+            return item == itemStack.getItem()
+                    && meta == itemStack.getMetadata()
+                    && stackSize <= itemStack.getCount()
+                    && tag == itemStack.getTagCompound();
+        }));
     }
 }

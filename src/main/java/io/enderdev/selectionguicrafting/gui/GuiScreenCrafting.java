@@ -49,6 +49,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     private float timeMultiplier;
     private float totalCraftingTime;
     private final EntityPlayer player;
+    private final World world;
 
     private ItemStack toolTipToRenderItem = null;
     private int toolTipToRenderX = 32000;
@@ -77,13 +78,16 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     private boolean wrongInput = false;
     private boolean wrongAmount = false;
     private boolean wrongDurability = false;
+    private boolean wrongCatalyst = false;
     private boolean correctAmount = false;
+    private boolean noQueue = false;
 
     public GuiScreenCrafting(GsCategory recipeCategory, EntityPlayer player, World world) {
         super();
 
         this.recipeCategory = recipeCategory;
         this.player = player;
+        this.world = world;
 
         this.validRecipes = GsRegistry.getValidRecipes(recipeCategory, player.getHeldItemMainhand());
         calculateRowsCols();
@@ -147,6 +151,16 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 sounds.forEach(sound -> player.playSound(new SoundEvent(sound.getSound()), sound.getVolume(), sound.getPitch()));
             }
 
+            List<GsParticle> particles = selectedRecipe.getParticles() == null || selectedRecipe.getParticles().isEmpty() ? recipeCategory.getParticles() : selectedRecipe.getParticles();
+            particles.forEach(particle -> {
+                for (int i = 0; i < particle.getCount(); i++) {
+                    double offsetX = random.nextGaussian();
+                    double offsetY = random.nextGaussian();
+                    double offsetZ = random.nextGaussian();
+                    world.spawnParticle(particle.getType(), player.posX + offsetX, player.posY + offsetY, player.posZ + offsetZ, particle.getSpeed(), particle.getSpeed(), particle.getSpeed());
+                }
+            });
+
             // Close GUI
             queue.remove(0);
             if (queue.isEmpty()) {
@@ -177,9 +191,17 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_amount", hoveredRecipe.getInputStackSize(offHand), offHand.getDisplayName(), offHand.getCount()));
             wrongAmount = false;
         }
+        if (wrongCatalyst && hoveredRecipe.getCatalyst() != null) {
+            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_catalyst", hoveredRecipe.getCatalyst().getIngredient().getMatchingStacks()[0].getDisplayName()));
+            wrongCatalyst = false;
+        }
         if (correctAmount) {
             textLines.add(I18n.format("gui." + Tags.MOD_ID + ".correct_amount", hoveredRecipe.getInputStackSize(offHand)));
             correctAmount = false;
+        }
+        if (noQueue) {
+            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".no_queue"));
+            noQueue = false;
         }
         if (wrongDurability) {
             if (player.getHeldItemMainhand().isItemStackDamageable()) {
@@ -226,6 +248,16 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             itemRender.renderItemIntoGUI(recipeItem, xPos, yPos);
             itemRender.renderItemOverlayIntoGUI(this.fontRenderer, recipeItem, xPos, yPos, null);
 
+            if (recipe.getCatalyst() != null) {
+                GlStateManager.pushMatrix();
+                GlStateManager.disableDepth();
+                GlStateManager.scale(0.5, 0.5, 1);
+                ItemStack catalyst = recipe.getCatalyst().getIngredient().getMatchingStacks()[0];
+                itemRender.renderItemIntoGUI(catalyst, xPos * 2 + 16, yPos * 2);
+                itemRender.renderItemOverlayIntoGUI(this.fontRenderer, catalyst, xPos * 2 + 16, yPos * 2, null);
+                GlStateManager.popMatrix();
+            }
+
             GlStateManager.disableLighting();
             GlStateManager.disableDepth();
 
@@ -233,23 +265,33 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             mc.getTextureManager().bindTexture(Assets.ICON.get());
             GlStateManager.pushMatrix();
             boolean isHovered = isMouseOverSlot(mouseX, mouseY, xPos, xPos + 16, yPos, yPos + 16);
-            if (recipe.getInput().stream().map(Ingredient::getMatchingStacks).noneMatch(itemStacks -> Arrays.stream(itemStacks).anyMatch(stack -> stack.isItemEqual(player.getHeldItemOffhand())))) {
-                drawScaledCustomSizeModalRect(xPos, yPos + 8, 16, 0, 16, 16, 8, 8, 32, 32);
-                drawScaledCustomSizeModalRect(xPos + 8, yPos + 8, 0, 16, 16, 16, 8, 8, 32, 32);
+            boolean isQueueable = recipe.getQueueable() != null ? recipe.getQueueable().isQueueable() : recipeCategory.getQueueable().isQueueable();
+            int iconX = xPos + 8;
+            int iconY = yPos + 8;
+            if (!isQueueable && !queue.isEmpty()) {
+                drawScaledCustomSizeModalRect(xPos, yPos, 0, 16, 16, 16, 16, 16, 32, 32);
+                if (isHovered) {
+                    noQueue = true;
+                }
+            } else if (recipe.getInput().stream().map(Ingredient::getMatchingStacks).noneMatch(itemStacks -> Arrays.stream(itemStacks).anyMatch(stack -> stack.isItemEqual(player.getHeldItemOffhand())))) {
+                drawScaledCustomSizeModalRect(iconX, iconY, 0, 16, 16, 16, 8, 8, 32, 32); // Red X
                 if (isHovered) {
                     wrongInput = true;
                 }
             } else if (!recipe.isToolValid(player.getHeldItemMainhand())) {
-                drawScaledCustomSizeModalRect(xPos, yPos + 8, 16, 16, 16, 16, 8, 8, 32, 32);
-                drawScaledCustomSizeModalRect(xPos + 8, yPos + 8, 0, 16, 16, 16, 8, 8, 32, 32);
+                drawScaledCustomSizeModalRect(iconX, iconY, 16, 16, 16, 16, 8, 8, 32, 32); // Anvil
                 if (isHovered) {
                     wrongDurability = true;
                 }
             } else if (!recipe.isInputValid(player.getHeldItemOffhand())) {
-                drawScaledCustomSizeModalRect(xPos, yPos + 8, 0, 0, 16, 16, 8, 8, 32, 32);
-                drawScaledCustomSizeModalRect(xPos + 8, yPos + 8, 0, 16, 16, 16, 8, 8, 32, 32);
+                drawScaledCustomSizeModalRect(iconX, iconY, 0, 0, 16, 16, 8, 8, 32, 32); // Pouch
                 if (isHovered) {
                     wrongAmount = true;
+                }
+            } else if (!recipe.isCatalystValid(player)) {
+                drawScaledCustomSizeModalRect(iconX, iconY, 16, 0, 16, 16, 8, 8, 32, 32); // Magnifying glass
+                if (isHovered) {
+                    wrongCatalyst = true;
                 }
             } else if (isHovered) {
                 drawGradientRect(xPos, yPos, xPos + 16, yPos + 16, -2130706433, -2130706433);
@@ -266,7 +308,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
             if (queue.contains(i)) {
                 int finalI = i;
-                renderRecipeText(String.valueOf(queue.stream().filter(j -> j == finalI).count()), xPos + 16, yPos, Color.green.getRGB());
+                renderRecipeText(String.valueOf(queue.stream().filter(j -> j == finalI).count()), xPos + 6, yPos + 4, Color.green.getRGB());
             }
 
             GlStateManager.colorMask(true, true, true, true);
@@ -317,11 +359,20 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             int slotYmin = slotCoordinates.get(i + 1);
             int slotXmax = slotCoordinates.get(i + 2);
             int slotYmax = slotCoordinates.get(i + 3);
+
+            GsRecipe recipe = validRecipes.get(i / 4);
+            boolean isQueueable = recipe.getQueueable() != null ? recipe.getQueueable().isQueueable() : recipeCategory.getQueueable().isQueueable();
+
             if (isMouseOverSlot(mouseX, mouseY, slotXmin, slotXmax, slotYmin, slotYmax)) {
-                if (validRecipes.get(i / 4).isInputValid(player.getHeldItemOffhand()) && validRecipes.get(i / 4).isToolValid(player.getHeldItemMainhand())) {
+                if (!isQueueable && !queue.isEmpty()) {
+                    break;
+                }
+                if (recipe.isInputValid(player.getHeldItemOffhand())
+                        && recipe.isToolValid(player.getHeldItemMainhand())
+                        && recipe.isCatalystValid(player)) {
                     queue.add(i / 4);
                     timeQueueStart = timeQueueStart == -1 ? Minecraft.getSystemTime() : timeQueueStart;
-                    totalCraftingTime += (validRecipes.get(i / 4).getTime() / Objects.requireNonNull(validRecipes.get(i / 4).getTool(player.getHeldItemMainhand())).getTimeMultiplier()) * 50;
+                    totalCraftingTime += (recipe.getTime() / Objects.requireNonNull(recipe.getTool(player.getHeldItemMainhand())).getTimeMultiplier()) * 50;
                     break;
                 }
             }

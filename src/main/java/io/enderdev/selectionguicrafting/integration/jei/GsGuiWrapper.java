@@ -10,6 +10,7 @@ import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +28,7 @@ public class GsGuiWrapper implements IRecipeWrapper {
     private List<ItemStack> tool;
     private List<ItemStack> input;
     private List<ItemStack> secondary;
+    private float secondaryChance;
     private List<ItemStack> output;
     private List<Float> outputChance;
 
@@ -56,7 +58,8 @@ public class GsGuiWrapper implements IRecipeWrapper {
             return stack;
         }).collect(Collectors.toList());
 
-        secondary = Collections.emptyList(); // TODO: Implement secondary output
+        secondary = recipe.getCatalyst() == null ? Collections.emptyList() : Arrays.asList(recipe.getCatalyst().getIngredient().getMatchingStacks());
+        secondaryChance = recipe.getCatalyst() == null ? 1 : recipe.getCatalyst().getChance();
 
         output = recipe.getOutput().stream().map(GsOutput::getItemStack).collect(Collectors.toList());
         outputChance = recipe.getOutput().stream().map(GsOutput::getChance).collect(Collectors.toList());
@@ -71,7 +74,10 @@ public class GsGuiWrapper implements IRecipeWrapper {
 
     @Override
     public void drawInfo(@NotNull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        if (secondary.isEmpty() && minecraft.currentScreen != null) {
+        if (minecraft.currentScreen == null) {
+            return;
+        }
+        if (secondary.isEmpty()) {
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
             minecraft.getTextureManager().bindTexture(Assets.JEI_LOCKED.get());
@@ -83,10 +89,20 @@ public class GsGuiWrapper implements IRecipeWrapper {
 
     @Override
     public @NotNull List<String> getTooltipStrings(int mouseX, int mouseY) {
-        if (isMouseOver(mouseX, mouseY, 87, 0,23,18)) {
-            return output.stream().map(itemStack -> itemStack.getCount()+ "x " + itemStack.getDisplayName()+ " " + outputChance.get(output.indexOf(itemStack))*100 + "%").collect(Collectors.toList());
-        } else if (isMouseOver(mouseX,mouseY,64,0,18,18)  && secondary.isEmpty()) {
-            return Collections.singletonList("No secondary input.");
+        if (isMouseOver(mouseX, mouseY, 87, 0, 23, 18)) {
+            return output.stream().map(itemStack -> I18n.format("jei.selectionguicrafting.output", itemStack.getCount(), itemStack.getDisplayName(), outputChance.get(output.indexOf(itemStack)) * 100)).collect(Collectors.toList());
+        }
+        if (isMouseOver(mouseX, mouseY, 64, 0, 18, 18) && secondary.isEmpty()) {
+            return Collections.singletonList(I18n.format("jei.selectionguicrafting.no_second"));
+        }
+        if (isMouseOver(mouseX, mouseY, 57, 6, 6, 6) && !secondary.isEmpty()) {
+            if (secondaryChance == 1) {
+                return Collections.singletonList(I18n.format("jei.selectionguicrafting.secondary_all"));
+            } else if (secondaryChance == 0) {
+                return Collections.singletonList(I18n.format("jei.selectionguicrafting.secondary_none"));
+            } else {
+                return Collections.singletonList(I18n.format("jei.selectionguicrafting.secondary_chance", secondaryChance * 100));
+            }
         }
         return Collections.emptyList();
     }

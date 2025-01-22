@@ -3,10 +3,17 @@ gui.selectionguicrafting.close=Close GUI
 gui.selectionguicrafting.wrong_input=§c§oRequires %s
 gui.selectionguicrafting.wrong_amount=§c§oNeeds %s %s, but got %s
 gui.selectionguicrafting.wrong_durability=§c§o%s doesn't have enough durability
+gui.selectionguicrafting.wrong_catalyst=§c§oRequires %s
 gui.selectionguicrafting.correct_amount=§a§oConsume: %s
+gui.selectionguicrafting.no_queue=§c§oCan't queue this recipe
 gui.selectionguicrafting.crafting_time=%s
 
 jei.selectionguicrafting.category=Selection GUI Crafting
+jei.selectionguicrafting.output=%sx %s %s%%
+jei.selectionguicrafting.no_second=No secondary input.
+jei.selectionguicrafting.secondary_all=Catalyst will be consumed.
+jei.selectionguicrafting.secondary_none=Catalyst won't be consumed.
+jei.selectionguicrafting.secondary_chance=Catalyst consumption chance: %s%%
 
 config.selectionguicrafting.client=Client
 

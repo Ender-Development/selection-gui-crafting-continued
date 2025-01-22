@@ -59,8 +59,8 @@ public class SgcCategory extends VirtualizedRegistry<GsCategory> {
     }
 
     @RecipeBuilderDescription(example = {
-            @Example(".id('dummy_category').displayName('Your first Category').background('selectionguicrafting:textures/gui/gui_wood.png')"),
-            @Example(".id('blub').displayName('Pick your recipe').background('selectionguicrafting:textures/gui/gui_full.png').backgroundType('SINGLE_STRETCH')")
+            @Example(".id('dummy_category').displayName('Your first Category').background('selectionguicrafting:textures/gui/background/wood.png')"),
+            @Example(".id('blub').displayName('Pick your recipe').background('selectionguicrafting:textures/gui/background/lake.png').backgroundType('SINGLE_STRETCH')")
     })
     public CategoryBuilder newCategory() {
         return new CategoryBuilder();
@@ -146,6 +146,16 @@ public class SgcCategory extends VirtualizedRegistry<GsCategory> {
         @RecipeBuilderMethodDescription(field = "queueable")
         public CategoryBuilder queueType(String queueable) {
             super.setQueueable(GsEnum.QueueType.valueOf(queueable));
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "queueable")
+        public CategoryBuilder queueType(boolean queueable) {
+            if (queueable) {
+                super.setQueueable(GsEnum.QueueType.YES);
+            } else {
+                super.setQueueable(GsEnum.QueueType.NO);
+            }
             return this;
         }
 
