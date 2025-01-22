@@ -2,6 +2,7 @@ package io.enderdev.selectionguicrafting.gui;
 
 import io.enderdev.selectionguicrafting.registry.GsCategory;
 import io.enderdev.selectionguicrafting.registry.GsEnum;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
@@ -51,11 +52,6 @@ public abstract class GuiScreenDynamic extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawBackground();
-    }
-
-    private void drawBackground() {
-        // Init
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f); // Reset color
         drawDynamicBackground();
         drawDynamicBorder();
@@ -86,8 +82,8 @@ public abstract class GuiScreenDynamic extends GuiScreen {
 
     private void drawDynamicBorder() {
         GlStateManager.pushMatrix();
-        mc.getTextureManager().bindTexture(borderTexture); // Fetch texture
-        int textureWidth  = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
+        mc.getTextureManager().bindTexture(borderTexture);
+        int textureWidth = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
         int textureHeight = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
         int border = (textureHeight - 16) / 2;
 
@@ -104,19 +100,19 @@ public abstract class GuiScreenDynamic extends GuiScreen {
         drawScaledCustomSizeModalRect(right - border, bottom - border, 24, 24, border, border, border, border, textureWidth, textureHeight);
 
         // Left side
-        for (int i = 0; i < guiHeight - border*2; i += 16)
+        for (int i = 0; i < guiHeight - border * 2; i += 16)
             drawScaledCustomSizeModalRect(left, top + 8 + i, 0, 8, border, 16, border, 16, textureWidth, textureHeight);
 
         // Top side
-        for (int i = 0; i < guiWidth - border*2; i += 16)
+        for (int i = 0; i < guiWidth - border * 2; i += 16)
             drawScaledCustomSizeModalRect(left + 8 + i, top, 8, 0, 16, border, 16, border, textureWidth, textureHeight);
 
         // Right side
-        for (int i = 0; i < guiHeight - border*2; i += 16)
+        for (int i = 0; i < guiHeight - border * 2; i += 16)
             drawScaledCustomSizeModalRect(right - border, top + 8 + i, 24, 8, border, 16, border, 16, textureWidth, textureHeight);
 
         // Bottom side
-        for (int i = 0; i < guiWidth - border*2; i += 16)
+        for (int i = 0; i < guiWidth - border * 2; i += 16)
             drawScaledCustomSizeModalRect(left + 8 + i, bottom - border, 8, 24, 16, border, 16, border, textureWidth, textureHeight);
 
         GlStateManager.popMatrix();
@@ -124,38 +120,96 @@ public abstract class GuiScreenDynamic extends GuiScreen {
 
     private void drawDynamicBackground() {
         mc.getTextureManager().bindTexture(backgroundTexture); // Fetch texture
-        int textureWidth  = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
+        int textureWidth = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
         int textureHeight = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
         int border = (textureHeight - 16) / 2;
         GlStateManager.pushMatrix();
 
-        if (backgroundType == GsEnum.BackgroundType.TILE) {
-            // Draw center tiles
-            for (int i = 0; i < guiWidth - border*2; i += 16) {
-                for (int j = 0; j < guiHeight - border*2; j += 16) {
-                    drawScaledCustomSizeModalRect(left + border + i, top + border + j, border, border, 16, 16, 16, 16, textureWidth, textureHeight);
+        switch (backgroundType) {
+            case TILE:
+                for (int i = 0; i < guiWidth - border * 2; i += 16) {
+                    for (int j = 0; j < guiHeight - border * 2; j += 16) {
+                        drawScaledCustomSizeModalRect(left + border + i, top + border + j, border, border, 16, 16, 16, 16, textureWidth, textureHeight);
+                    }
                 }
-            }
-        }
-        if (backgroundType == GsEnum.BackgroundType.SINGLE_STRETCH) {
-            drawScaledCustomSizeModalRect(left + 8, top + 8, 0, 0, textureWidth, textureHeight, guiWidth - 16, guiHeight - 16, textureWidth, textureHeight);
-        }
-        if (backgroundType == GsEnum.BackgroundType.SINGLE_CUT) {
-            // TODO: Implement
+                break;
+            case SINGLE_STRETCH:
+                drawScaledCustomSizeModalRect(left + 8, top + 8, 0, 0, textureWidth, textureHeight, guiWidth - 16, guiHeight - 16, textureWidth, textureHeight);
+                break;
+            case SINGLE_CUT:
+                float textureAspectRatio = (float) textureWidth / textureHeight;
+                float screenAspectRatio = (float) guiWidth / guiHeight;
+                float finalWidth, finalHeight;
+
+                if (textureAspectRatio > screenAspectRatio) {
+                    // Fit height to screen, width will exceed
+                    finalHeight = guiHeight;
+                    finalWidth = guiHeight * textureAspectRatio;
+                } else {
+                    // Fit width to screen, height will exceed
+                    finalWidth = guiWidth;
+                    finalHeight = guiWidth / textureAspectRatio;
+                }
+
+                // I have no idea how any of the GL11 stuff works, but thanks to the RenderBook by tttsaurus for the stencil code
+                // I thought I have to tweak the stencil code to make it work, but all that was needed was to tweak the QUADS vertices
+                // Reference: https://github.com/tttsaurus/Mc122RenderBook/blob/main/articles/Stencil.md
+                if (!Minecraft.getMinecraft().getFramebuffer().isStencilEnabled()) {
+                    Minecraft.getMinecraft().getFramebuffer().enableStencil();
+                }
+
+                GlStateManager.disableTexture2D();
+                GlStateManager.disableCull();
+
+                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                GL11.glEnable(GL11.GL_STENCIL_TEST);
+
+                int stencilValue = 1;
+                GlStateManager.depthMask(false);
+                GlStateManager.colorMask(false, false, false, false);
+                GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+                GL11.glStencilFunc(GL11.GL_ALWAYS, stencilValue, 0xFF);
+                GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_REPLACE, GL11.GL_REPLACE);
+
+                GL11.glStencilMask(0xFF);
+
+                GL11.glBegin(GL11.GL_QUADS);
+                GL11.glVertex2f(left, top);
+                GL11.glVertex2f(right, top);
+                GL11.glVertex2f(right, bottom);
+                GL11.glVertex2f(left, bottom);
+                GL11.glEnd();
+
+                GL11.glStencilMask(0x00);
+
+                GlStateManager.depthMask(true);
+                GlStateManager.colorMask(true, true, true, true);
+
+                GL11.glStencilFunc(GL11.GL_EQUAL, stencilValue, 0xFF);
+                GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+
+                GlStateManager.enableCull();
+                GlStateManager.enableTexture2D();
+                int posX = (int) (left + 8 + ((float) guiWidth / 2) - (finalWidth / 2));
+                int posY = (int) (top + 8 + ((float) guiHeight / 2) - (finalHeight / 2));
+                drawScaledCustomSizeModalRect(posX, posY, 0, 0, textureWidth, textureHeight, (int) finalWidth - 16, (int) finalHeight - 16, textureWidth, textureHeight);
+
+                GL11.glDisable(GL11.GL_STENCIL_TEST);
+                break;
         }
         GlStateManager.popMatrix();
     }
 
     private void drawDynamicDecoration() {
         mc.getTextureManager().bindTexture(decorationTexture);
-        int textureWidth  = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
+        int textureWidth = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
         int textureHeight = GlStateManager.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
 
         // Draw decoration
         int posX = left + (guiWidth / 2) - (textureWidth / 2);
         GlStateManager.pushMatrix();
-        drawScaledCustomSizeModalRect(posX, top, 0, 0, textureWidth, textureHeight/2, textureWidth, textureHeight/2, textureWidth, textureHeight);
-        drawScaledCustomSizeModalRect(posX, bottom - textureHeight/2, 0, textureHeight/2, textureWidth, textureHeight/2, textureWidth, textureHeight/2, textureWidth, textureHeight);
+        drawScaledCustomSizeModalRect(posX, top, 0, 0, textureWidth, textureHeight / 2, textureWidth, textureHeight / 2, textureWidth, textureHeight);
+        drawScaledCustomSizeModalRect(posX, bottom - textureHeight / 2, 0, textureHeight / 2, textureWidth, textureHeight / 2, textureWidth, textureHeight / 2, textureWidth, textureHeight);
         GlStateManager.popMatrix();
     }
 }

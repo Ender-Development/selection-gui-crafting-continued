@@ -20,7 +20,7 @@ mods.selectionguicrafting.sgc_category.newCategory()
     .id('blub')
     .displayName('Pick your recipe')
     .background('selectionguicrafting:textures/gui/background/lake.png')
-    .backgroundType('SINGLE_STRETCH')
+    .backgroundType('SINGLE_CUT')
     .register()
 
 
