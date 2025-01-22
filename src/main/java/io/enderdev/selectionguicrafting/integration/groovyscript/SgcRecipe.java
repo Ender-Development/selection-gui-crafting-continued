@@ -12,6 +12,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
 public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
     @Override
@@ -104,9 +105,9 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
     @Property(property = "input", comp = @Comp(gte = 1))
     @Property(property = "output", comp = @Comp(gte = 1))
     @Property(property = "tool", comp = @Comp(gte = 1))
-    @Property(property = "time", comp = @Comp(gte = 1))
-    @Property(property = "xp", comp = @Comp(gte = 1))
-    @Property(property = "durability", comp = @Comp(gte = 1))
+    @Property(property = "time", comp = @Comp(gte = 0))
+    @Property(property = "xp", comp = @Comp(gte = 0))
+    @Property(property = "durability", comp = @Comp(gte = 0))
     @Property(property = "sounds")
     @Property(property = "particles")
     @Property(property = "frame")

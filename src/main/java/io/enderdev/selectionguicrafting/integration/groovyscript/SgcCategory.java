@@ -13,6 +13,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
 public class SgcCategory extends VirtualizedRegistry<GsCategory> {
     @Override
