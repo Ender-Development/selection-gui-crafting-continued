@@ -386,7 +386,7 @@ public class GsRecipe {
 
     /**
      * Check if an input is valid for the recipe, it checks the item, metadata and tag a re the same as well as if the
-     * stack size is more than the amount set with {@link #setAmount(int)}.
+     * stack size is more than the size of the input stack.
      *
      * @param itemStack The input to check
      * @return If the input is valid for the recipe

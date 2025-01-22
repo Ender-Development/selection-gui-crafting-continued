@@ -1,6 +1,7 @@
 package io.enderdev.selectionguicrafting.integration.jei;
 
 import io.enderdev.selectionguicrafting.Tags;
+import io.enderdev.selectionguicrafting.gui.Assets;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -8,7 +9,6 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -19,8 +19,8 @@ public class GsGuiCategory implements IRecipeCategory<GsGuiWrapper> {
     private final IDrawable icon;
 
     public GsGuiCategory(IGuiHelper guiHelper) {
-        drawable = guiHelper.createDrawable(new ResourceLocation(Tags.MOD_ID, "textures/jei/selection.png"), 0, 0, 135, 18);
-        icon = guiHelper.createDrawable(new ResourceLocation(Tags.MOD_ID, "textures/jei/selection.png"), 135, 0, 18, 18);
+        drawable = guiHelper.createDrawable(Assets.JEI_SELECTION.get(), 0, 0, 135, 18);
+        icon = guiHelper.createDrawable(Assets.JEI_SELECTION.get(), 135, 0, 18, 18);
     }
 
     @Override

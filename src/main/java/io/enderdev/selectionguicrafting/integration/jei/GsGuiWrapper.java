@@ -1,6 +1,7 @@
 package io.enderdev.selectionguicrafting.integration.jei;
 
 import io.enderdev.selectionguicrafting.Tags;
+import io.enderdev.selectionguicrafting.gui.Assets;
 import io.enderdev.selectionguicrafting.registry.GsOutput;
 import io.enderdev.selectionguicrafting.registry.GsRecipe;
 import io.enderdev.selectionguicrafting.registry.GsTool;
@@ -73,17 +74,11 @@ public class GsGuiWrapper implements IRecipeWrapper {
         if (secondary.isEmpty() && minecraft.currentScreen != null) {
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
-            minecraft.getTextureManager().bindTexture(new ResourceLocation(Tags.MOD_ID, "textures/jei/locked.png"));
+            minecraft.getTextureManager().bindTexture(Assets.JEI_LOCKED.get());
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             drawModalRectWithCustomSizedTexture(64, 0, 0, 0, 18, 18, 18, 18);
             GlStateManager.popMatrix();
         }
-//        if (recipe() > 0) {
-//            minecraft.fontRenderer.drawString(String.valueOf(-recipe.getAmount()), 32, 14, Color.red.getRGB());
-//        }
-//        if (recipe.getAmount() < 0) {
-//            minecraft.fontRenderer.drawString("+" + -recipe.getAmount(), 32, 14, Color.green.getRGB());
-//        }
     }
 
     @Override

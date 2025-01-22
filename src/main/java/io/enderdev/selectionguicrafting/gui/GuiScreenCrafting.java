@@ -230,7 +230,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             GlStateManager.disableDepth();
 
             GlStateManager.colorMask(true, true, true, false);
-            mc.getTextureManager().bindTexture(new ResourceLocation(Tags.MOD_ID, "textures/gui/icon.png"));
+            mc.getTextureManager().bindTexture(Assets.ICON.get());
             GlStateManager.pushMatrix();
             boolean isHovered = isMouseOverSlot(mouseX, mouseY, xPos, xPos + 16, yPos, yPos + 16);
             if (recipe.getInput().stream().map(Ingredient::getMatchingStacks).noneMatch(itemStacks -> Arrays.stream(itemStacks).anyMatch(stack -> stack.isItemEqual(player.getHeldItemOffhand())))) {

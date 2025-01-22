@@ -1,6 +1,7 @@
 package io.enderdev.selectionguicrafting.registry;
 
 import io.enderdev.selectionguicrafting.Tags;
+import io.enderdev.selectionguicrafting.gui.Assets;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -167,27 +168,27 @@ public class GsCategory {
 
     @NotNull
     public ResourceLocation getBackground() {
-        return background == null ? new ResourceLocation(Tags.MOD_ID, "textures/gui/gui_default.png") : background;
+        return background == null ? Assets.BG_DEFAULT.get() : background;
     }
 
     @NotNull
     public ResourceLocation getBorder() {
-        return border == null ? new ResourceLocation(Tags.MOD_ID, "textures/gui/gui_default.png") : border;
+        return border == null ? Assets.BG_DEFAULT.get() : border;
     }
 
     @NotNull
     public ResourceLocation getDecoration() {
-        return decoration == null ? new ResourceLocation(Tags.MOD_ID, "textures/gui/gui_decor.png") : decoration;
+        return decoration == null ? Assets.DECOR_DEFAULT.get() : decoration;
     }
 
     @NotNull
     public ResourceLocation getFrame() {
-        return frame == null ? new ResourceLocation(Tags.MOD_ID, "textures/gui/itembackground.png") : frame;
+        return frame == null ? Assets.FRAME_DEFAULT.get() : frame;
     }
 
     @NotNull
     public ResourceLocation getProgressBar() {
-        return progressBar == null ? new ResourceLocation(Tags.MOD_ID, "textures/gui/progress.png") : progressBar;
+        return progressBar == null ? Assets.BAR_DEFAULT.get() : progressBar;
     }
 
     @NotNull
