@@ -279,7 +279,11 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                     wrongInput = true;
                 }
             } else if (!recipe.isToolValid(player.getHeldItemMainhand())) {
-                drawScaledCustomSizeModalRect(iconX, iconY, 16, 16, 16, 16, 8, 8, 32, 32); // Anvil
+                if (player.getHeldItemMainhand().isItemStackDamageable()) {
+                    drawScaledCustomSizeModalRect(iconX, iconY, 16, 16, 16, 16, 8, 8, 32, 32); // Anvil
+                } else {
+                    drawScaledCustomSizeModalRect(iconX, iconY, 0, 0, 16, 16, 8, 8, 32, 32); // Pouch
+                }
                 if (isHovered) {
                     wrongDurability = true;
                 }
@@ -306,7 +310,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 toolTipToRenderY = mouseY;
             }
 
-            if (queue.contains(i)) {
+            if (queue.contains(i) && isQueueable) {
                 int finalI = i;
                 renderRecipeText(String.valueOf(queue.stream().filter(j -> j == finalI).count()), xPos + 6, yPos + 4, Color.green.getRGB());
             }

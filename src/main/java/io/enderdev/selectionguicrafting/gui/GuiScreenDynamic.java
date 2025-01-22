@@ -34,14 +34,14 @@ public abstract class GuiScreenDynamic extends GuiScreen {
     private GsEnum.BackgroundType backgroundType;
 
     // Must be increment of 16!
-    void updateContainerSize(int guiWidth, int guiHeight, GsCategory category) {
+    void updateContainerSize(int newGuiWidth, int newGuiHeight, GsCategory category) {
         // Update container size
-        this.guiWidth = guiWidth;
-        this.guiHeight = guiHeight;
-        this.backgroundTexture = category.getBackground();
-        this.borderTexture = category.getBorder();
-        this.decorationTexture = category.getDecoration();
-        this.backgroundType = category.getBackgroundType();
+        guiWidth = newGuiWidth;
+        guiHeight = newGuiHeight;
+        backgroundTexture = category.getBackground();
+        borderTexture = category.getBorder();
+        decorationTexture = category.getDecoration();
+        backgroundType = category.getBackgroundType();
 
         // Calculate offsets
         top = (height / 2) - (guiHeight / 2);
@@ -141,14 +141,19 @@ public abstract class GuiScreenDynamic extends GuiScreen {
                 float screenAspectRatio = (float) guiWidth / guiHeight;
                 float finalWidth, finalHeight;
 
+                int inner_top = (height / 2) - (guiHeight / 2) + 8;
+                int inner_left = (width / 2) - (guiWidth / 2) + 8;
+                int inner_right = (width / 2) + (guiWidth / 2) - 8;
+                int inner_bottom = (height / 2) + (guiHeight / 2) - 8;
+
                 if (textureAspectRatio > screenAspectRatio) {
                     // Fit height to screen, width will exceed
-                    finalHeight = guiHeight;
-                    finalWidth = guiHeight * textureAspectRatio;
+                    finalHeight = guiHeight - 16;
+                    finalWidth = (guiHeight - 16) * textureAspectRatio;
                 } else {
                     // Fit width to screen, height will exceed
-                    finalWidth = guiWidth;
-                    finalHeight = guiWidth / textureAspectRatio;
+                    finalWidth = guiWidth - 16;
+                    finalHeight = (guiWidth - 16) / textureAspectRatio;
                 }
 
                 // I have no idea how any of the GL11 stuff works, but thanks to the RenderBook by tttsaurus for the stencil code
@@ -164,20 +169,22 @@ public abstract class GuiScreenDynamic extends GuiScreen {
                 GL11.glEnable(GL11.GL_DEPTH_TEST);
                 GL11.glEnable(GL11.GL_STENCIL_TEST);
 
+                GL11.glClearStencil(0);
+                GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+
                 int stencilValue = 1;
                 GlStateManager.depthMask(false);
                 GlStateManager.colorMask(false, false, false, false);
-                GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
                 GL11.glStencilFunc(GL11.GL_ALWAYS, stencilValue, 0xFF);
                 GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_REPLACE, GL11.GL_REPLACE);
 
                 GL11.glStencilMask(0xFF);
 
                 GL11.glBegin(GL11.GL_QUADS);
-                GL11.glVertex2f(left, top);
-                GL11.glVertex2f(right, top);
-                GL11.glVertex2f(right, bottom);
-                GL11.glVertex2f(left, bottom);
+                GL11.glVertex2f(inner_left, inner_top);
+                GL11.glVertex2f(inner_right, inner_top);
+                GL11.glVertex2f(inner_right, inner_bottom);
+                GL11.glVertex2f(inner_left, inner_bottom);
                 GL11.glEnd();
 
                 GL11.glStencilMask(0x00);
@@ -190,9 +197,9 @@ public abstract class GuiScreenDynamic extends GuiScreen {
 
                 GlStateManager.enableCull();
                 GlStateManager.enableTexture2D();
-                int posX = (int) (left + 8 + ((float) guiWidth / 2) - (finalWidth / 2));
-                int posY = (int) (top + 8 + ((float) guiHeight / 2) - (finalHeight / 2));
-                drawScaledCustomSizeModalRect(posX, posY, 0, 0, textureWidth, textureHeight, (int) finalWidth - 16, (int) finalHeight - 16, textureWidth, textureHeight);
+                int posX = (int) (left + ((float) guiWidth / 2) - (finalWidth / 2));
+                int posY = (int) (top + ((float) guiHeight / 2) - (finalHeight / 2));
+                drawScaledCustomSizeModalRect(posX, posY, 0, 0, textureWidth, textureHeight, (int) finalWidth, (int) finalHeight, textureWidth, textureHeight);
 
                 GL11.glDisable(GL11.GL_STENCIL_TEST);
                 break;
