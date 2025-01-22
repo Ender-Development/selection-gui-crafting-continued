@@ -159,6 +159,13 @@ public final class CTsgc {
         }
 
         @ZenMethod
+        @ZenDoc("Set the queueable type for the recipe. Possible values: true, false")
+        public CTCategoryBuilder queueType(boolean queueType) {
+            category.setQueueable(queueType ? GsEnum.QueueType.YES : GsEnum.QueueType.NO);
+            return this;
+        }
+
+        @ZenMethod
         @ZenDoc("Adds a sound to the category")
         public CTCategoryBuilder sound(String sound, float volume, float pitch) {
             category.addSound(new ResourceLocation(sound), volume, pitch);
@@ -235,6 +242,13 @@ public final class CTsgc {
         @ZenDoc("Set the queueable type for the recipe. Possible values: YES, NO")
         public CTRecipeBuilder queueable(String queueable) {
             recipe.setQueueable(GsEnum.QueueType.valueOf(queueable));
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Set the queueable type for the recipe. Possible values: true, false")
+        public CTRecipeBuilder queueable(boolean queueable) {
+            recipe.setQueueable(queueable ? GsEnum.QueueType.YES : GsEnum.QueueType.NO);
             return this;
         }
 

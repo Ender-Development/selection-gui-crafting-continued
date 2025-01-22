@@ -150,11 +150,7 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
 
         @RecipeBuilderMethodDescription(field = "queueable")
         public RecipeBuilder queueType(boolean queueable) {
-            if (queueable) {
-                super.setQueueable(GsEnum.QueueType.YES);
-            } else {
-                super.setQueueable(GsEnum.QueueType.NO);
-            }
+            super.setQueueable(queueable ? GsEnum.QueueType.YES : GsEnum.QueueType.NO);
             return this;
         }
 
