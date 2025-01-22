@@ -5,9 +5,10 @@ import com.cleanroommc.groovyscript.api.GroovyPlugin;
 import com.cleanroommc.groovyscript.compat.mods.GroovyContainer;
 import com.cleanroommc.groovyscript.compat.mods.GroovyPropertyContainer;
 import com.cleanroommc.groovyscript.documentation.linkgenerator.LinkGeneratorHooks;
-import groovyjarjarantlr4.v4.runtime.misc.NotNull;
-import groovyjarjarantlr4.v4.runtime.misc.Nullable;
+
 import io.enderdev.selectionguicrafting.Tags;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class GSPlugin implements GroovyPlugin {
     @GroovyBlacklist
