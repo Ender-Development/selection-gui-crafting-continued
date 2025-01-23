@@ -100,7 +100,7 @@ public class SelectionMessageProcessRecipe implements IMessage {
                 ItemStack stack = output.getItemStack().copy();
                 GsEnum.OutputType outputType = recipe.getOutputType() != null ? recipe.getOutputType() : category.getOutputType();
                 if (random.nextFloat() < output.getChance()) {
-                    if (recipe.getOutputType() == GsEnum.OutputType.DROP) {
+                    if (outputType == GsEnum.OutputType.DROP) {
                         player.dropItem(stack, false, true);
                     } else {
                         if (!player.inventory.addItemStackToInventory(stack)) {
