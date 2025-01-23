@@ -1,7 +1,53 @@
-gui.selectionguicrafting.title.select=Select
-gui.selectionguicrafting.title.recipe=Recipe
 gui.selectionguicrafting.close=Close GUI
 
-gui.selectionguicrafting.needed=Min.
+gui.selectionguicrafting.wrong_input=§c§oRequires %s
+gui.selectionguicrafting.wrong_amount=§c§oNeeds %s %s, but got %s
+gui.selectionguicrafting.wrong_durability=§c§o%s doesn't have enough durability
+gui.selectionguicrafting.wrong_catalyst=§c§oRequires %s
+gui.selectionguicrafting.correct_amount=§a§oConsume: %s
+gui.selectionguicrafting.no_queue=§c§oCan't queue this recipe
+gui.selectionguicrafting.crafting_time=%s
 
-jei.category.selection_recipe=Selection GUI Crafting
+jei.selectionguicrafting.category=Selection GUI Crafting
+jei.selectionguicrafting.output=%sx %s %s%%
+jei.selectionguicrafting.no_second=No secondary input.
+jei.selectionguicrafting.secondary_all=Catalyst will be consumed.
+jei.selectionguicrafting.secondary_none=Catalyst won't be consumed.
+jei.selectionguicrafting.secondary_chance=Catalyst consumption chance: %s%%
+
+config.selectionguicrafting.client=Client
+
+groovyscript.wiki.selectionguicrafting.sgc_category.title=Crafting Category
+groovyscript.wiki.selectionguicrafting.sgc_category.description=All recipes in the mod are divided into categories. Each category has its own set of recipes.
+groovyscript.wiki.selectionguicrafting.sgc_category.id.value=The Category ID, must be unique. The resource must be loaded via external methods.
+groovyscript.wiki.selectionguicrafting.sgc_category.frame.value=The path to the frame texture. The resource must be loaded via external methods. Can be overridden by the recipe.
+groovyscript.wiki.selectionguicrafting.sgc_category.border.value=The path to the border texture. The resource must be loaded via external methods.
+groovyscript.wiki.selectionguicrafting.sgc_category.sounds.value=The sounds that will be played when the recipe is crafted. Can be overridden by the recipe.
+groovyscript.wiki.selectionguicrafting.sgc_category.particles.value=The particles that will be spawned when the recipe is crafted. Can be overridden by the recipe.
+groovyscript.wiki.selectionguicrafting.sgc_category.queueable.value=If the recipes in this category can be queued. Can be overridden by the recipe. Allowed values are: 'true' or 'false'. DEFAULT is 'true'.
+groovyscript.wiki.selectionguicrafting.sgc_category.soundType.value=How the sounds will be played. Can be overridden by the recipe. Allowed values are: 'RANDOM' or 'COMBINED'. DEFAULT is 'RANDOM'.
+groovyscript.wiki.selectionguicrafting.sgc_category.background.value=The path to the background texture. The resource must be loaded via external methods.
+groovyscript.wiki.selectionguicrafting.sgc_category.decoration.value=The path to the decoration texture. The resource must be loaded via external methods.
+groovyscript.wiki.selectionguicrafting.sgc_category.outputType.value=How the output will be handed to the player. Can be overridden by the recipe. Allowed values are: 'DROP' or 'INVENTORY'. DEFAULT is 'DROP'.
+groovyscript.wiki.selectionguicrafting.sgc_category.displayName.value=The display name of the category that will be shown in the GUI.
+groovyscript.wiki.selectionguicrafting.sgc_category.progressBar.value=The path to the progress bar texture. The resource must be loaded via external methods. Can be overridden by the recipe.
+groovyscript.wiki.selectionguicrafting.sgc_category.backgroundType.value=How the background will be rendered. The resource must be loaded via external methods. Allowed values are: 'SINGLE_STRETCH' , 'TILE' or 'SINGLE_CUT'. DEFAULT is 'TILE'. 'TILE' uses a 16x16 texture and repeats it. 'SINGLE_STRETCH' stretches the texture ratio to fill the screen. 'SINGLE_CUT' stretches the texture while keeping the aspect ratio and cuts of anything that goes outside the gui. The texture is centered on the x and y axis.
+groovyscript.wiki.selectionguicrafting.sgc_category.streamCategories=Iterates through every entry in the registry, with the ability to call remove on any element to remove it
+
+groovyscript.wiki.selectionguicrafting.sgc_recipe.title=Crafting Recipe
+groovyscript.wiki.selectionguicrafting.sgc_recipe.description=Creates a recipe that is shown in the specified category. It can requires an input, output and tool. You may also need a catalyst to craft the recipe.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.xp.value=The amount of XP that will be granted to the player when the recipe is crafted.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.time.value=The time in ticks it takes to craft the recipe.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.tool.value=The tool that will be used to craft the recipe. Tool refers to the mainhand item. This doesn't need to be an item with durability.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.frame.value=The path to the frame texture. Overrides the category frame.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.input.value=The input items that are required to craft the recipe. Input refers to the offhand item.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.output.value=The output items that will be given to the player. You can add multiple outputs each with a different chance.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.catalyst.value=The catalyst that will be used to craft the recipe. The catalyst is an optional additional input that must be present in the player's inventory. You're able to set the chance of the catalyst being consumed.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.sounds.value=The sounds that will be played when the recipe is crafted. Overrides the category sounds.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.category.value=The category that the recipe belongs to.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.particles.value=The particles that will be spawned when the recipe is crafted. Overrides the category particles.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.queueable.value=If the recipe can be queued. Overrides the category queue able. Allowed values are: 'true' or 'false'. DEFAULT is 'true'.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.soundType.value=How the sounds will be played. Overrides the category soundType. Allowed values are: 'RANDOM' or 'COMBINED'. DEFAULT is 'RANDOM'.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.durability.value=The durability that will be consumed. Tool damage can be tweaked individually with the multiplier. This does nothing it the tool is a non damageable item.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.outputType.value=How the output will be handed to the player. Overrides the category outputType. Allowed values are: 'DROP' or 'INVENTORY'. DEFAULT is 'DROP'.
+groovyscript.wiki.selectionguicrafting.sgc_recipe.progressBar.value=The path to the progress bar texture. Overrides the category progressBar.

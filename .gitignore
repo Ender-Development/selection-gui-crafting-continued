@@ -20,3 +20,8 @@ build
 # other
 eclipse
 run
+
+# groovyscript
+jei.groovy
+main.groovy
+runConfig.json
