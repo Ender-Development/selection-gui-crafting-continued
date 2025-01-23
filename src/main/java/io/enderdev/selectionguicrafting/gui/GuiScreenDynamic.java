@@ -2,6 +2,7 @@ package io.enderdev.selectionguicrafting.gui;
 
 import io.enderdev.selectionguicrafting.registry.GsCategory;
 import io.enderdev.selectionguicrafting.registry.GsEnum;
+import io.enderdev.selectionguicrafting.registry.GsRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -33,6 +34,9 @@ public abstract class GuiScreenDynamic extends GuiScreen {
     private ResourceLocation decorationTexture;
     private GsEnum.BackgroundType backgroundType;
 
+    // Stencil value
+    private int stencilValue;
+
     // Must be increment of 16!
     void updateContainerSize(int newGuiWidth, int newGuiHeight, GsCategory category) {
         // Update container size
@@ -42,6 +46,7 @@ public abstract class GuiScreenDynamic extends GuiScreen {
         borderTexture = category.getBorder();
         decorationTexture = category.getDecoration();
         backgroundType = category.getBackgroundType();
+        stencilValue = GsRegistry.getCategories().indexOf(category) + 1;
 
         // Calculate offsets
         top = (height / 2) - (guiHeight / 2);
@@ -172,7 +177,6 @@ public abstract class GuiScreenDynamic extends GuiScreen {
                 GL11.glClearStencil(0);
                 GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
 
-                int stencilValue = 1;
                 GlStateManager.depthMask(false);
                 GlStateManager.colorMask(false, false, false, false);
                 GL11.glStencilFunc(GL11.GL_ALWAYS, stencilValue, 0xFF);
