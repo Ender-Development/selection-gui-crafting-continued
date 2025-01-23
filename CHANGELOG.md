@@ -1,11 +1,8 @@
 # Changelog
 
-## [2.0.0] - 2025-02-XX
+## [2.0.0] - 2025-01-23
 
-### Changed
-- rewrote the whole recipe management
-- rewrote the GroovyScript support
-- rewrote the whole CraftTweaker support
+- rewritten the whole mod
 
 ## [1.1.0] - 2025-01-17
 

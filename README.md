@@ -1,4 +1,4 @@
-# Selection GUI Crafting - Continued
+![](title.png)
 
 This is a fork of [Selection GUI Crafting](https://www.curseforge.com/minecraft/mc-mods/selection-gui-crafting) by [Gliese_832_c](https://www.curseforge.com/members/gliese_832_c). It provides a few improvements to the original mod and also adds support for [GroovyScript](https://www.curseforge.com/minecraft/mc-mods/groovyscript).
 
@@ -11,9 +11,11 @@ Minecraft 1.12.2 mod that gives modpack authors the ability to add crafting reci
 This could, for example, be used for clay recipes. Instead of manually arranging clay balls in a different way in a crafting table, it would be possible to make it so that you right-click with a spatula in one hand, clay in the other, and just select the clay item you want to make.
 Another use example would be forging. Right-click with a hammer in one hand, an ingot in the other, and select your desired toolhead.
 
-## Changes
+![](src/main/resources/assets/selectionguicrafting/textures/logo.png)
 
-- Added support for GroovyScript
+## Fork? Rewrite!
+
+What started as a fork of the original mod, quickly turned into a rewrite. The original crafting system felt way to clunky and not user-friendly. The new system is much more intuitive and user-friendly. It also allows much more customization and is more flexible to benefit the needs of modpack developers. An added bonus is the support for GroovyScript. The old CraftTweaker support was rewritten as well to reflect the new system.
 
 ## [Ender-Development](https://github.com/Ender-Development)
 
