@@ -330,9 +330,23 @@ public final class CTsgc {
         }
 
         @ZenMethod
-        @ZenDoc("Set the amount of durability that is conumed when crafting this recipe")
+        @ZenDoc("Set the amount of durability that is consumed when crafting this recipe")
         public CTRecipeBuilder durability(int durability) {
             recipe.setDurability(durability);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Set the catalyst for the recipe, with a specified chance")
+        public CTRecipeBuilder catalyst(IIngredient catalyst, float chance) {
+            recipe.setCatalyst(Ingredient.fromStacks((ItemStack) catalyst.getInternal()), chance);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Set the catalyst for the recipe")
+        public CTRecipeBuilder catalyst(IIngredient catalyst) {
+            recipe.setCatalyst(Ingredient.fromStacks((ItemStack) catalyst.getInternal()), 1);
             return this;
         }
 
