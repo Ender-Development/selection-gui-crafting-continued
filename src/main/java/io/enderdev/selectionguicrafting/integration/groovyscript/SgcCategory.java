@@ -60,7 +60,8 @@ public class SgcCategory extends VirtualizedRegistry<GsCategory> {
 
     @RecipeBuilderDescription(example = {
             @Example(".id('dummy_category').displayName('Your first Category').background('selectionguicrafting:textures/gui/background/wood.png')"),
-            @Example(".id('blub').displayName('Pick your recipe').background('selectionguicrafting:textures/gui/background/lake.png').backgroundType('SINGLE_CUT')")
+            @Example(".id('blub').displayName('Pick your recipe').background('selectionguicrafting:textures/gui/background/lake.png').backgroundType('SINGLE_CUT')"),
+            @Example(".id('dead').displayName('This is another dummy category to test').background('selectionguicrafting:textures/gui/background/deadlands.png').decoration('selectionguicrafting:textures/gui/decor/gold.png').border('selectionguicrafting:textures/gui/background/wood.png').backgroundType('SINGLE_CUT')")
     })
     public CategoryBuilder newCategory() {
         return new CategoryBuilder();
