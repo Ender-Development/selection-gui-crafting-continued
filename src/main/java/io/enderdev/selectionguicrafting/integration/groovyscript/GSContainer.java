@@ -4,8 +4,8 @@ import com.cleanroommc.groovyscript.compat.mods.GroovyPropertyContainer;
 
 public class GSContainer extends GroovyPropertyContainer {
 
-    public final SgcCategory category = new SgcCategory();
-    public final SgcRecipe recipe = new SgcRecipe();
+    public final Category category = new Category();
+    public final Recipe recipe = new Recipe();
 
     public GSContainer() {
         addProperty(category);

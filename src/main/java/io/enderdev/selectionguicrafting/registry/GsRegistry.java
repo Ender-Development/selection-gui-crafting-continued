@@ -2,10 +2,13 @@ package io.enderdev.selectionguicrafting.registry;
 
 import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class GsRegistry {
@@ -57,5 +60,15 @@ public class GsRegistry {
 
     public static boolean removeRecipe(@NotNull String category, @NotNull ArrayList<GsOutput> output) {
         return recipes.removeIf(recipe -> recipe.getCategory().equals(category) && recipe.getOutput().equals(output));
+    }
+
+    @Nullable
+    public static String getCategoryFromInput(ItemStack mainhand, ItemStack offhand) {
+        return GsRegistry.getRecipes().stream()
+                .filter(recipe -> recipe.getTool().stream().map(GsTool::getItemStack).map(ItemStack::getItem).anyMatch(item -> item == mainhand.getItem()))
+                .filter(recipe -> recipe.getInput().stream().map(Ingredient::getMatchingStacks)
+                        .anyMatch(stacks -> Arrays.stream(stacks).anyMatch(stack -> stack.getItem() == offhand.getItem())))
+                .map(GsRecipe::getCategory)
+                .findFirst().orElse(null);
     }
 }

@@ -31,20 +31,18 @@ public class EventRightClick {
         ItemStack eventItemMainhand = player.getHeldItemMainhand();
         ItemStack eventStackOffhand = player.getHeldItemOffhand();
 
-        GsRegistry.getRecipes().forEach((recipe) -> {
-            Item itemMainhand = eventItemMainhand.getItem();
-            Item itemOffhand = eventStackOffhand.getItem();
-            if (recipe.getTool().stream().map(GsTool::getItemStack).map(ItemStack::getItem).anyMatch((item) -> item == itemMainhand)) {
-                if (recipe.getInput().stream().map(Ingredient::getMatchingStacks)
-                        .anyMatch(stacks -> Arrays.stream(stacks).anyMatch((stack) -> stack.getItem() == itemOffhand))) {
-                    event.setCanceled(true);
-                    if (player.getEntityWorld().isRemote) {
-                        player.openGui(SelectionGuiCrafting.instance, ModGuiHandler.CRAFTING_GUI_ID, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
-                    }
-                }
-            }
+        if (eventItemMainhand.isEmpty() || eventStackOffhand.isEmpty()) {
+            return;
+        }
 
-        });
+        if (GsRegistry.getCategoryFromInput(eventItemMainhand, eventStackOffhand) == null) {
+            return;
+        }
+
+        event.setCanceled(true);
+        if (player.getEntityWorld().isRemote) {
+            player.openGui(SelectionGuiCrafting.instance, ModGuiHandler.CRAFTING_GUI_ID, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -56,16 +54,17 @@ public class EventRightClick {
             return;
         }
 
-        Item eventItemMainhand = player.getHeldItemMainhand().getItem();
-        Item eventItemOffhand = player.getHeldItemOffhand().getItem();
+        ItemStack eventItemMainhand = player.getHeldItemMainhand();
+        ItemStack eventItemOffhand = player.getHeldItemOffhand();
 
-        GsRegistry.getRecipes().forEach((recipe) -> {
-            if (recipe.getTool().stream().map(GsTool::getItemStack).map(ItemStack::getItem).anyMatch((item) -> item == eventItemMainhand)) {
-                if (recipe.getInput().stream().map(Ingredient::getMatchingStacks)
-                        .anyMatch(stacks -> Arrays.stream(stacks).anyMatch((stack) -> stack.getItem() == eventItemOffhand))) {
-                    event.setCanceled(true);
-                }
-            }
-        });
+        if (eventItemMainhand.isEmpty() || eventItemOffhand.isEmpty()) {
+            return;
+        }
+
+        if (GsRegistry.getCategoryFromInput(eventItemMainhand, eventItemOffhand) == null) {
+            return;
+        }
+
+        event.setCanceled(true);
     }
 }

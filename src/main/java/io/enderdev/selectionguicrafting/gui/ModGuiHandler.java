@@ -34,9 +34,9 @@ public class ModGuiHandler implements IGuiHandler {
                 .filter(recipe -> recipe.getInput().stream().map(Ingredient::getMatchingStacks)
                         .anyMatch(stacks -> Arrays.stream(stacks).anyMatch(stack -> stack.getItem() == heldStackOffhand.getItem())))
                 .map(GsRecipe::getCategory)
-                .findFirst().orElse("invalid");
+                .findFirst().orElse(null);
 
-        if (ID == CRAFTING_GUI_ID) {
+        if (ID == CRAFTING_GUI_ID && recipeCategory != null) {
             return craftingGui = new GuiScreenCrafting(GsRegistry.getCategory(recipeCategory), player, world);
         }
 
