@@ -1,7 +1,7 @@
 package io.enderdev.selectionguicrafting.registry;
 
-import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.gui.Assets;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +44,7 @@ public class GsCategory {
      * @return The category
      */
     public GsCategory setDisplayName(@NotNull String displayName) {
-        this.displayName = displayName;
+        this.displayName = I18n.format(displayName);
         return this;
     }
 
