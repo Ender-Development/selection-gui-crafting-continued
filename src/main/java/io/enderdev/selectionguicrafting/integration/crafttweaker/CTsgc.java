@@ -16,58 +16,13 @@ import net.minecraft.util.ResourceLocation;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
-@ZenRegister
-@ZenClass("mods.selectionguicrafting.sgc")
 public final class CTsgc {
 
-    @ZenMethod
-    public static void removeByName(String categoryName) {
-        CraftTweakerAPI.apply(new IAction() {
-            @Override
-            public void apply() {
-                GsRegistry.removeCategory(categoryName);
-            }
-
-            @Override
-            public String describe() {
-                return "Removing Selection GUI Crafting recipe category '" + categoryName + "'";
-            }
-        });
-    }
-
-    @ZenMethod
-    public static void removeAllCategories() {
-        CraftTweakerAPI.apply(new IAction() {
-            @Override
-            public void apply() {
-                GsRegistry.getCategories().clear();
-            }
-
-            @Override
-            public String describe() {
-                return "Removing all Selection GUI Crafting recipe categories";
-            }
-        });
-    }
-
-    @ZenMethod
-    public static void removeAllRecipes() {
-        CraftTweakerAPI.apply(new IAction() {
-            @Override
-            public void apply() {
-                GsRegistry.getRecipes().clear();
-            }
-
-            @Override
-            public String describe() {
-                return "Removing all Selection GUI Crafting recipes";
-            }
-        });
-    }
-
     @ZenRegister
-    @ZenClass("mods.selectionguicrafting.sgc_category")
+    @ZenClass("mods.selectionguicrafting.category")
     public static class CTCategoryBuilder {
         private final GsCategory category;
 
@@ -77,7 +32,7 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Create a new category")
-        public static CTCategoryBuilder newCategory() {
+        public static CTCategoryBuilder categoryBuilder() {
             return new CTCategoryBuilder();
         }
 
@@ -185,6 +140,9 @@ public final class CTsgc {
             if (category.getId() == null || category.getDisplayName() == null) {
                 throw new IllegalArgumentException("Category ID and display name must be set before registering");
             }
+            if (GsRegistry.getCategories().stream().anyMatch(ctg -> Objects.equals(ctg.getId(), category.getId()))) {
+                throw new IllegalArgumentException("Category with ID '" + category.getId() + "' already exists");
+            }
             GsRegistry.registerCategory(category);
         }
 
@@ -193,10 +151,42 @@ public final class CTsgc {
         public String toString() {
             return "CTCategoryBuilder{category={id=" + category.getId() + "}, {displayName=" + category.getDisplayName() + "}}";
         }
+
+        @ZenMethod
+        @ZenDoc("Removes a category by its ID.")
+        public static void removeByName(String categoryName) {
+            CraftTweakerAPI.apply(new IAction() {
+                @Override
+                public void apply() {
+                    GsRegistry.removeCategory(categoryName);
+                }
+
+                @Override
+                public String describe() {
+                    return "Removing Selection GUI Crafting recipe category '" + categoryName + "'";
+                }
+            });
+        }
+
+        @ZenMethod
+        @ZenDoc("Removes all categories.")
+        public static void removeAllCategories() {
+            CraftTweakerAPI.apply(new IAction() {
+                @Override
+                public void apply() {
+                    GsRegistry.getCategories().clear();
+                }
+
+                @Override
+                public String describe() {
+                    return "Removing all Selection GUI Crafting recipe categories";
+                }
+            });
+        }
     }
 
     @ZenRegister
-    @ZenClass("mods.selectionguicrafting.sgc_recipe")
+    @ZenClass("mods.selectionguicrafting.recipe")
     public static class CTRecipeBuilder {
         private final GsRecipe recipe;
 
@@ -206,7 +196,7 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Create a new recipe")
-        public static CTRecipeBuilder newRecipe() {
+        public static CTRecipeBuilder recipeBuilder() {
             return new CTRecipeBuilder();
         }
 
@@ -359,6 +349,9 @@ public final class CTsgc {
             if (recipe.getInput().isEmpty() || recipe.getOutput().isEmpty() || recipe.getTool().isEmpty()) {
                 throw new IllegalArgumentException("Input, output, and tool must be set before registering");
             }
+            if (GsRegistry.getCategories().stream().noneMatch(ctg -> Objects.equals(ctg.getId(), recipe.getCategory()))) {
+                throw new IllegalArgumentException("Category with ID '" + recipe.getCategory() + "' does not exist");
+            }
             GsRegistry.registerRecipe(recipe);
         }
 
@@ -366,6 +359,22 @@ public final class CTsgc {
         @ZenMethod
         public String toString() {
             return "CTRecipeBuilder{category={id=" + recipe.getCategory() + "}, {outputs=" + recipe.getOutput() + "}}";
+        }
+
+        @ZenMethod
+        @ZenDoc("Removes all recipes.")
+        public static void removeAllRecipes() {
+            CraftTweakerAPI.apply(new IAction() {
+                @Override
+                public void apply() {
+                    GsRegistry.getRecipes().clear();
+                }
+
+                @Override
+                public String describe() {
+                    return "Removing all Selection GUI Crafting recipes";
+                }
+            });
         }
     }
 }
