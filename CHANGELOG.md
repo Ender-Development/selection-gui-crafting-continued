@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1] - 2025-01-24
+
+### Changed
+- improved GroovyScript and CraftTweaker support
+- made Category display names translatable
+- wrote more documentation
+
 ## [2.0.0] - 2025-01-23
 
 - rewritten the whole mod
