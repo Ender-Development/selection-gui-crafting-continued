@@ -4,8 +4,11 @@
 
 log.info 'mod \'selectionguicrafting\' detected, running script'
 
-// groovyscript.wiki.selectionguicrafting.category.title:
-// groovyscript.wiki.selectionguicrafting.category.description.
+// Crafting Category:
+// All recipes in the mod are divided into categories. Each category has its own set of recipes. Each category can have its
+// own texture for the background, border, frame, decoration, and progress bar. The category can also have its own sounds
+// and particles. It also allows to specify how the sounds are played, if recipes in the category can be added to the
+// crafting queue and how the output items are handed to the player.
 
 mods.selectionguicrafting.category.removeByName('dummy_category_1')
 // mods.selectionguicrafting.category.removeAll()
@@ -33,8 +36,13 @@ mods.selectionguicrafting.category.categoryBuilder()
     .register()
 
 
-// groovyscript.wiki.selectionguicrafting.recipe.title:
-// groovyscript.wiki.selectionguicrafting.recipe.description.
+// Crafting Recipe:
+// Creates a recipe that is shown in the specified category. Each recipe requires at least an input (placed in the
+// offhand), tool (placed in the mainhand), and output. There can also be an optional catalyst (placed in the inventory).
+// The recipe can have its own frame, sounds, particles, and progress bar. It also allows to specify how the sounds are
+// played, if the recipe can be added to the crafting queue, how the output items are handed to the player, and how much
+// durability is consumed, if the tool is a damageable item. The crafting time as well as a possible XP reward can be set
+// as well.
 
 // mods.selectionguicrafting.recipe.removeByCategory('dummy_category')
 mods.selectionguicrafting.recipe.removeByInput(item('minecraft:cobblestone'))
