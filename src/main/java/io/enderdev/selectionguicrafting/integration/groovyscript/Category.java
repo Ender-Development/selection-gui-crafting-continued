@@ -1,6 +1,7 @@
 package io.enderdev.selectionguicrafting.integration.groovyscript;
 
 import com.cleanroommc.groovyscript.api.GroovyBlacklist;
+import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.documentation.annotations.*;
 import com.cleanroommc.groovyscript.helper.SimpleObjectStream;
 import com.cleanroommc.groovyscript.helper.recipe.IRecipeBuilder;
@@ -11,11 +12,14 @@ import io.enderdev.selectionguicrafting.registry.GsEnum;
 import io.enderdev.selectionguicrafting.registry.GsRegistry;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
-public class SgcCategory extends VirtualizedRegistry<GsCategory> {
+public class Category extends VirtualizedRegistry<GsCategory> {
     @Override
     @GroovyBlacklist
     public void onReload() {
@@ -63,23 +67,23 @@ public class SgcCategory extends VirtualizedRegistry<GsCategory> {
             @Example(".id('blub').displayName('Pick your recipe').background('selectionguicrafting:textures/gui/background/lake.png').backgroundType('SINGLE_CUT')"),
             @Example(".id('dead').displayName('This is another dummy category to test').background('selectionguicrafting:textures/gui/background/deadlands.png').decoration('selectionguicrafting:textures/gui/decor/gold.png').border('selectionguicrafting:textures/gui/background/wood.png').backgroundType('SINGLE_CUT')")
     })
-    public CategoryBuilder newCategory() {
+    public CategoryBuilder categoryBuilder() {
         return new CategoryBuilder();
     }
 
     @Property(property = "id", comp = @Comp(not = "null"))
     @Property(property = "displayName", comp = @Comp(not = "null"))
-    @Property(property = "background")
-    @Property(property = "border")
-    @Property(property = "decoration")
-    @Property(property = "frame")
-    @Property(property = "progressBar")
-    @Property(property = "backgroundType")
-    @Property(property = "outputType")
-    @Property(property = "queueable")
-    @Property(property = "soundType")
-    @Property(property = "sounds")
-    @Property(property = "particles")
+    @Property(property = "background", defaultValue = "selectionguicrafting:textures/gui/background/default.png")
+    @Property(property = "border", defaultValue = "selectionguicrafting:textures/gui/background/default.png")
+    @Property(property = "decoration", defaultValue = "selectionguicrafting:textures/gui/decor/default.png")
+    @Property(property = "frame", defaultValue = "selectionguicrafting:textures/gui/frame/default.png")
+    @Property(property = "progressBar", defaultValue = "selectionguicrafting:textures/gui/progress/default.png")
+    @Property(property = "backgroundType", defaultValue = "TILE")
+    @Property(property = "outputType", defaultValue = "DROP")
+    @Property(property = "queueable", defaultValue = "YES")
+    @Property(property = "soundType", defaultValue = "RANDOM")
+    @Property(property = "sounds", defaultValue = "null")
+    @Property(property = "particles", defaultValue = "null")
     public static class CategoryBuilder extends GsCategory implements IRecipeBuilder<GsCategory> {
         // Init
         @RecipeBuilderMethodDescription(field = "id")
@@ -101,9 +105,21 @@ public class SgcCategory extends VirtualizedRegistry<GsCategory> {
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "background")
+        public CategoryBuilder background(ResourceLocation background) {
+            super.setBackground(background);
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "border")
         public CategoryBuilder border(String border) {
             super.setBorder(new ResourceLocation(border));
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "border")
+        public CategoryBuilder border(ResourceLocation border) {
+            super.setBorder(border);
             return this;
         }
 
@@ -113,15 +129,33 @@ public class SgcCategory extends VirtualizedRegistry<GsCategory> {
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "frame")
+        public CategoryBuilder frame(ResourceLocation frame) {
+            super.setFrame(frame);
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "progressBar")
         public CategoryBuilder bar(String progressBar) {
             super.setProgressBar(new ResourceLocation(progressBar));
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "progressBar")
+        public CategoryBuilder bar(ResourceLocation progressBar) {
+            super.setProgressBar(progressBar);
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "decoration")
         public CategoryBuilder decoration(String decoration) {
             super.setDecoration(new ResourceLocation(decoration));
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "decoration")
+        public CategoryBuilder decoration(ResourceLocation decoration) {
+            super.setDecoration(decoration);
             return this;
         }
 
@@ -132,9 +166,21 @@ public class SgcCategory extends VirtualizedRegistry<GsCategory> {
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "outputType")
+        public CategoryBuilder outputType(GsEnum.OutputType outputType) {
+            super.setOutputType(outputType);
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "soundType")
         public CategoryBuilder soundType(String soundType) {
             super.setSoundType(GsEnum.SoundType.valueOf(soundType));
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "soundType")
+        public CategoryBuilder soundType(GsEnum.SoundType soundType) {
+            super.setSoundType(soundType);
             return this;
         }
 
@@ -144,9 +190,21 @@ public class SgcCategory extends VirtualizedRegistry<GsCategory> {
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "backgroundType")
+        public CategoryBuilder backgroundType(GsEnum.BackgroundType backgroundType) {
+            super.setBackgroundType(backgroundType);
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "queueable")
         public CategoryBuilder queueType(String queueable) {
             super.setQueueable(GsEnum.QueueType.valueOf(queueable));
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "queueable")
+        public CategoryBuilder queueType(GsEnum.QueueType queueable) {
+            super.setQueueable(queueable);
             return this;
         }
 
@@ -163,15 +221,37 @@ public class SgcCategory extends VirtualizedRegistry<GsCategory> {
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "sounds")
+        public CategoryBuilder sound(ResourceLocation sound, float volume, float pitch) {
+            super.addSound(sound, volume, pitch);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "sounds")
+        public CategoryBuilder sound(SoundEvent sound, float volume, float pitch) {
+            super.addSound(sound.getSoundName(), volume, pitch);
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "particles")
         public CategoryBuilder particle(String particle, int count, float speed) {
             super.addParticle(EnumParticleTypes.valueOf(particle), count, speed);
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "particles")
+        public CategoryBuilder particle(EnumParticleTypes particle, int count, float speed) {
+            super.addParticle(particle, count, speed);
+            return this;
+        }
+
         @Override
         public boolean validate() {
-            return super.getId() != null && super.getDisplayName() != null;
+            GroovyLog.Msg msg = GroovyLog.msg("Error adding SelectionGUI Crafting recipe").error();
+            msg.add(super.getId() == null, "ID can not be null");
+            msg.add(super.getDisplayName() == null, "Display Name can not be null");
+            msg.add(GsRegistry.getCategories().stream().anyMatch(category -> Objects.equals(category.getId(), super.getId())), "ID already exists");
+            return !msg.postIfNotEmpty();
         }
 
         @Override

@@ -4,26 +4,26 @@
 
 log.info 'mod \'selectionguicrafting\' detected, running script'
 
-// Crafting Category:
-// All recipes in the mod are divided into categories. Each category has its own set of recipes.
+// groovyscript.wiki.selectionguicrafting.category.title:
+// groovyscript.wiki.selectionguicrafting.category.description.
 
-mods.selectionguicrafting.sgc_category.removeByName('dummy_category_1')
-// mods.selectionguicrafting.sgc_category.removeAll()
+mods.selectionguicrafting.category.removeByName('dummy_category_1')
+// mods.selectionguicrafting.category.removeAll()
 
-mods.selectionguicrafting.sgc_category.newCategory()
+mods.selectionguicrafting.category.categoryBuilder()
     .id('dummy_category')
     .displayName('Your first Category')
     .background('selectionguicrafting:textures/gui/background/wood.png')
     .register()
 
-mods.selectionguicrafting.sgc_category.newCategory()
+mods.selectionguicrafting.category.categoryBuilder()
     .id('blub')
     .displayName('Pick your recipe')
     .background('selectionguicrafting:textures/gui/background/lake.png')
     .backgroundType('SINGLE_CUT')
     .register()
 
-mods.selectionguicrafting.sgc_category.newCategory()
+mods.selectionguicrafting.category.categoryBuilder()
     .id('dead')
     .displayName('This is another dummy category to test')
     .background('selectionguicrafting:textures/gui/background/deadlands.png')
@@ -33,17 +33,16 @@ mods.selectionguicrafting.sgc_category.newCategory()
     .register()
 
 
-// Crafting Recipe:
-// Creates a recipe that is shown in the specified category. It can requires an input, output and tool. You may also need a
-// catalyst to craft the recipe.
+// groovyscript.wiki.selectionguicrafting.recipe.title:
+// groovyscript.wiki.selectionguicrafting.recipe.description.
 
-// mods.selectionguicrafting.sgc_recipe.removeByCategory('dummy_category')
-mods.selectionguicrafting.sgc_recipe.removeByInput(item('minecraft:cobblestone'))
-mods.selectionguicrafting.sgc_recipe.removeByOutput(item('minecraft:stone'))
-mods.selectionguicrafting.sgc_recipe.removeByTool(item('minecraft:wool'))
-// mods.selectionguicrafting.sgc_recipe.removeAll()
+// mods.selectionguicrafting.recipe.removeByCategory('dummy_category')
+mods.selectionguicrafting.recipe.removeByInput(item('minecraft:cobblestone'))
+mods.selectionguicrafting.recipe.removeByOutput(item('minecraft:stone'))
+mods.selectionguicrafting.recipe.removeByTool(item('minecraft:wool'))
+// mods.selectionguicrafting.recipe.removeAll()
 
-mods.selectionguicrafting.sgc_recipe.newRecipe()
+mods.selectionguicrafting.recipe.recipeBuilder()
     .category('dummy_category')
     .input(item('minecraft:stone') * 3)
     .output(item('minecraft:cobblestone') * 2, 0.5f)
@@ -53,14 +52,14 @@ mods.selectionguicrafting.sgc_recipe.newRecipe()
     .sound('minecraft:block.anvil.land', 1.0f, 1.0f)
     .register()
 
-mods.selectionguicrafting.sgc_recipe.newRecipe()
+mods.selectionguicrafting.recipe.recipeBuilder()
     .category('blub')
     .input(item('minecraft:diamond'))
     .output(item('minecraft:wheat_seeds') * 5, 0.5f)
     .tool(item('minecraft:grass') * 5, 1.0f)
     .register()
 
-mods.selectionguicrafting.sgc_recipe.newRecipe()
+mods.selectionguicrafting.recipe.recipeBuilder()
     .category('dummy_category')
     .input(item('minecraft:stone') * 32)
     .output(item('minecraft:diamond') * 50, 0.5f)
@@ -73,7 +72,7 @@ mods.selectionguicrafting.sgc_recipe.newRecipe()
     .sound('minecraft:block.anvil.land', 1.0f, 1.0f)
     .register()
 
-mods.selectionguicrafting.sgc_recipe.newRecipe()
+mods.selectionguicrafting.recipe.recipeBuilder()
     .category('dead')
     .input(item('minecraft:wheat_seeds') * 3)
     .output(item('minecraft:sand') * 2)
@@ -87,7 +86,7 @@ mods.selectionguicrafting.sgc_recipe.newRecipe()
     .xp(1)
     .register()
 
-mods.selectionguicrafting.sgc_recipe.newRecipe()
+mods.selectionguicrafting.recipe.recipeBuilder()
     .category('dead')
     .input(item('minecraft:stick') * 3)
     .output(item('minecraft:sand') * 2)

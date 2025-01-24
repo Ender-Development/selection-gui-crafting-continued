@@ -1,6 +1,7 @@
 package io.enderdev.selectionguicrafting.integration.groovyscript;
 
 import com.cleanroommc.groovyscript.api.GroovyBlacklist;
+import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.IIngredient;
 import com.cleanroommc.groovyscript.api.documentation.annotations.*;
 import com.cleanroommc.groovyscript.helper.SimpleObjectStream;
@@ -8,13 +9,17 @@ import com.cleanroommc.groovyscript.helper.recipe.IRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.registry.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
-public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
+public class Recipe extends VirtualizedRegistry<GsRecipe> {
     @Override
     @GroovyBlacklist
     public void onReload() {
@@ -99,7 +104,7 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
             @Example(".category('dead').input(item('minecraft:wheat_seeds') * 3).output(item('minecraft:sand') * 2).tool(item('minecraft:wooden_pickaxe'), 1.0f, 1.1f).tool(item('minecraft:golden_pickaxe'), 0.5f, 1.5f).catalyst(item('minecraft:apple') * 2, 0.9f).time(40).durability(1).queueType(false).outputType('INVENTORY').xp(1)"),
             @Example(".category('dead').input(item('minecraft:stick') * 3).output(item('minecraft:sand') * 2).tool(item('minecraft:wooden_pickaxe'), 1.0f, 1.1f).tool(item('minecraft:golden_pickaxe'), 0.5f, 1.5f).catalyst(item('minecraft:apple') * 2, 0.9f).frame('selectionguicrafting:textures/gui/frame/iron.png').time(40).durability(1).queueType(false)")
     })
-    public RecipeBuilder newRecipe() {
+    public RecipeBuilder recipeBuilder() {
         return new RecipeBuilder();
     }
 
@@ -111,13 +116,13 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
     @Property(property = "time", comp = @Comp(gte = 0))
     @Property(property = "xp", comp = @Comp(gte = 0))
     @Property(property = "durability", comp = @Comp(gte = 0))
-    @Property(property = "sounds")
-    @Property(property = "particles")
-    @Property(property = "frame")
-    @Property(property = "progressBar")
-    @Property(property = "outputType")
-    @Property(property = "queueable")
-    @Property(property = "soundType")
+    @Property(property = "sounds", defaultValue = "null")
+    @Property(property = "particles", defaultValue = "null")
+    @Property(property = "frame", defaultValue = "selectionguicrafting:textures/gui/frame/default.png")
+    @Property(property = "progressBar", defaultValue = "selectionguicrafting:textures/gui/progress/default.png")
+    @Property(property = "outputType", defaultValue = "null")
+    @Property(property = "queueable", defaultValue = "null")
+    @Property(property = "soundType", defaultValue = "null")
     public static class RecipeBuilder extends GsRecipe implements IRecipeBuilder<GsRecipe> {
 
         @RecipeBuilderMethodDescription(field = "category")
@@ -132,15 +137,33 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "frame")
+        public RecipeBuilder frame(ResourceLocation frame) {
+            super.setFrame(frame);
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "progressBar")
         public RecipeBuilder progressBar(String progressBar) {
             super.setProgressBar(new ResourceLocation(progressBar));
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "progressBar")
+        public RecipeBuilder progressBar(ResourceLocation progressBar) {
+            super.setProgressBar(progressBar);
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "outputType")
         public RecipeBuilder outputType(String outputType) {
             super.setOutputType(GsEnum.OutputType.valueOf(outputType));
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "outputType")
+        public RecipeBuilder outputType(GsEnum.OutputType outputType) {
+            super.setOutputType(outputType);
             return this;
         }
 
@@ -156,9 +179,21 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "queueable")
+        public RecipeBuilder queueable(GsEnum.QueueType queueable) {
+            super.setQueueable(queueable);
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "soundType")
         public RecipeBuilder soundType(String soundType) {
             super.setSoundType(GsEnum.SoundType.valueOf(soundType));
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "soundType")
+        public RecipeBuilder soundType(GsEnum.SoundType soundType) {
+            super.setSoundType(soundType);
             return this;
         }
 
@@ -168,9 +203,27 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "sounds")
+        public RecipeBuilder sound(ResourceLocation sound, float volume, float pitch) {
+            super.addSound(sound, volume, pitch);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "sounds")
+        public RecipeBuilder sound(SoundEvent sound, float volume, float pitch) {
+            super.addSound(sound.getSoundName(), volume, pitch);
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "particles")
         public RecipeBuilder particle(String particle, int count, float speed) {
             super.addParticle(EnumParticleTypes.valueOf(particle), count, speed);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "particles")
+        public RecipeBuilder particle(EnumParticleTypes particle, int count, float speed) {
+            super.addParticle(particle, count, speed);
             return this;
         }
 
@@ -181,14 +234,14 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
         }
 
         @RecipeBuilderMethodDescription(field = "output")
-        public RecipeBuilder output(IIngredient output, float chance) {
-            super.addOutput(output.getMatchingStacks()[0], chance);
+        public RecipeBuilder output(ItemStack output, float chance) {
+            super.addOutput(output, chance);
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "output")
-        public RecipeBuilder output(IIngredient output) {
-            super.addOutput(output.getMatchingStacks()[0], 1);
+        public RecipeBuilder output(ItemStack output) {
+            super.addOutput(output, 1);
             return this;
         }
 
@@ -242,7 +295,13 @@ public class SgcRecipe extends VirtualizedRegistry<GsRecipe> {
 
         @Override
         public boolean validate() {
-            return super.getCategory() != null && !super.getInput().isEmpty() && !super.getOutput().isEmpty() && !super.getTool().isEmpty();
+            GroovyLog.Msg msg = GroovyLog.msg("Error adding SelectionGUI Crafting recipe").error();
+            msg.add(super.getCategory() == null, "Category can not be null");
+            msg.add(super.getInput().isEmpty(), "Input can not be empty");
+            msg.add(super.getOutput().isEmpty(), "Output can not be empty");
+            msg.add(super.getTool().isEmpty(), "Tool can not be empty");
+            msg.add(GsRegistry.getCategories().stream().noneMatch(category -> Objects.equals(category.getId(), super.getCategory())), "Category not found. Has the category been registered?");
+            return !msg.postIfNotEmpty();
         }
 
         @Override

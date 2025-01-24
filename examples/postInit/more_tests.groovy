@@ -1,10 +1,7 @@
-mods.selectionguicrafting.sgc_category.newCategory()
-        .id('hi')
-        .displayName('SelectionGUI Crafting')
-        .register()
+mods.selectionguicrafting.category.categoryBuilder().id('hi').displayName('config.selectionguicrafting.client').register()
 
 for (i in 0..15) {
-    mods.selectionguicrafting.sgc_recipe.newRecipe()
+    mods.selectionguicrafting.recipe.recipeBuilder()
             .category('hi')
             .input(item('minecraft:wool', i) * 3)
             .output(item('minecraft:dye', i) * 2)
