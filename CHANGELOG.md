@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.2] - 2025-01-27
+
+### Changed
+- minor tweaks to the GroovyScript support
+- improved the GroovyScript documentation (requested by @WaitingIdly)
+
 ## [2.0.1] - 2025-01-24
 
 ### Changed
