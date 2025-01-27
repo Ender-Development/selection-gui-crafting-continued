@@ -10,12 +10,17 @@ import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.registry.*;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
@@ -108,7 +113,7 @@ public class Recipe extends VirtualizedRegistry<GsRecipe> {
         return new RecipeBuilder();
     }
 
-    @Property(property = "category", comp = @Comp(not = "null"))
+    @Property(property = "category", comp = @Comp(not = "null", unique = "groovyscript.wiki.selectionguicrafting.recipe.unique_category"))
     @Property(property = "input", comp = @Comp(gte = 1))
     @Property(property = "output", comp = @Comp(gte = 1))
     @Property(property = "tool", comp = @Comp(gte = 1))
@@ -215,6 +220,12 @@ public class Recipe extends VirtualizedRegistry<GsRecipe> {
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "sounds")
+        public RecipeBuilder sound(GsSound sound) {
+            super.addSound(sound.getSound(), sound.getVolume(), sound.getPitch());
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "particles")
         public RecipeBuilder particle(String particle, int count, float speed) {
             super.addParticle(EnumParticleTypes.valueOf(particle), count, speed);
@@ -227,9 +238,29 @@ public class Recipe extends VirtualizedRegistry<GsRecipe> {
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "particles")
+        public RecipeBuilder particle(GsParticle particle) {
+            super.addParticle(particle.getType(), particle.getCount(), particle.getSpeed());
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "input")
         public RecipeBuilder input(IIngredient input) {
             super.addInput(input.toMcIngredient());
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "input")
+        public RecipeBuilder input(IIngredient... input) {
+            ArrayList<Ingredient> ingredients = Arrays.stream(input).map(IIngredient::toMcIngredient).collect(Collectors.toCollection(ArrayList::new));
+            super.addInput(ingredients);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "input")
+        public RecipeBuilder input(Collection<IIngredient> inputs) {
+            ArrayList<Ingredient> ingredients = inputs.stream().map(IIngredient::toMcIngredient).collect(Collectors.toCollection(ArrayList::new));
+            super.addInput(ingredients);
             return this;
         }
 
@@ -242,6 +273,38 @@ public class Recipe extends VirtualizedRegistry<GsRecipe> {
         @RecipeBuilderMethodDescription(field = "output")
         public RecipeBuilder output(ItemStack output) {
             super.addOutput(output, 1);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "output")
+        public RecipeBuilder output(ItemStack... output) {
+            super.addOutput(Arrays.stream(output).map(stack -> new GsOutput(stack, 1)).collect(Collectors.toCollection(ArrayList::new)));
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "output")
+        public RecipeBuilder output(GsOutput output) {
+            super.addOutput(output.getItemStack(), output.getChance());
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "output")
+        public RecipeBuilder output(GsOutput... output) {
+            super.addOutput(Arrays.stream(output).collect(Collectors.toCollection(ArrayList::new)));
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "output")
+        public <output> RecipeBuilder output(Collection<output> output) {
+            ArrayList<GsOutput> outputs = output.stream().map(o -> {
+                if (o instanceof GsOutput) {
+                    return (GsOutput) o;
+                } else if (o instanceof ItemStack) {
+                    return new GsOutput((ItemStack) o, 1);
+                }
+                return null;
+            }).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new));
+            super.addOutput(outputs);
             return this;
         }
 

@@ -7,9 +7,7 @@ import com.cleanroommc.groovyscript.helper.SimpleObjectStream;
 import com.cleanroommc.groovyscript.helper.recipe.IRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import io.enderdev.selectionguicrafting.Tags;
-import io.enderdev.selectionguicrafting.registry.GsCategory;
-import io.enderdev.selectionguicrafting.registry.GsEnum;
-import io.enderdev.selectionguicrafting.registry.GsRegistry;
+import io.enderdev.selectionguicrafting.registry.*;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -71,17 +69,17 @@ public class Category extends VirtualizedRegistry<GsCategory> {
         return new CategoryBuilder();
     }
 
-    @Property(property = "id", comp = @Comp(not = "null"))
-    @Property(property = "displayName", comp = @Comp(not = "null"))
+    @Property(property = "id", comp = @Comp(not = "null", unique = "groovyscript.wiki.selectionguicrafting.category.unique_id"))
+    @Property(property = "displayName", comp = @Comp(not = "null", unique = "groovyscript.wiki.selectionguicrafting.category.unique_display_name"))
     @Property(property = "background", defaultValue = "selectionguicrafting:textures/gui/background/default.png")
     @Property(property = "border", defaultValue = "selectionguicrafting:textures/gui/background/default.png")
     @Property(property = "decoration", defaultValue = "selectionguicrafting:textures/gui/decor/default.png")
     @Property(property = "frame", defaultValue = "selectionguicrafting:textures/gui/frame/default.png")
     @Property(property = "progressBar", defaultValue = "selectionguicrafting:textures/gui/progress/default.png")
-    @Property(property = "backgroundType", defaultValue = "'TILE'")
-    @Property(property = "outputType", defaultValue = "'DROP'")
-    @Property(property = "queueable", defaultValue = "'YES'")
-    @Property(property = "soundType", defaultValue = "'RANDOM'")
+    @Property(property = "backgroundType", defaultValue = "TILE")
+    @Property(property = "outputType", defaultValue = "DROP")
+    @Property(property = "queueable", defaultValue = "YES")
+    @Property(property = "soundType", defaultValue = "RANDOM")
     @Property(property = "sounds", defaultValue = "null")
     @Property(property = "particles", defaultValue = "null")
     public static class CategoryBuilder extends GsCategory implements IRecipeBuilder<GsCategory> {
@@ -233,6 +231,12 @@ public class Category extends VirtualizedRegistry<GsCategory> {
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "sounds")
+        public CategoryBuilder sound(GsSound sound) {
+            super.addSound(sound.getSound(), sound.getVolume(), sound.getPitch());
+            return this;
+        }
+
         @RecipeBuilderMethodDescription(field = "particles")
         public CategoryBuilder particle(String particle, int count, float speed) {
             super.addParticle(EnumParticleTypes.valueOf(particle), count, speed);
@@ -242,6 +246,12 @@ public class Category extends VirtualizedRegistry<GsCategory> {
         @RecipeBuilderMethodDescription(field = "particles")
         public CategoryBuilder particle(EnumParticleTypes particle, int count, float speed) {
             super.addParticle(particle, count, speed);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "particles")
+        public CategoryBuilder particle(GsParticle particle) {
+            super.addParticle(particle.getType(), particle.getCount(), particle.getSpeed());
             return this;
         }
 
