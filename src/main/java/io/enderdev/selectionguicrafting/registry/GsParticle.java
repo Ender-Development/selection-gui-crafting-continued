@@ -2,6 +2,7 @@ package io.enderdev.selectionguicrafting.registry;
 
 import net.minecraft.util.EnumParticleTypes;
 
+@Deprecated
 public class GsParticle {
     private final EnumParticleTypes particleType;
     private final Integer particleCount;
@@ -14,14 +15,14 @@ public class GsParticle {
     }
 
     public EnumParticleTypes getType() {
-        return particleType == null ? EnumParticleTypes.VILLAGER_HAPPY : particleType;
+        return particleType;
     }
 
     public Integer getCount() {
-        return particleCount == null ? 10 : particleCount;
+        return particleCount;
     }
 
     public Float getSpeed() {
-        return particleSpeed == null ? 0.1F : particleSpeed;
+        return particleSpeed;
     }
 }

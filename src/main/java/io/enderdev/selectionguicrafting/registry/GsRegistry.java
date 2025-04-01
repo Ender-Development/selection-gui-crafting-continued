@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@Deprecated
 public class GsRegistry {
     private static final ArrayList<GsCategory> categories = new ArrayList<>();
     private static final ArrayList<GsRecipe> recipes = new ArrayList<>();

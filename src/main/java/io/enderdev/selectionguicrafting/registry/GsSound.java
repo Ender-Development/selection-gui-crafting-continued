@@ -3,6 +3,7 @@ package io.enderdev.selectionguicrafting.registry;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class GsSound {
     private final ResourceLocation sound;
     private final float volume;

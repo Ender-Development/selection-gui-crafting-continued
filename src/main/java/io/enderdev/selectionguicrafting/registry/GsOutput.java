@@ -2,6 +2,7 @@ package io.enderdev.selectionguicrafting.registry;
 
 import net.minecraft.item.ItemStack;
 
+@Deprecated
 public class GsOutput {
     private final ItemStack itemStack;
     private final float chance;

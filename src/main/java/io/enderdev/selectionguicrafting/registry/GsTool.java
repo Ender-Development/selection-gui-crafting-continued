@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+@Deprecated
 public class GsTool {
     private final ItemStack item;
     private final float damageMultiplier;

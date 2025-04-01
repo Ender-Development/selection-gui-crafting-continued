@@ -1,5 +1,6 @@
 package io.enderdev.selectionguicrafting.registry;
 
+@Deprecated
 public class GsEnum {
     /**
      * How the output of the recipe should be handled

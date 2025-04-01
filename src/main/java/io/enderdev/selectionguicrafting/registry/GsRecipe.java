@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-@SuppressWarnings("UnusedReturnValue")
+@Deprecated
 public class GsRecipe {
     // Required
     private String category;

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("UnusedReturnValue")
+@Deprecated
 public class GsCategory {
     private final ArrayList<GsSound> sounds = new ArrayList<>();
     private final ArrayList<GsParticle> particles = new ArrayList<>();
