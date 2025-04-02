@@ -18,9 +18,7 @@ public class GsPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
-        registry.addRecipeCategories(
-                new GsGuiCategory(registry.getJeiHelpers().getGuiHelper())
-        );
+        registry.addRecipeCategories(new GsGuiCategory(registry.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -28,5 +26,4 @@ public class GsPlugin implements IModPlugin {
         registry.handleRecipes(Recipe.class, GsGuiWrapper::new, "jei." + Tags.MOD_ID + ".category");
         registry.addRecipes(Register.getRecipes(), "jei." + Tags.MOD_ID + ".category");
     }
-
 }

@@ -9,6 +9,7 @@ import io.enderdev.selectionguicrafting.registry.Register;
 import io.enderdev.selectionguicrafting.registry.category.BlockTrigger;
 import io.enderdev.selectionguicrafting.registry.category.ItemTrigger;
 import io.enderdev.selectionguicrafting.registry.recipe.Recipe;
+import io.enderdev.selectionguicrafting.registry.recipe.RecipeHelper;
 import io.enderdev.selectionguicrafting.registry.recipe.RecipeInput;
 import io.enderdev.selectionguicrafting.registry.recipe.RecipeOutput;
 import mezz.jei.api.ingredients.IIngredients;
@@ -24,16 +25,14 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static net.minecraft.client.gui.Gui.drawModalRectWithCustomSizedTexture;
 
 public class GsGuiWrapper implements IRecipeWrapper {
     private final Recipe recipe;
+    private final RecipeHelper recipeHelper;
     private final List<ItemStack> trigger = new ArrayList<>();
     private final List<ItemStack> mainHand = new ArrayList<>();
     private final List<ItemStack> offHand = new ArrayList<>();
@@ -44,6 +43,7 @@ public class GsGuiWrapper implements IRecipeWrapper {
 
     public GsGuiWrapper(Recipe recipe) {
         this.recipe = recipe;
+        this.recipeHelper = new RecipeHelper(recipe);
     }
 
     @Override
@@ -66,8 +66,17 @@ public class GsGuiWrapper implements IRecipeWrapper {
         output.addAll(recipe.getOutputs().stream().map(RecipeOutput::getItemStack).collect(Collectors.toList()));
         outputChance.addAll(recipe.getOutputs().stream().map(RecipeOutput::getChance).collect(Collectors.toList()));
 
-        mainHand.addAll(Arrays.stream(recipe.getMainHand().getIngredient().getMatchingStacks()).collect(Collectors.toList()));
-        offHand.addAll(Arrays.stream(recipe.getOffHand().getIngredient().getMatchingStacks()).collect(Collectors.toList()));
+        if (recipeHelper.hasMainHand()) {
+            mainHand.addAll(Arrays.stream(recipe.getMainHand().getIngredient().getMatchingStacks()).filter(Objects::nonNull).collect(Collectors.toList()));
+        } else {
+            mainHand.add(ItemStack.EMPTY);
+        }
+
+        if (recipeHelper.hasOffHand()) {
+            offHand.addAll(Arrays.stream(recipe.getOffHand().getIngredient().getMatchingStacks()).filter(Objects::nonNull).collect(Collectors.toList()));
+        } else {
+            offHand.add(ItemStack.EMPTY);
+        }
 
         List<List<ItemStack>> inputs = Arrays.asList(trigger, input, mainHand, offHand);
         List<List<ItemStack>> outputs = Collections.singletonList(output);

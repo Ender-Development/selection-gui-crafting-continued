@@ -120,4 +120,12 @@ public class RecipeHelper {
     public int getAbsoluteXP(double multiplier) {
         return (int) (recipe.getXP() * multiplier);
     }
+
+    public boolean hasMainHand() {
+        return recipe.getMainHand() != null && recipe.getMainHand().getIngredient().getMatchingStacks().length != 0;
+    }
+
+    public boolean hasOffHand() {
+        return recipe.getOffHand() != null && recipe.getOffHand().getIngredient().getMatchingStacks().length != 0;
+    }
 }

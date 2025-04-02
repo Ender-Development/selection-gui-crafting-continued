@@ -65,6 +65,11 @@ public class GsGuiCategory implements IRecipeCategory<GsGuiWrapper> {
         iRecipeLayout.getItemStacks().init(index, true, 64, 0);
         iRecipeLayout.getItemStacks().set(index, iIngredients.getInputs(VanillaTypes.ITEM).get(index));
 
+        // Off Hand
+        index++;
+        iRecipeLayout.getItemStacks().init(index, true, 90, 0);
+        iRecipeLayout.getItemStacks().set(index, iIngredients.getInputs(VanillaTypes.ITEM).get(index));
+
         // Output Items
         index++;
         iRecipeLayout.getItemStacks().init(index, false, 117, 0);
