@@ -12,22 +12,22 @@ public class RecipeInput {
     private final double chance;
     private final int damage;
 
-    public RecipeInput(Ingredient input, float chance) {
+    public RecipeInput(Ingredient input, double chance, int damage) {
         this.input = input;
         this.chance = chance;
-        this.damage = 0;
-    }
-
-    public RecipeInput(Ingredient input, int damage) {
-        this.input = input;
-        this.chance = 0.0;
         this.damage = damage;
     }
 
+    public RecipeInput(Ingredient input, double chance) {
+        this(input, chance, 0);
+    }
+
+    public RecipeInput(Ingredient input, int damage) {
+        this(input, 1.0, damage);
+    }
+
     public RecipeInput(Ingredient input) {
-        this.input = input;
-        this.chance = 1.0;
-        this.damage = 0;
+        this(input, 1.0, 0);
     }
 
     public Ingredient getIngredient() {
