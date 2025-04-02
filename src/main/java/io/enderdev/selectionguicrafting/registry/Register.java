@@ -25,9 +25,22 @@ public class Register {
 		allTriggerBlocks.addAll(category.getTriggerBlocks());
 	}
 
+    public static boolean removeCategory(Category category) {
+        if (categories.remove(category)) {
+            allTriggerItems.removeAll(category.getTriggerItems());
+            allTriggerBlocks.removeAll(category.getTriggerBlocks());
+            return true;
+        }
+        return false;
+    }
+
 	public static void addRecipe(Recipe recipe) {
 		recipes.add(recipe);
 	}
+
+    public static boolean removeRecipe(Recipe recipe) {
+        return recipes.remove(recipe);
+    }
 
     public static ArrayList<Category> getCategories() {
         return categories;

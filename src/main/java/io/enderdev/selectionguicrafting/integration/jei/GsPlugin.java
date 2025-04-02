@@ -3,6 +3,8 @@ package io.enderdev.selectionguicrafting.integration.jei;
 import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.registry.GsRecipe;
 import io.enderdev.selectionguicrafting.registry.GsRegistry;
+import io.enderdev.selectionguicrafting.registry.Register;
+import io.enderdev.selectionguicrafting.registry.recipe.Recipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
@@ -23,8 +25,8 @@ public class GsPlugin implements IModPlugin {
 
     @Override
     public void register(IModRegistry registry) {
-        registry.handleRecipes(GsRecipe.class, GsGuiWrapper::new, "jei." + Tags.MOD_ID + ".category");
-        registry.addRecipes(GsRegistry.getRecipes(), "jei." + Tags.MOD_ID + ".category");
+        registry.handleRecipes(Recipe.class, GsGuiWrapper::new, "jei." + Tags.MOD_ID + ".category");
+        registry.addRecipes(Register.getRecipes(), "jei." + Tags.MOD_ID + ".category");
     }
 
 }

@@ -4,11 +4,15 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenDoc;
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.block.IBlock;
 import crafttweaker.api.item.IIngredient;
-import io.enderdev.selectionguicrafting.registry.GsCategory;
-import io.enderdev.selectionguicrafting.registry.GsEnum;
-import io.enderdev.selectionguicrafting.registry.GsRecipe;
-import io.enderdev.selectionguicrafting.registry.GsRegistry;
+import crafttweaker.api.item.IItemStack;
+import io.enderdev.selectionguicrafting.registry.category.*;
+import io.enderdev.selectionguicrafting.registry.recipe.Recipe;
+import io.enderdev.selectionguicrafting.registry.Register;
+import io.enderdev.selectionguicrafting.registry.util.Particle;
+import io.enderdev.selectionguicrafting.registry.util.Sound;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.EnumParticleTypes;
@@ -16,18 +20,16 @@ import net.minecraft.util.ResourceLocation;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.Objects;
-
 @SuppressWarnings("unused")
 public final class CTsgc {
 
     @ZenRegister
     @ZenClass("mods.selectionguicrafting.category")
     public static class CTCategoryBuilder {
-        private final GsCategory category;
+        private final Category category;
 
         public CTCategoryBuilder() {
-            this.category = new GsCategory();
+            this.category = new Category();
         }
 
         @ZenMethod
@@ -39,14 +41,49 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Set the ID of the category")
         public CTCategoryBuilder id(String id) {
-            category.setId(id);
+            category.id(id);
             return this;
         }
 
         @ZenMethod
-        @ZenDoc("Set the display name of the category")
-        public CTCategoryBuilder displayName(String displayName) {
-            category.setDisplayName(displayName);
+        @ZenDoc("Add a trigger item to the category")
+        public CTCategoryBuilder trigger(IItemStack input, double damageMultiplier, double timeMultiplier, double xpMultiplier) {
+            category.trigger(Ingredient.fromStacks((ItemStack) input.getInternal()), damageMultiplier, timeMultiplier, xpMultiplier);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Add a trigger item to the category")
+        public CTCategoryBuilder trigger(IItemStack input) {
+            category.trigger(Ingredient.fromStacks((ItemStack) input.getInternal()));
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Add a trigger item to the category")
+        public CTCategoryBuilder trigger(IIngredient input, double damageMultiplier, double timeMultiplier, double xpMultiplier) {
+            category.trigger(Ingredient.fromStacks((ItemStack) input.getInternal()), damageMultiplier, timeMultiplier, xpMultiplier);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Add a trigger item to the category")
+        public CTCategoryBuilder trigger(IIngredient input) {
+            category.trigger(Ingredient.fromStacks((ItemStack) input.getInternal()));
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Add a trigger block to the category")
+        public CTCategoryBuilder trigger(IBlock input, double damageMultiplier, double timeMultiplier, double xpMultiplier) {
+            category.trigger((Block) input.getDefinition().getInternal(), damageMultiplier, timeMultiplier, xpMultiplier);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Add a trigger block to the category")
+        public CTCategoryBuilder trigger(IBlock input) {
+            category.trigger((Block) input.getDefinition().getInternal());
             return this;
         }
 
@@ -88,68 +125,65 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Set the output type for the recipe. Possible values: DROP, INVENTORY")
         public CTCategoryBuilder outputType(String outputType) {
-            category.setOutputType(GsEnum.OutputType.valueOf(outputType));
+            category.setOutputType(OutputType.valueOf(outputType));
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Set the sound type for the recipe. Possible values: RANDOM, COMBINED")
         public CTCategoryBuilder soundType(String soundType) {
-            category.setSoundType(GsEnum.SoundType.valueOf(soundType));
+            category.setSoundType(SoundType.valueOf(soundType));
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Set the background type for the recipe. Possible values: SINGLE_STRETCH, SINGLE_CUT, TILE")
         public CTCategoryBuilder backgroundType(String backgroundType) {
-            category.setBackgroundType(GsEnum.BackgroundType.valueOf(backgroundType));
+            category.setBackgroundType(BackgroundType.valueOf(backgroundType));
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Set the queueable type for the recipe. Possible values: YES, NO")
         public CTCategoryBuilder queueType(String queueType) {
-            category.setQueueable(GsEnum.QueueType.valueOf(queueType));
+            category.setQueueable(QueueType.valueOf(queueType));
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Set the queueable type for the recipe. Possible values: true, false")
         public CTCategoryBuilder queueType(boolean queueType) {
-            category.setQueueable(queueType ? GsEnum.QueueType.YES : GsEnum.QueueType.NO);
+            category.setQueueable(queueType ? QueueType.YES : QueueType.NO);
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Adds a sound to the category")
         public CTCategoryBuilder sound(String sound, float volume, float pitch) {
-            category.addSound(new ResourceLocation(sound), volume, pitch);
+            category.addSound(new Sound(new ResourceLocation(sound), volume, pitch));
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Adds a particle to the category")
         public CTCategoryBuilder particle(String particle, int count, float speed) {
-            category.addParticle(EnumParticleTypes.valueOf(particle), count, speed);
+            category.addParticle(new Particle(EnumParticleTypes.valueOf(particle), count, speed));
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Register the category")
         public void register() {
-            if (category.getId() == null || category.getDisplayName() == null) {
-                throw new IllegalArgumentException("Category ID and display name must be set before registering");
+            if (!category.validate()) {
+                throw new IllegalArgumentException("Category is not valid: " + category.getID());
             }
-            if (GsRegistry.getCategories().stream().anyMatch(ctg -> Objects.equals(ctg.getId(), category.getId()))) {
-                throw new IllegalArgumentException("Category with ID '" + category.getId() + "' already exists");
-            }
-            GsRegistry.registerCategory(category);
+            Register.addCategory(category);
         }
 
         @Override
         @ZenMethod
         public String toString() {
-            return "CTCategoryBuilder{category={id=" + category.getId() + "}, {displayName=" + category.getDisplayName() + "}}";
+            return "CTCategoryBuilder{category={id=" + category.getID() + "}}";
         }
 
         @ZenMethod
@@ -158,7 +192,7 @@ public final class CTsgc {
             CraftTweakerAPI.apply(new IAction() {
                 @Override
                 public void apply() {
-                    GsRegistry.removeCategory(categoryName);
+                    Register.removeCategory(Register.getCategoryByID(categoryName));
                 }
 
                 @Override
@@ -174,7 +208,7 @@ public final class CTsgc {
             CraftTweakerAPI.apply(new IAction() {
                 @Override
                 public void apply() {
-                    GsRegistry.getCategories().clear();
+                    Register.getCategories().clear();
                 }
 
                 @Override
@@ -188,10 +222,10 @@ public final class CTsgc {
     @ZenRegister
     @ZenClass("mods.selectionguicrafting.recipe")
     public static class CTRecipeBuilder {
-        private final GsRecipe recipe;
+        private final Recipe recipe;
 
         public CTRecipeBuilder() {
-            this.recipe = new GsRecipe();
+            this.recipe = new Recipe();
         }
 
         @ZenMethod
@@ -203,7 +237,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Set the category for the recipe")
         public CTRecipeBuilder category(String category) {
-            recipe.setCategory(category);
+            recipe.category(category);
             return this;
         }
 
@@ -224,141 +258,170 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Set the output type for the recipe. Possible values: DROP, INVENTORY")
         public CTRecipeBuilder outputType(String outputType) {
-            recipe.setOutputType(GsEnum.OutputType.valueOf(outputType));
+            recipe.setOutputType(OutputType.valueOf(outputType));
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Set the queueable type for the recipe. Possible values: YES, NO")
         public CTRecipeBuilder queueable(String queueable) {
-            recipe.setQueueable(GsEnum.QueueType.valueOf(queueable));
+            recipe.setQueueable(QueueType.valueOf(queueable));
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Set the queueable type for the recipe. Possible values: true, false")
         public CTRecipeBuilder queueable(boolean queueable) {
-            recipe.setQueueable(queueable ? GsEnum.QueueType.YES : GsEnum.QueueType.NO);
+            recipe.setQueueable(queueable ? QueueType.YES : QueueType.NO);
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Set the sound type for the recipe. Possible values: RANDOM, COMBINED")
         public CTRecipeBuilder soundType(String soundType) {
-            recipe.setSoundType(GsEnum.SoundType.valueOf(soundType));
+            recipe.setSoundType(SoundType.valueOf(soundType));
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Adds a sound to the recipe")
         public CTRecipeBuilder sound(String sound, float volume, float pitch) {
-            recipe.addSound(new ResourceLocation(sound), volume, pitch);
+            recipe.addSound(new Sound(new ResourceLocation(sound), volume, pitch));
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Adds a particle to the recipe")
         public CTRecipeBuilder particle(String particle, int count, float speed) {
-            recipe.addParticle(EnumParticleTypes.valueOf(particle), count, speed);
+            recipe.addParticle(new Particle(EnumParticleTypes.valueOf(particle), count, speed));
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Adds an input to the recipe")
         public CTRecipeBuilder input(IIngredient input) {
-            recipe.addInput(Ingredient.fromStacks((ItemStack) input.getInternal()));
+            recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()));
             return this;
         }
 
         @ZenMethod
-        @ZenDoc("Adds an output to the recipe, with a specified chance")
+        @ZenDoc("Adds an input to the recipe")
+        public CTRecipeBuilder input(IIngredient input, int damage) {
+            recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()), damage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an input to the recipe")
+        public CTRecipeBuilder input(IIngredient input, double chance) {
+            recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()), chance);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an input to the recipe")
+        public CTRecipeBuilder input(IIngredient input, int damage, double chance) {
+            recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()), chance, damage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds a main hand input to the recipe")
+        public CTRecipeBuilder mainHand(IIngredient input) {
+            recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()));
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds a main hand input to the recipe")
+        public CTRecipeBuilder mainHand(IIngredient input, int damage) {
+            recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()), damage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds a main hand input to the recipe")
+        public CTRecipeBuilder mainHand(IIngredient input, double chance) {
+            recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds a main hand input to the recipe")
+        public CTRecipeBuilder mainHand(IIngredient input, int damage, double chance) {
+            recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance, damage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an off hand input to the recipe")
+        public CTRecipeBuilder offHand(IIngredient input) {
+            recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()));
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an off hand input to the recipe")
+        public CTRecipeBuilder offHand(IIngredient input, int damage) {
+            recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()), damage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an off hand input to the recipe")
+        public CTRecipeBuilder offHand(IIngredient input, double chance) {
+            recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an off hand input to the recipe")
+        public CTRecipeBuilder offHand(IIngredient input, int damage, double chance) {
+            recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance, damage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an output to the recipe")
         public CTRecipeBuilder output(IIngredient output, float chance) {
-            recipe.addOutput((ItemStack) output.getInternal(), chance);
+            recipe.output((ItemStack) output.getInternal(), chance);
             return this;
         }
 
         @ZenMethod
-        @ZenDoc("Adds an output to the recipe, with a chance of 1.0")
+        @ZenDoc("Adds an output to the recipe")
         public CTRecipeBuilder output(IIngredient output) {
-            recipe.addOutput((ItemStack) output.getInternal(), 1);
-            return this;
-        }
-
-        @ZenMethod
-        @ZenDoc("Adds a tool to the recipe, specifying the damage and time multipliers")
-        public CTRecipeBuilder tool(IIngredient tool, float damageMultiplier, float timeMultiplier) {
-            recipe.addTool((ItemStack) tool.getInternal(), damageMultiplier, timeMultiplier);
-            return this;
-        }
-
-        @ZenMethod
-        @ZenDoc("Adds a tool to the recipe, without specifying the time multiplier")
-        public CTRecipeBuilder tool(IIngredient tool, float timeMultiplier) {
-            recipe.addTool((ItemStack) tool.getInternal(), 1, timeMultiplier);
-            return this;
-        }
-
-        @ZenMethod
-        @ZenDoc("Adds a tool to the recipe, without specifying the damage and time multipliers")
-        public CTRecipeBuilder tool(IIngredient tool) {
-            recipe.addTool((ItemStack) tool.getInternal(), 1, 1);
+            recipe.output((ItemStack) output.getInternal());
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Set the time it takes to craft this recipe")
         public CTRecipeBuilder time(int time) {
-            recipe.setTime(time);
+            recipe.time(time);
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Set the amount of experience that is given when crafting this recipe")
         public CTRecipeBuilder xp(int xp) {
-            recipe.setXp(xp);
-            return this;
-        }
-
-        @ZenMethod
-        @ZenDoc("Set the amount of durability that is consumed when crafting this recipe")
-        public CTRecipeBuilder durability(int durability) {
-            recipe.setDurability(durability);
-            return this;
-        }
-
-        @ZenMethod
-        @ZenDoc("Set the catalyst for the recipe, with a specified chance")
-        public CTRecipeBuilder catalyst(IIngredient catalyst, float chance) {
-            recipe.setCatalyst(Ingredient.fromStacks((ItemStack) catalyst.getInternal()), chance);
-            return this;
-        }
-
-        @ZenMethod
-        @ZenDoc("Set the catalyst for the recipe")
-        public CTRecipeBuilder catalyst(IIngredient catalyst) {
-            recipe.setCatalyst(Ingredient.fromStacks((ItemStack) catalyst.getInternal()), 1);
+            recipe.xp(xp);
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Register the recipe")
         public void register() {
-            if (recipe.getCategory() == null) {
-                throw new IllegalArgumentException("Category must be set before registering");
+            if (!recipe.validate()) {
+                throw new IllegalArgumentException("Recipe is not valid: " + recipe);
             }
-            if (recipe.getInput().isEmpty() || recipe.getOutput().isEmpty() || recipe.getTool().isEmpty()) {
-                throw new IllegalArgumentException("Input, output, and tool must be set before registering");
-            }
-            if (GsRegistry.getCategories().stream().noneMatch(ctg -> Objects.equals(ctg.getId(), recipe.getCategory()))) {
-                throw new IllegalArgumentException("Category with ID '" + recipe.getCategory() + "' does not exist");
-            }
-            GsRegistry.registerRecipe(recipe);
+            Register.addRecipe(recipe);
         }
 
         @Override
         @ZenMethod
         public String toString() {
-            return "CTRecipeBuilder{category={id=" + recipe.getCategory() + "}, {outputs=" + recipe.getOutput() + "}}";
+            return "CTRecipeBuilder{category={id=" + recipe.getCategory() + "}}";
         }
 
         @ZenMethod
@@ -367,7 +430,7 @@ public final class CTsgc {
             CraftTweakerAPI.apply(new IAction() {
                 @Override
                 public void apply() {
-                    GsRegistry.getRecipes().clear();
+                    Register.getRecipes().clear();
                 }
 
                 @Override

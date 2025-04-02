@@ -65,12 +65,22 @@ public class Category implements IRegisterObject {
         return this;
     }
 
+    public Category trigger(Ingredient input) {
+        trigger(input, 1, 1, 1);
+        return this;
+    }
+
     public Category trigger(Block input, double damageMultiplier, double timeMultiplier, double xpMultiplier) {
         if (Register.getTriggerBlocks().stream().map(BlockTrigger::getTriggerBlock).anyMatch(input::equals)) {
             ErrorCheck.error("Invalid Trigger Block " + input.getLocalizedName() + " is already registered as Trigger.");
         } else {
             triggerBlocks.add(new BlockTrigger(input, damageMultiplier, timeMultiplier, xpMultiplier));
         }
+        return this;
+    }
+
+    public Category trigger(Block input) {
+        trigger(input, 1, 1, 1);
         return this;
     }
 
@@ -86,6 +96,7 @@ public class Category implements IRegisterObject {
     /* ---- VALIDATION ----- */
     /* --------------------- */
 
+    @Override
     public boolean validate() {
         if (id == null) {
             ErrorCheck.error("Category ID must be set.");
@@ -100,6 +111,7 @@ public class Category implements IRegisterObject {
         return true;
     }
 
+    @Override
     public Category register() {
         if (!validate()) {
             return null;

@@ -41,13 +41,16 @@ public class Recipe implements IRegisterObject {
     /* ---- VALIDATION ----- */
     /* --------------------- */
 
-    public void register() {
+    @Override
+    public IRegisterObject register() {
         if (!validate()) {
-            return;
+            return null;
         }
         Register.addRecipe(this);
+        return this;
     }
 
+    @Override
     public boolean validate() {
         if (category == null) {
             ErrorCheck.error("Category must be set.");

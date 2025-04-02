@@ -50,18 +50,22 @@ public class GsGuiCategory implements IRecipeCategory<GsGuiWrapper> {
 
     @Override
     public void setRecipe(IRecipeLayout iRecipeLayout, @NotNull GsGuiWrapper gsGuiWrapper, IIngredients iIngredients) {
+        // Trigger Items
         int index = 0;
         iRecipeLayout.getItemStacks().init(index, true, 0, 0);
         iRecipeLayout.getItemStacks().set(index, iIngredients.getInputs(VanillaTypes.ITEM).get(index));
 
+        // Input Items
         index++;
         iRecipeLayout.getItemStacks().init(index, true, 38, 0);
         iRecipeLayout.getItemStacks().set(index, iIngredients.getInputs(VanillaTypes.ITEM).get(index));
 
+        // Main Hand
         index++;
         iRecipeLayout.getItemStacks().init(index, true, 64, 0);
         iRecipeLayout.getItemStacks().set(index, iIngredients.getInputs(VanillaTypes.ITEM).get(index));
 
+        // Output Items
         index++;
         iRecipeLayout.getItemStacks().init(index, false, 117, 0);
         iRecipeLayout.getItemStacks().set(index, iIngredients.getOutputs(VanillaTypes.ITEM).get(0));
