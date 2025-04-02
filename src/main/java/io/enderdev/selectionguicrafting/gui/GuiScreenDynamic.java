@@ -3,6 +3,9 @@ package io.enderdev.selectionguicrafting.gui;
 import io.enderdev.selectionguicrafting.registry.GsCategory;
 import io.enderdev.selectionguicrafting.registry.GsEnum;
 import io.enderdev.selectionguicrafting.registry.GsRegistry;
+import io.enderdev.selectionguicrafting.registry.Register;
+import io.enderdev.selectionguicrafting.registry.category.BackgroundType;
+import io.enderdev.selectionguicrafting.registry.category.Category;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -32,21 +35,21 @@ public abstract class GuiScreenDynamic extends GuiScreen {
     private ResourceLocation backgroundTexture;
     private ResourceLocation borderTexture;
     private ResourceLocation decorationTexture;
-    private GsEnum.BackgroundType backgroundType;
+    private BackgroundType backgroundType;
 
     // Stencil value
     private int stencilValue;
 
     // Must be increment of 16!
-    void updateContainerSize(int newGuiWidth, int newGuiHeight, GsCategory category) {
+    void updateContainerSize(int newGuiWidth, int newGuiHeight, Category category) {
         // Update container size
         guiWidth = newGuiWidth;
         guiHeight = newGuiHeight;
-        backgroundTexture = category.getBackground();
-        borderTexture = category.getBorder();
-        decorationTexture = category.getDecoration();
-        backgroundType = category.getBackgroundType();
-        stencilValue = GsRegistry.getCategories().indexOf(category) + 1;
+        backgroundTexture = category.getScreenData().getBackground();
+        borderTexture = category.getScreenData().getBorder();
+        decorationTexture = category.getScreenData().getDecoration();
+        backgroundType = category.getScreenData().getBackgroundType();
+        stencilValue = Register.getCategories().indexOf(category) + 1;
 
         // Calculate offsets
         top = (height / 2) - (guiHeight / 2);

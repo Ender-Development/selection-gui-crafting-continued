@@ -11,10 +11,6 @@ public abstract class AbstractTrigger {
         this.xpMultiplier = xpMultiplier;
     }
 
-    public AbstractTrigger() {
-        this(1.0, 1.0, 1.0);
-    }
-
     public double getDamageMultiplier() {
         return damageMultiplier;
     }

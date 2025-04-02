@@ -100,11 +100,12 @@ public class Category implements IRegisterObject {
         return true;
     }
 
-    public void register() {
+    public Category register() {
         if (!validate()) {
-            return;
+            return null;
         }
         Register.addCategory(this);
+        return this;
     }
 
     /* --------------------- */

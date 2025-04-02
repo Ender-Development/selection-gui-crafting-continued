@@ -11,7 +11,7 @@ public interface IRegisterObject {
     /**
      * Register the object in the registry.
      */
-    void register();
+    IRegisterObject register();
 
     /**
      * Check if the object is valid.
