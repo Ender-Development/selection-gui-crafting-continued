@@ -110,6 +110,14 @@ public class SelectionMessageProcessRecipe implements IMessage {
                 }
             });
 
+            if (recipeHelper.hasMainHand()) {
+                recipe.getMainHand().consume(player.getHeldItemMainhand());
+            }
+
+            if (recipeHelper.hasOffHand()) {
+                recipe.getOffHand().consume(player.getHeldItemOffhand());
+            }
+
 //            stackOffhand.shrink(recipe.getInputStackSize(stackOffhand));
 //
 //            if (recipe.getCatalyst() != null) {

@@ -1,5 +1,6 @@
 package io.enderdev.selectionguicrafting.registry.recipe;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 
 import java.util.Arrays;
@@ -11,11 +12,13 @@ public class RecipeInput {
     private final Ingredient input;
     private final double chance;
     private final int damage;
+    private final int amount;
 
     public RecipeInput(Ingredient input, double chance, int damage) {
         this.input = input;
         this.chance = chance;
         this.damage = damage;
+        this.amount = input.getMatchingStacks()[0].getCount();
     }
 
     public RecipeInput(Ingredient input, double chance) {
@@ -42,11 +45,26 @@ public class RecipeInput {
         return damage;
     }
 
+    public int getAmount() {
+        return amount;
+    }
+
     public boolean isDamageable() {
         return Arrays.stream(getIngredient().getMatchingStacks()).anyMatch(e -> e.getItem().isDamageable());
     }
 
     public boolean beConsumed() {
         return random.nextDouble() <= getChance();
+    }
+
+    public void consume(ItemStack stack) {
+        if (!beConsumed()) {
+            return;
+        }
+        if (stack.getCount() > getAmount()) {
+            stack.shrink(getAmount());
+        } else {
+            stack.setCount(0);
+        }
     }
 }

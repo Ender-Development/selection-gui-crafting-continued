@@ -99,7 +99,7 @@ public class RecipeHelper {
         ItemStack offHand = player.getHeldItemOffhand();
         ArrayList<ItemStack> inventory = player.inventory.mainInventory.stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
-        Boolean result = true;
+        boolean result = true;
         if (recipe.getMainHand() != null && recipe.getMainHand().getIngredient().getMatchingStacks().length != 0) {
             result = !mainHand.isEmpty() && Arrays.stream(recipe.getMainHand().getIngredient().getMatchingStacks()).anyMatch(matching -> matching.isItemEqual(mainHand));
         }

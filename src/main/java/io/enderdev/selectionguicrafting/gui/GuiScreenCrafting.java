@@ -200,7 +200,8 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         ItemStack mainHand = player.getHeldItemMainhand();
         ItemStack offHand = player.getHeldItemOffhand();
         if (wrongInput) {
-            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_input", hoveredRecipe.getInputs().get(0).getIngredient().getMatchingStacks()[0].getDisplayName()));
+            String displayName = !hoveredRecipe.getInputs().isEmpty() ? hoveredRecipe.getInputs().get(0).getIngredient().getMatchingStacks()[0].getDisplayName() : hoveredRecipe.getMainHand() != null ? hoveredRecipe.getMainHand().getIngredient().getMatchingStacks()[0].getDisplayName() : hoveredRecipe.getOffHand() != null ? hoveredRecipe.getOffHand().getIngredient().getMatchingStacks()[0].getDisplayName() : "";
+            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_input", displayName));
             wrongInput = false;
         }
 //        if (wrongAmount) {
