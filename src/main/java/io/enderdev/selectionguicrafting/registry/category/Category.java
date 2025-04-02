@@ -1,11 +1,18 @@
 package io.enderdev.selectionguicrafting.registry.category;
 
 import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.registry.Register;
+import io.enderdev.selectionguicrafting.registry.util.Particle;
+import io.enderdev.selectionguicrafting.registry.util.Sound;
 import io.enderdev.selectionguicrafting.registry.util.Validation;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +26,6 @@ public class Category {
     private final ArrayList<BlockTrigger> triggerBlocks = new ArrayList<>();
 
     private String id;
-    private String name;
 
     public Category() {
     }
@@ -27,6 +33,8 @@ public class Category {
     public Category id(String id) {
         if (Register.getCategories().stream().anyMatch(ctg -> ctg.getID().equals(id))) {
             ErrorCheck.error("ID already exists");
+        } else {
+            this.id = id;
         }
         return this;
     }
@@ -69,17 +77,81 @@ public class Category {
         return id;
     }
 
+    @SideOnly(Side.CLIENT)
+    public String getName() {
+        return I18n.format(Tags.MOD_ID + ".category." + id + ".name");
+    }
+
     private boolean validate() {
-        if (this.getID() == null) {
+        if (id == null) {
             ErrorCheck.error("Category ID must be set.");
         }
         if (triggerBlocks.isEmpty() && triggerItems.isEmpty()) {
             ErrorCheck.error("Category has no trigger!");
         }
         if (!ErrorCheck.valid()) {
-            SelectionGuiCrafting.LOGGER.warn("Invalid Category {}. Error: {}", this.getID(), ErrorCheck.msg());
+            SelectionGuiCrafting.LOGGER.warn("Invalid Category {}. Error: {}", id, ErrorCheck.msg());
             return false;
         }
         return true;
+    }
+
+    public CategoryData getScreenData() {
+        return ScreenData;
+    }
+
+    public Category setBackground(ResourceLocation background) {
+        ScreenData.setBackground(background);
+        return this;
+    }
+
+    public Category setBorder(ResourceLocation border) {
+        ScreenData.setBorder(border);
+        return this;
+    }
+
+    public Category setDecoration(ResourceLocation decoration) {
+        ScreenData.setDecoration(decoration);
+        return this;
+    }
+
+    public Category setBackgroundType(BackgroundType backgroundType) {
+        ScreenData.setBackgroundType(backgroundType);
+        return this;
+    }
+
+    public Category setFrame(ResourceLocation frame) {
+        ScreenData.setFrame(frame);
+        return this;
+    }
+
+    public Category setProgressBar(ResourceLocation progressBar) {
+        ScreenData.setProgressBar(progressBar);
+        return this;
+    }
+
+    public Category setOutputType(OutputType outputType) {
+        ScreenData.setOutputType(outputType);
+        return this;
+    }
+
+    public Category setQueueable(QueueType queueable) {
+        ScreenData.setQueueable(queueable);
+        return this;
+    }
+
+    public Category setSoundType(SoundType soundType) {
+        ScreenData.setSoundType(soundType);
+        return this;
+    }
+
+    public Category addSound(Sound sound) {
+        ScreenData.addSound(sound);
+        return this;
+    }
+
+    public Category addParticle(Particle particle) {
+        ScreenData.addParticle(particle);
+        return this;
     }
 }
