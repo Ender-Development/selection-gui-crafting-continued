@@ -2,10 +2,10 @@ package io.enderdev.selectionguicrafting.registry.category;
 
 import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import io.enderdev.selectionguicrafting.Tags;
+import io.enderdev.selectionguicrafting.registry.IRegisterObject;
 import io.enderdev.selectionguicrafting.registry.Register;
 import io.enderdev.selectionguicrafting.registry.util.Particle;
 import io.enderdev.selectionguicrafting.registry.util.Sound;
-import io.enderdev.selectionguicrafting.registry.util.Validation;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class Category {
-    private final Validation ErrorCheck = new Validation();
+public class Category implements IRegisterObject {
     private final CategoryData ScreenData = new CategoryData();
 
     private final ArrayList<ItemTrigger> triggerItems = new ArrayList<>();
@@ -30,6 +29,10 @@ public class Category {
     public Category() {
     }
 
+    /* --------------------- */
+    /* ------ ID & NAME ---- */
+    /* --------------------- */
+
     public Category id(String id) {
         if (Register.getCategories().stream().anyMatch(ctg -> ctg.getID().equals(id))) {
             ErrorCheck.error("ID already exists");
@@ -38,6 +41,19 @@ public class Category {
         }
         return this;
     }
+
+    public String getID() {
+        return id;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public String getName() {
+        return I18n.format(Tags.MOD_ID + ".category." + id + ".name");
+    }
+
+    /* --------------------- */
+    /* ------ TRIGGER ------ */
+    /* --------------------- */
 
     public Category trigger(Ingredient input, double damageMultiplier, double timeMultiplier, double xpMultiplier) {
         ArrayList<ItemStack> inputItems = new ArrayList<>(Arrays.asList(input.getMatchingStacks()));
@@ -58,13 +74,6 @@ public class Category {
         return this;
     }
 
-    public void register() {
-        if (!validate()) {
-            return;
-        }
-        Register.addCategory(this);
-    }
-
     public ArrayList<BlockTrigger> getTriggerBlocks() {
         return triggerBlocks;
     }
@@ -73,16 +82,11 @@ public class Category {
         return triggerItems;
     }
 
-    public String getID() {
-        return id;
-    }
+    /* --------------------- */
+    /* ---- VALIDATION ----- */
+    /* --------------------- */
 
-    @SideOnly(Side.CLIENT)
-    public String getName() {
-        return I18n.format(Tags.MOD_ID + ".category." + id + ".name");
-    }
-
-    private boolean validate() {
+    public boolean validate() {
         if (id == null) {
             ErrorCheck.error("Category ID must be set.");
         }
@@ -95,6 +99,17 @@ public class Category {
         }
         return true;
     }
+
+    public void register() {
+        if (!validate()) {
+            return;
+        }
+        Register.addCategory(this);
+    }
+
+    /* --------------------- */
+    /* ---- SCREENDATA ----- */
+    /* --------------------- */
 
     public CategoryData getScreenData() {
         return ScreenData;

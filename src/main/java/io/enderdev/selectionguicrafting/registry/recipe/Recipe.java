@@ -1,5 +1,8 @@
 package io.enderdev.selectionguicrafting.registry.recipe;
 
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
+import io.enderdev.selectionguicrafting.registry.IRegisterObject;
+import io.enderdev.selectionguicrafting.registry.Register;
 import io.enderdev.selectionguicrafting.registry.category.OutputType;
 import io.enderdev.selectionguicrafting.registry.category.QueueType;
 import io.enderdev.selectionguicrafting.registry.category.SoundType;
@@ -15,7 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class Recipe {
+public class Recipe implements IRegisterObject {
     private final Validation ErrorCheck = new Validation();
     private final RecipeData ScreenData = new RecipeData();
     // required
@@ -32,6 +35,34 @@ public class Recipe {
     public Recipe() {
         this.time = 20;
         this.xp = 0;
+    }
+
+    /* --------------------- */
+    /* ---- VALIDATION ----- */
+    /* --------------------- */
+
+    public void register() {
+        if (!validate()) {
+            return;
+        }
+        Register.addRecipe(this);
+    }
+
+    public boolean validate() {
+        if (category == null) {
+            ErrorCheck.error("Category must be set.");
+        }
+        if (inputs.isEmpty() && mainHand == null && offHand == null) {
+            ErrorCheck.error("At least one input must be set.");
+        }
+        if (outputs.isEmpty()) {
+            ErrorCheck.error("At least one output must be set.");
+        }
+        if (!ErrorCheck.valid()) {
+            SelectionGuiCrafting.LOGGER.error("Recipe is invalid: {}", ErrorCheck.msg());
+            return false;
+        }
+        return true;
     }
 
     /* --------------------- */
