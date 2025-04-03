@@ -13,10 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Recipe implements IRegisterObject {
     private final Validation ErrorCheck = new Validation();
@@ -57,6 +54,9 @@ public class Recipe implements IRegisterObject {
         }
         if (inputs.isEmpty() && mainHand == null && offHand == null) {
             ErrorCheck.error("At least one input must be set.");
+        }
+        if (inputs.stream().anyMatch(rIn -> Arrays.stream(rIn.getIngredient().getMatchingStacks()).mapToInt(ItemStack::getMaxStackSize).max().orElse(64) > rIn.getAmount())) {
+            ErrorCheck.error("Input amount is greater than max stack size.");
         }
         if (outputs.isEmpty()) {
             ErrorCheck.error("At least one output must be set.");

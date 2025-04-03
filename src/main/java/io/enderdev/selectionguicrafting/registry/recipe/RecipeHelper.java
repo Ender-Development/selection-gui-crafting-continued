@@ -27,18 +27,18 @@ public class RecipeHelper {
     }
 
     public ResourceLocation getFrame() {
-        if (!recipeData.getFrame().toString().equals(Assets.FRAME_DEFAULT.get().toString())){
+        if (!recipeData.getFrame().toString().equals(Assets.FRAME_DEFAULT.get().toString())) {
             return recipeData.getFrame();
-        } else if (!categoryData.getFrame().toString().equals(Assets.FRAME_DEFAULT.get().toString())){
+        } else if (!categoryData.getFrame().toString().equals(Assets.FRAME_DEFAULT.get().toString())) {
             return recipeData.getFrame();
         }
         return categoryData.getFrame();
     }
 
     public ResourceLocation getProgressBar() {
-        if (!recipeData.getProgressBar().toString().equals(Assets.BAR_DEFAULT.get().toString())){
+        if (!recipeData.getProgressBar().toString().equals(Assets.BAR_DEFAULT.get().toString())) {
             return recipeData.getProgressBar();
-        } else if (!categoryData.getProgressBar().toString().equals(Assets.BAR_DEFAULT.get().toString())){
+        } else if (!categoryData.getProgressBar().toString().equals(Assets.BAR_DEFAULT.get().toString())) {
             return recipeData.getProgressBar();
         }
         return categoryData.getProgressBar();
@@ -77,7 +77,7 @@ public class RecipeHelper {
         } else if (!categoryData.getSounds().isEmpty()) {
             return categoryData.getSounds();
         }
-        return new ArrayList<Sound>(){{
+        return new ArrayList<Sound>() {{
             add(new Sound(new ResourceLocation("minecraft", "block.anvil.use"), 0.1f, 1));
             add(new Sound(new ResourceLocation("minecraft", "block.anvil.break"), 0.1f, 1));
         }};
@@ -89,7 +89,7 @@ public class RecipeHelper {
         } else if (!categoryData.getParticles().isEmpty()) {
             return categoryData.getParticles();
         }
-        return new ArrayList<Particle>(){{
+        return new ArrayList<Particle>() {{
             add(new Particle(EnumParticleTypes.VILLAGER_HAPPY, 10, 0.5f));
         }};
     }
@@ -105,6 +105,25 @@ public class RecipeHelper {
         }
         if (recipe.getOffHand() != null && recipe.getOffHand().getIngredient().getMatchingStacks().length != 0) {
             result = !offHand.isEmpty() && Arrays.stream(recipe.getOffHand().getIngredient().getMatchingStacks()).anyMatch(matching -> matching.isItemEqual(offHand));
+        }
+
+        // go through all recipeInputs, if all can be found in the simplified inventory, return true
+        for (RecipeInput input : recipe.getInputs()) {
+            boolean found = false;
+            for (ItemStack stack : inventory) {
+                if (input.compare(stack)) {
+                    // remove the stack from the inventory
+                    // this way we will return false if we
+                    // need more than one stack of the same item
+                    inventory.remove(stack);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                result = false;
+                break;
+            }
         }
 
         return result;

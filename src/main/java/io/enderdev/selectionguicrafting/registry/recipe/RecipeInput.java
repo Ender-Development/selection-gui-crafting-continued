@@ -1,5 +1,6 @@
 package io.enderdev.selectionguicrafting.registry.recipe;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 
@@ -46,7 +47,7 @@ public class RecipeInput {
     }
 
     public int getAmount() {
-        return amount;
+        return Math.min(amount, Arrays.stream(getIngredient().getMatchingStacks()).mapToInt(ItemStack::getMaxStackSize).max().orElse(64));
     }
 
     public boolean isDamageable() {
@@ -57,14 +58,43 @@ public class RecipeInput {
         return random.nextDouble() <= getChance();
     }
 
+    /**
+     * Consumes the item stack if the chance is met.
+     * If the item is damageable, it will damage the item.
+     * If the item is not damageable, it will remove the amount from the stack.
+     * @param stack the stack to consume
+     */
     public void consume(ItemStack stack) {
         if (!beConsumed()) {
             return;
         }
-        if (stack.getCount() > getAmount()) {
-            stack.shrink(getAmount());
+        if (stack.isItemStackDamageable() && getDamage() > 0) {
+            int damage = stack.getItemDamage() + getDamage();
+            if (damage >= stack.getMaxDamage()) {
+                stack.shrink(1);
+            } else {
+                stack.setItemDamage(damage);
+            }
         } else {
-            stack.setCount(0);
+            if (stack.getCount() > getAmount()) {
+                stack.shrink(getAmount());
+            } else {
+                stack.setCount(0);
+            }
         }
+    }
+
+    /**
+     * Compares the input with the given stack.
+     * (The +1 is to account that tool durability is 0 based)
+     * @param stack the stack to compare with
+     * @return true if the input matches the stack, false otherwise
+     */
+    public boolean compare(ItemStack stack) {
+        boolean isItemEqual = Arrays.stream(getIngredient().getMatchingStacks()).anyMatch(matching -> matching.isItemEqualIgnoreDurability(stack));
+        boolean hasEnoughDurability = stack.getItem().isDamageable() && stack.getMaxDamage() - stack.getItemDamage() + 1 >= getDamage();
+        boolean hasEnoughStackSize = stack.getCount() >= getAmount();
+
+        return isItemEqual && hasEnoughDurability && hasEnoughStackSize;
     }
 }
