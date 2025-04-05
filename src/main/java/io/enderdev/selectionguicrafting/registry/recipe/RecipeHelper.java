@@ -99,18 +99,15 @@ public class RecipeHelper {
         ItemStack offHand = player.getHeldItemOffhand();
         ArrayList<ItemStack> inventory = player.inventory.mainInventory.stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
-        boolean result = true;
-        if (recipe.getMainHand() != null && recipe.getMainHand().getIngredient().getMatchingStacks().length != 0) {
-            result = !mainHand.isEmpty() && Arrays.stream(recipe.getMainHand().getIngredient().getMatchingStacks()).anyMatch(matching -> matching.isItemEqual(mainHand));
-        }
-        if (recipe.getOffHand() != null && recipe.getOffHand().getIngredient().getMatchingStacks().length != 0) {
-            result = !offHand.isEmpty() && Arrays.stream(recipe.getOffHand().getIngredient().getMatchingStacks()).anyMatch(matching -> matching.isItemEqual(offHand));
-        }
+        if (hasMainHand() && (mainHand.isEmpty() || !recipe.getMainHand().getIngredient().test(mainHand)))
+            return false;
+        if (hasOffHand() && (offHand.isEmpty() || !recipe.getOffHand().getIngredient().test(offHand)))
+            return false;
 
         // go through all recipeInputs, if all can be found in the simplified inventory, return true
         for (RecipeInput input : recipe.getInputs()) {
             boolean found = false;
-            for (ItemStack stack : inventory) {
+            for (ItemStack stack : inventory)
                 if (input.compare(stack)) {
                     // remove the stack from the inventory
                     // this way we will return false if we
@@ -119,14 +116,11 @@ public class RecipeHelper {
                     found = true;
                     break;
                 }
-            }
-            if (!found) {
-                result = false;
-                break;
-            }
+            if (!found)
+                return false;
         }
 
-        return result;
+        return true;
     }
 
     public int getAbsoluteDamage(RecipeInput input, double multiplier) {

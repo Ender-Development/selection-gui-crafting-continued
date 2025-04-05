@@ -26,45 +26,26 @@ public class RecipeHandler {
     }
 
     public boolean validate() {
-        if (player == null || category == null) {
-            return false;
-        }
-
-        if (recipe == null) {
-            return false;
-        }
-
-        return recipeHelper.canCraft(player);
+        return player != null && category != null && recipe != null && recipeHelper.canCraft(player);
     }
 
     public void craft() {
-        if (!validate()) {
+        if (!validate())
             return;
-        }
 
         // If we got here, the recipe is valid and can be processed
-        Random random = new Random();
         recipe.getOutputs().forEach(output -> {
             ItemStack stack = output.getItemStack().copy();
-            OutputType outputType = recipeHelper.getOutputType();
-            if (random.nextDouble() < output.getChance()) {
-                if (outputType == OutputType.DROP) {
+            if (player.world.rand.nextDouble() < output.getChance())
+                if (recipeHelper.getOutputType() == OutputType.DROP || !player.inventory.addItemStackToInventory(stack))
                     player.dropItem(stack, false, true);
-                } else {
-                    if (!player.inventory.addItemStackToInventory(stack)) {
-                        player.dropItem(stack, false, true);
-                    }
-                }
-            }
         });
 
-        if (recipeHelper.hasMainHand()) {
+        if (recipeHelper.hasMainHand())
             recipe.getMainHand().consume(player.getHeldItemMainhand());
-        }
 
-        if (recipeHelper.hasOffHand()) {
+        if (recipeHelper.hasOffHand())
             recipe.getOffHand().consume(player.getHeldItemOffhand());
-        }
 
         player.addExperience(xp);
     }
