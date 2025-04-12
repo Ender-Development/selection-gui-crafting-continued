@@ -413,7 +413,7 @@ public final class CTsgc {
         @ZenDoc("Register the recipe")
         public void register() {
             if (!recipe.validate()) {
-                throw new IllegalArgumentException("Recipe is not valid: " + recipe);
+                throw new IllegalArgumentException("Recipe is not valid: " + recipe.getErrorCheck().msg());
             }
             Register.addRecipe(recipe);
         }

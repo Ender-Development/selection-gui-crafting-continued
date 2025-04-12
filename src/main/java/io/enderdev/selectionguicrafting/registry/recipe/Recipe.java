@@ -55,10 +55,7 @@ public class Recipe implements IRegisterObject {
         if (inputs.isEmpty() && mainHand == null && offHand == null) {
             ErrorCheck.error("At least one input must be set.");
         }
-        if (inputs.stream().anyMatch(rIn -> Arrays.stream(rIn.getIngredient().getMatchingStacks()).mapToInt(ItemStack::getMaxStackSize).max().orElse(64) > rIn.getAmount())) {
-            ErrorCheck.error("Input amount is greater than max stack size.");
-        }
-        if (outputs.isEmpty()) {
+	    if (outputs.isEmpty()) {
             ErrorCheck.error("At least one output must be set.");
         }
         if (!ErrorCheck.valid()) {
@@ -66,6 +63,10 @@ public class Recipe implements IRegisterObject {
             return false;
         }
         return true;
+    }
+
+    public Validation getErrorCheck() {
+        return ErrorCheck;
     }
 
     /* --------------------- */
