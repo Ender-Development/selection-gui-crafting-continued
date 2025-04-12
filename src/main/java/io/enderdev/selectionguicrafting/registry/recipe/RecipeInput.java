@@ -92,7 +92,7 @@ public class RecipeInput {
      */
     public boolean compare(ItemStack stack) {
         boolean isItemEqual = Arrays.stream(getIngredient().getMatchingStacks()).anyMatch(matching -> matching.isItemEqualIgnoreDurability(stack));
-        boolean hasEnoughDurability = stack.getItem().isDamageable() && stack.getMaxDamage() - stack.getItemDamage() + 1 >= getDamage();
+        boolean hasEnoughDurability = !stack.getItem().isDamageable() || stack.getMaxDamage() - stack.getItemDamage() + 1 >= getDamage();
         boolean hasEnoughStackSize = stack.getCount() >= getAmount();
 
         return isItemEqual && hasEnoughDurability && hasEnoughStackSize;

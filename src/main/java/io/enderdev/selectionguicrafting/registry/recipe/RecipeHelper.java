@@ -97,12 +97,16 @@ public class RecipeHelper {
     public boolean canCraft(EntityPlayer player) {
         ItemStack mainHand = player.getHeldItemMainhand();
         ItemStack offHand = player.getHeldItemOffhand();
-        ArrayList<ItemStack> inventory = player.inventory.mainInventory.stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        ArrayList<ItemStack> inventory = new ArrayList<>(player.inventory.mainInventory);
 
         if (hasMainHand() && (mainHand.isEmpty() || !recipe.getMainHand().getIngredient().test(mainHand)))
             return false;
         if (hasOffHand() && (offHand.isEmpty() || !recipe.getOffHand().getIngredient().test(offHand)))
             return false;
+
+        // this'll only work for a whole itemslot having a good amount of items
+        // if you'd want to also check for the items being spread out across multiple slots (like 3 slots each with 1 snow blocks and the recipe requiring 3 snow blocks)
+        // you'd probably want to consume the recipeinput instead of consuming itemstacks, and at the end check if any inputs haven't been fully consumed
 
         // go through all recipeInputs, if all can be found in the simplified inventory, return true
         for (RecipeInput input : recipe.getInputs()) {
@@ -112,7 +116,7 @@ public class RecipeHelper {
                     // remove the stack from the inventory
                     // this way we will return false if we
                     // need more than one stack of the same item
-                    inventory.remove(stack);
+                    input.consume(stack);
                     found = true;
                     break;
                 }

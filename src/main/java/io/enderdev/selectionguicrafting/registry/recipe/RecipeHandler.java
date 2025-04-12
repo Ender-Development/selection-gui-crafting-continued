@@ -6,6 +6,8 @@ import io.enderdev.selectionguicrafting.registry.category.OutputType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class RecipeHandler {
@@ -46,6 +48,18 @@ public class RecipeHandler {
 
         if (recipeHelper.hasOffHand())
             recipe.getOffHand().consume(player.getHeldItemOffhand());
+
+        if(!recipe.getInputs().isEmpty()) {
+            for(RecipeInput input : recipe.getInputs()) {
+                if(!input.beConsumed())
+                    continue;
+                for(ItemStack stack : player.inventory.mainInventory)
+                    if(input.compare(stack)) {
+                        input.consume(stack);
+                        break;
+                    }
+            }
+        }
 
         player.addExperience(xp);
     }
