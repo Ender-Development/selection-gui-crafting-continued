@@ -7,6 +7,7 @@ import io.enderdev.selectionguicrafting.registry.recipe.Recipe;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -75,10 +76,20 @@ public class Register {
     }
 
     public static boolean isTriggerItem(ItemStack itemStack) {
-        return allTriggerItems.stream().anyMatch(triggerItem -> triggerItem.getTriggerItem().isItemEqual(itemStack));
+        return allTriggerItems.stream().anyMatch(triggerItem -> triggerItem.getTriggerItem().isItemEqualIgnoreDurability(itemStack));
+    }
+
+    @Nullable
+    public static ItemTrigger getTriggerItem(ItemStack itemStack) {
+        return allTriggerItems.stream().filter(triggerItem -> triggerItem.getTriggerItem().isItemEqualIgnoreDurability(itemStack)).findFirst().orElse(null);
     }
 
     public static boolean isTriggerBlock(Block block) {
         return allTriggerBlocks.stream().anyMatch(triggerBlock -> triggerBlock.getTriggerBlock().isAssociatedBlock(block));
+    }
+
+    @Nullable
+    public static BlockTrigger getTriggerBlock(Block block) {
+        return allTriggerBlocks.stream().filter(triggerBlock -> triggerBlock.getTriggerBlock().isAssociatedBlock(block)).findFirst().orElse(null);
     }
 }

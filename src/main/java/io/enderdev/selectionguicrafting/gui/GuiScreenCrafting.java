@@ -197,11 +197,22 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
     @Override
     public void drawHoveringText(@NotNull List<String> textLines, int x, int y, @NotNull FontRenderer font) {
-        ItemStack mainHand = player.getHeldItemMainhand();
-        ItemStack offHand = player.getHeldItemOffhand();
+        RecipeHelper hoveredRecipeHelper = new RecipeHelper(hoveredRecipe);
         if (wrongInput) {
-            String displayName = !hoveredRecipe.getInputs().isEmpty() ? hoveredRecipe.getInputs().get(0).getIngredient().getMatchingStacks()[0].getDisplayName() : hoveredRecipe.getMainHand() != null ? hoveredRecipe.getMainHand().getIngredient().getMatchingStacks()[0].getDisplayName() : hoveredRecipe.getOffHand() != null ? hoveredRecipe.getOffHand().getIngredient().getMatchingStacks()[0].getDisplayName() : "";
-            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_input", displayName));
+            if (hoveredRecipeHelper.hasMainHand()) {
+                textLines.add("Main Hand:");
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_input", hoveredRecipe.getMainHand().getIngredient().getMatchingStacks()[0].getDisplayName()));
+            }
+            if (hoveredRecipeHelper.hasOffHand()) {
+                textLines.add("Off Hand:");
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_input", hoveredRecipe.getOffHand().getIngredient().getMatchingStacks()[0].getDisplayName()));
+            }
+            if (!hoveredRecipe.getInputs().isEmpty()) {
+                textLines.add("Inputs:");
+                for (RecipeInput input : hoveredRecipe.getInputs()) {
+                    textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_input", input.getIngredient().getMatchingStacks()[0].getDisplayName()));
+                }
+            }
             wrongInput = false;
         }
 //        if (wrongAmount) {
@@ -281,7 +292,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 if (isHovered) {
                     noQueue = true;
                 }
-            } else if (recipe.getInputs().stream().map(RecipeInput::getIngredient).map(Ingredient::getMatchingStacks).noneMatch(itemStacks -> Arrays.stream(itemStacks).anyMatch(stack -> stack.isItemEqual(player.getHeldItemOffhand())))) {
+            } else if (!recipeHelper.canCraft(player, damageMultiplier)) {
                 drawScaledCustomSizeModalRect(iconX, iconY, 0, 16, 16, 16, 8, 8, 32, 32); // Red X
                 if (isHovered) {
                     wrongInput = true;
@@ -333,7 +344,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 lineCoordX = xPos - 1;
                 lineCoordY = yPos + 14;
 
-                craftingProgress = selectedRecipeHelper.canCraft(player) ? (Minecraft.getSystemTime() - timeRecipeStart) / (recipeTime / timeMultiplier * 50) : 1.0;
+                craftingProgress = selectedRecipeHelper.canCraft(player, damageMultiplier) ? (Minecraft.getSystemTime() - timeRecipeStart) / (recipeTime / timeMultiplier * 50) : 1.0;
 
                 double remainingCraftingTime = totalCraftingTime - (Minecraft.getSystemTime() - timeQueueStart);
                 if (remainingCraftingTime < 0) {
@@ -381,7 +392,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 if (!isQueueable && !queue.isEmpty()) {
                     break;
                 }
-                if (recipeHelper.canCraft(player)) {
+                if (recipeHelper.canCraft(player, damageMultiplier)) {
                     queue.add(i / 4);
                     timeQueueStart = timeQueueStart == -1 ? Minecraft.getSystemTime() : timeQueueStart;
                     totalCraftingTime += (recipe.getTime() / timeMultiplier) * 50;

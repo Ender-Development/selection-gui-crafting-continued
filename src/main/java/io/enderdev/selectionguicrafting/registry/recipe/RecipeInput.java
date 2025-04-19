@@ -64,12 +64,12 @@ public class RecipeInput {
      * If the item is not damageable, it will remove the amount from the stack.
      * @param stack the stack to consume
      */
-    public void consume(ItemStack stack) {
+    public void consume(ItemStack stack, double damageMultiplier) {
         if (!beConsumed()) {
             return;
         }
         if (stack.isItemStackDamageable() && getDamage() > 0) {
-            int damage = stack.getItemDamage() + getDamage();
+            int damage = stack.getItemDamage() + (int) (getDamage() * damageMultiplier);
             if (damage >= stack.getMaxDamage()) {
                 stack.shrink(1);
             } else {
@@ -90,9 +90,9 @@ public class RecipeInput {
      * @param stack the stack to compare with
      * @return true if the input matches the stack, false otherwise
      */
-    public boolean compare(ItemStack stack) {
+    public boolean compare(ItemStack stack, double damageMultiplier) {
         boolean isItemEqual = Arrays.stream(getIngredient().getMatchingStacks()).anyMatch(matching -> matching.isItemEqualIgnoreDurability(stack));
-        boolean hasEnoughDurability = !stack.getItem().isDamageable() || stack.getMaxDamage() - stack.getItemDamage() + 1 >= getDamage();
+        boolean hasEnoughDurability = !stack.getItem().isDamageable() || stack.getMaxDamage() - stack.getItemDamage() + 1 >= getDamage() * damageMultiplier;
         boolean hasEnoughStackSize = stack.getCount() >= getAmount();
 
         return isItemEqual && hasEnoughDurability && hasEnoughStackSize;

@@ -70,6 +70,20 @@ public class Category implements IRegisterObject {
         return this;
     }
 
+    public Category trigger(ItemStack input, double damageMultiplier, double timeMultiplier, double xpMultiplier) {
+        if (Register.getTriggerItems().stream().map(ItemTrigger::getTriggerItem).anyMatch(input::equals)) {
+            ErrorCheck.error("Invalid Trigger Item " + input.getDisplayName() + " is already registered as Trigger.");
+        } else {
+            triggerItems.add(new ItemTrigger(input, damageMultiplier, timeMultiplier, xpMultiplier));
+        }
+        return this;
+    }
+
+    public Category trigger(ItemStack input) {
+        trigger(input, 1, 1, 1);
+        return this;
+    }
+
     public Category trigger(Block input, double damageMultiplier, double timeMultiplier, double xpMultiplier) {
         if (Register.getTriggerBlocks().stream().map(BlockTrigger::getTriggerBlock).anyMatch(input::equals)) {
             ErrorCheck.error("Invalid Trigger Block " + input.getLocalizedName() + " is already registered as Trigger.");

@@ -28,7 +28,7 @@ public class RecipeHandler {
     }
 
     public boolean validate() {
-        return player != null && category != null && recipe != null && recipeHelper.canCraft(player);
+        return player != null && category != null && recipe != null && recipeHelper.canCraft(player, durabilityMultiplier);
     }
 
     public void craft() {
@@ -44,18 +44,18 @@ public class RecipeHandler {
         });
 
         if (recipeHelper.hasMainHand())
-            recipe.getMainHand().consume(player.getHeldItemMainhand());
+            recipe.getMainHand().consume(player.getHeldItemMainhand(), durabilityMultiplier);
 
         if (recipeHelper.hasOffHand())
-            recipe.getOffHand().consume(player.getHeldItemOffhand());
+            recipe.getOffHand().consume(player.getHeldItemOffhand(), durabilityMultiplier);
 
         if(!recipe.getInputs().isEmpty()) {
             for(RecipeInput input : recipe.getInputs()) {
                 if(!input.beConsumed())
                     continue;
                 for(ItemStack stack : player.inventory.mainInventory)
-                    if(input.compare(stack)) {
-                        input.consume(stack);
+                    if(input.compare(stack, durabilityMultiplier)) {
+                        input.consume(stack, durabilityMultiplier);
                         break;
                     }
             }

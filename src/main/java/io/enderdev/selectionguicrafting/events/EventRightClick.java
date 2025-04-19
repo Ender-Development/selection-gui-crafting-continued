@@ -54,6 +54,17 @@ public class EventRightClick {
             return;
         }
 
+        ItemStack eventItemMainhand = player.getHeldItemMainhand();
+        ItemStack eventStackOffhand = player.getHeldItemOffhand();
+
+        if (eventItemMainhand.isEmpty() && eventStackOffhand.isEmpty()) {
+            return;
+        }
+
+        if (!Register.isTriggerItem(eventItemMainhand) && !Register.isTriggerItem(eventStackOffhand)) {
+            return;
+        }
+
         event.setCanceled(true);
         openGui(player);
     }

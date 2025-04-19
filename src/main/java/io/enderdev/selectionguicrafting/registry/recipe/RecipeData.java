@@ -26,7 +26,7 @@ public class RecipeData {
         this.frame = Assets.FRAME_DEFAULT.get();
         this.progressBar = Assets.BAR_DEFAULT.get();
 
-        this.outputType = OutputType.DROP;
+        this.outputType = OutputType.INVENTORY;
         this.queueable = QueueType.YES;
         this.soundType = SoundType.RANDOM;
     }

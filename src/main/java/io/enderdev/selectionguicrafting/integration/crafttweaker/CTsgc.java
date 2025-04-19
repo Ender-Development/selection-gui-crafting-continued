@@ -48,14 +48,14 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Add a trigger item to the category")
         public CTCategoryBuilder trigger(IItemStack input, double damageMultiplier, double timeMultiplier, double xpMultiplier) {
-            category.trigger(Ingredient.fromStacks((ItemStack) input.getInternal()), damageMultiplier, timeMultiplier, xpMultiplier);
+            category.trigger((ItemStack) input.getInternal(), damageMultiplier, timeMultiplier, xpMultiplier);
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Add a trigger item to the category")
         public CTCategoryBuilder trigger(IItemStack input) {
-            category.trigger(Ingredient.fromStacks((ItemStack) input.getInternal()));
+            category.trigger((ItemStack) input.getInternal());
             return this;
         }
 
@@ -306,7 +306,21 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Adds an input to the recipe")
+        public CTRecipeBuilder input(IItemStack input) {
+            recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()));
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an input to the recipe")
         public CTRecipeBuilder input(IIngredient input, int damage) {
+            recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()), damage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an input to the recipe")
+        public CTRecipeBuilder input(IItemStack input, int damage) {
             recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()), damage);
             return this;
         }
@@ -320,7 +334,21 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Adds an input to the recipe")
+        public CTRecipeBuilder input(IItemStack input, double chance) {
+            recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()), chance);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an input to the recipe")
         public CTRecipeBuilder input(IIngredient input, int damage, double chance) {
+            recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()), chance, damage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an input to the recipe")
+        public CTRecipeBuilder input(IItemStack input, int damage, double chance) {
             recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()), chance, damage);
             return this;
         }
@@ -334,7 +362,21 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Adds a main hand input to the recipe")
+        public CTRecipeBuilder mainHand(IItemStack input) {
+            recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()));
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds a main hand input to the recipe")
         public CTRecipeBuilder mainHand(IIngredient input, int damage) {
+            recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()), damage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds a main hand input to the recipe")
+        public CTRecipeBuilder mainHand(IItemStack input, int damage) {
             recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()), damage);
             return this;
         }
@@ -348,7 +390,21 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Adds a main hand input to the recipe")
+        public CTRecipeBuilder mainHand(IItemStack input, double chance) {
+            recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds a main hand input to the recipe")
         public CTRecipeBuilder mainHand(IIngredient input, int damage, double chance) {
+            recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance, damage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds a main hand input to the recipe")
+        public CTRecipeBuilder mainHand(IItemStack input, int damage, double chance) {
             recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance, damage);
             return this;
         }
@@ -362,7 +418,21 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Adds an off hand input to the recipe")
+        public CTRecipeBuilder offHand(IItemStack input) {
+            recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()));
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an off hand input to the recipe")
         public CTRecipeBuilder offHand(IIngredient input, int damage) {
+            recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()), damage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an off hand input to the recipe")
+        public CTRecipeBuilder offHand(IItemStack input, int damage) {
             recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()), damage);
             return this;
         }
@@ -376,7 +446,21 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Adds an off hand input to the recipe")
+        public CTRecipeBuilder offHand(IItemStack input, double chance) {
+            recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an off hand input to the recipe")
         public CTRecipeBuilder offHand(IIngredient input, int damage, double chance) {
+            recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance, damage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an off hand input to the recipe")
+        public CTRecipeBuilder offHand(IItemStack input, int damage, double chance) {
             recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance, damage);
             return this;
         }
@@ -390,7 +474,21 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Adds an output to the recipe")
+        public CTRecipeBuilder output(IItemStack output, float chance) {
+            recipe.output((ItemStack) output.getInternal(), chance);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an output to the recipe")
         public CTRecipeBuilder output(IIngredient output) {
+            recipe.output((ItemStack) output.getInternal());
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Adds an output to the recipe")
+        public CTRecipeBuilder output(IItemStack output) {
             recipe.output((ItemStack) output.getInternal());
             return this;
         }

@@ -11,7 +11,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class RecipeHelper {
     private final Recipe recipe;
@@ -45,9 +44,9 @@ public class RecipeHelper {
     }
 
     public OutputType getOutputType() {
-        if (recipeData.getOutputType() != OutputType.DROP) {
+        if (recipeData.getOutputType() != OutputType.INVENTORY) {
             return recipeData.getOutputType();
-        } else if (categoryData.getOutputType() != OutputType.DROP) {
+        } else if (categoryData.getOutputType() != OutputType.INVENTORY) {
             return recipeData.getOutputType();
         }
         return categoryData.getOutputType();
@@ -94,14 +93,14 @@ public class RecipeHelper {
         }};
     }
 
-    public boolean canCraft(EntityPlayer player) {
+    public boolean canCraft(EntityPlayer player, double multiplier) {
         ItemStack mainHand = player.getHeldItemMainhand();
         ItemStack offHand = player.getHeldItemOffhand();
         ArrayList<ItemStack> inventory = new ArrayList<>(player.inventory.mainInventory);
 
-        if (hasMainHand() && (mainHand.isEmpty() || !recipe.getMainHand().getIngredient().test(mainHand)))
+        if (hasMainHand() && (mainHand.isEmpty() || !recipe.getMainHand().compare(mainHand, multiplier)))
             return false;
-        if (hasOffHand() && (offHand.isEmpty() || !recipe.getOffHand().getIngredient().test(offHand)))
+        if (hasOffHand() && (offHand.isEmpty() || !recipe.getOffHand().compare(offHand, multiplier)))
             return false;
 
         // this'll only work for a whole itemslot having a good amount of items
@@ -112,11 +111,8 @@ public class RecipeHelper {
         for (RecipeInput input : recipe.getInputs()) {
             boolean found = false;
             for (ItemStack stack : inventory)
-                if (input.compare(stack)) {
-                    // remove the stack from the inventory
-                    // this way we will return false if we
-                    // need more than one stack of the same item
-                    input.consume(stack);
+                if (input.compare(stack, multiplier)) {
+                    inventory.remove(stack);
                     found = true;
                     break;
                 }
@@ -125,13 +121,6 @@ public class RecipeHelper {
         }
 
         return true;
-    }
-
-    public int getAbsoluteDamage(RecipeInput input, double multiplier) {
-        if (!input.isDamageable()) {
-            return 0;
-        }
-        return (int) (input.getDamage() * multiplier);
     }
 
     public int getAbsoluteXP(double multiplier) {

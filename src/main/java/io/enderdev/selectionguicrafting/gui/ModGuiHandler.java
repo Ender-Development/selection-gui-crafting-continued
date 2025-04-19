@@ -39,24 +39,21 @@ public class ModGuiHandler implements IGuiHandler {
 
         /* BLOCK: HIGHEST PRIORITY */
         RayTraceResult rayTraceResult = player.rayTrace(Minecraft.getMinecraft().playerController.getBlockReachDistance(), 1.0F);
-        if (rayTraceResult == null || rayTraceResult.typeOfHit != RayTraceResult.Type.BLOCK) {
-            SelectionGuiCrafting.LOGGER.info("RayTraceResult is null or not a block");
-        } else {
+        if (rayTraceResult != null && rayTraceResult.typeOfHit == RayTraceResult.Type.BLOCK) {
             Block rayBlock = world.getBlockState(rayTraceResult.getBlockPos()).getBlock();
-            SelectionGuiCrafting.LOGGER.info("Block: {}", rayBlock.getRegistryName());
-            trigger = Register.getTriggerBlocks().stream().filter(blockTrigger -> blockTrigger.getTriggerBlock().isAssociatedBlock(rayBlock)).findFirst().orElse(null);
+            trigger = Register.getTriggerBlock(rayBlock);
         }
 
         /* OFFHAND: LOWEST PRIORITY */
         if (trigger == null) {
             ItemStack heldStackOffhand = player.getHeldItemOffhand();
-            trigger = Register.getTriggerItems().stream().filter(item -> item.getTriggerItem().isItemEqual(heldStackOffhand)).findFirst().orElse(null);
+            trigger = Register.getTriggerItem(heldStackOffhand);
         }
 
         /* MAINHAND: HIGHER PRIORITY */
         if (trigger == null) {
             ItemStack heldStackMainhand = player.getHeldItemMainhand();
-            trigger = Register.getTriggerItems().stream().filter(item -> item.getTriggerItem().isItemEqual(heldStackMainhand)).findFirst().orElse(null);
+            trigger = Register.getTriggerItem(heldStackMainhand);
         }
 
         Category recipeCategory = null;
