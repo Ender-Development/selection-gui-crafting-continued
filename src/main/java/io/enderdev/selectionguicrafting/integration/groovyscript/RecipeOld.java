@@ -23,8 +23,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
+@Deprecated
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
-public class Recipe extends VirtualizedRegistry<GsRecipe> {
+public class RecipeOld extends VirtualizedRegistry<GsRecipe> {
     @Override
     @GroovyBlacklist
     public void onReload() {
@@ -373,7 +374,7 @@ public class Recipe extends VirtualizedRegistry<GsRecipe> {
             if (!validate()) {
                 return null;
             }
-            GSPlugin.instance.recipe.add(this);
+            // GSPlugin.instance.old_recipe.add(this);
             return this;
         }
     }

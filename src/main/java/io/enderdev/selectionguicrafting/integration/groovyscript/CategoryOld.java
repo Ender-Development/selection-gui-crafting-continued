@@ -16,8 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
+@Deprecated
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
-public class Category extends VirtualizedRegistry<GsCategory> {
+public class CategoryOld extends VirtualizedRegistry<GsCategory> {
     @Override
     @GroovyBlacklist
     public void onReload() {
@@ -270,7 +271,7 @@ public class Category extends VirtualizedRegistry<GsCategory> {
             if (!validate()) {
                 return null;
             }
-            GSPlugin.instance.category.add(this);
+            // GSPlugin.instance.old_category.add(this);
             return this;
         }
     }
