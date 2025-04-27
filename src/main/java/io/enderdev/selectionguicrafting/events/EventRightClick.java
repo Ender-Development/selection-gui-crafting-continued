@@ -24,19 +24,10 @@ public class EventRightClick {
             return;
         }
 
-        ItemStack eventItemMainhand = player.getHeldItemMainhand();
-        ItemStack eventStackOffhand = player.getHeldItemOffhand();
-
-        if (eventItemMainhand.isEmpty() && eventStackOffhand.isEmpty()) {
-            return;
+        if (checkItems(player)) {
+            event.setCanceled(true);
+            openGui(player);
         }
-
-        if (!Register.isTriggerItem(eventItemMainhand) && !Register.isTriggerItem(eventStackOffhand)) {
-            return;
-        }
-
-        event.setCanceled(true);
-        openGui(player);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -48,25 +39,29 @@ public class EventRightClick {
             return;
         }
 
-        Block eventBlock = player.getEntityWorld().getBlockState(event.getPos()).getBlock();
-
-        if (!Register.isTriggerBlock(eventBlock)) {
+        if (checkItems(player)) {
+            event.setCanceled(true);
+            openGui(player);
             return;
         }
 
+        Block eventBlock = player.getEntityWorld().getBlockState(event.getPos()).getBlock();
+
+        if (Register.isTriggerBlock(eventBlock)) {
+            event.setCanceled(true);
+            openGui(player);
+        }
+    }
+
+    private boolean checkItems(EntityPlayer player) {
         ItemStack eventItemMainhand = player.getHeldItemMainhand();
         ItemStack eventStackOffhand = player.getHeldItemOffhand();
 
         if (eventItemMainhand.isEmpty() && eventStackOffhand.isEmpty()) {
-            return;
+            return false;
         }
 
-        if (!Register.isTriggerItem(eventItemMainhand) && !Register.isTriggerItem(eventStackOffhand)) {
-            return;
-        }
-
-        event.setCanceled(true);
-        openGui(player);
+        return Register.isTriggerItem(eventItemMainhand) || Register.isTriggerItem(eventStackOffhand);
     }
 
     private void openGui(EntityPlayer player) {
