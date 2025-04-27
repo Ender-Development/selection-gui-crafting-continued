@@ -9,11 +9,23 @@ gui.selectionguicrafting.no_queue=§c§oCan't queue this recipe
 gui.selectionguicrafting.crafting_time=%s
 
 jei.selectionguicrafting.category=Selection GUI Crafting
-jei.selectionguicrafting.output=%sx %s %s%%
+jei.selectionguicrafting.output=§6[Output]§r
+jei.selectionguicrafting.output.entry=%sx %s %s%%
+jei.selectionguicrafting.input=§b[Input]§r
+jei.selectionguicrafting.input.entry=%sx %s %s%%
 jei.selectionguicrafting.no_second=No secondary input.
 jei.selectionguicrafting.secondary_all=Catalyst will be consumed.
 jei.selectionguicrafting.secondary_none=Catalyst won't be consumed.
 jei.selectionguicrafting.secondary_chance=Catalyst consumption chance: %s%%
+
+jei.selectionguicrafting.trigger=§c[Trigger]§r
+jei.selectionguicrafting.trigger.item=§a%s§r
+jei.selectionguicrafting.trigger.damage=- Tool Damage: %s
+jei.selectionguicrafting.trigger.time=- Crafting Time: %s
+jei.selectionguicrafting.trigger.xp=- XP Multiplier: %s
+jei.selectionguicrafting.trigger.nomodifier=- No Modifiers
+jei.selectionguicrafting.mainhand=Main Hand
+jei.selectionguicrafting.offhand=Offhand
 
 config.selectionguicrafting.client=Client
 

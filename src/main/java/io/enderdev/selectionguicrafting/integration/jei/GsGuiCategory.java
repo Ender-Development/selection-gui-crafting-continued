@@ -13,14 +13,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GsGuiCategory implements IRecipeCategory<GsGuiWrapper> {
     private final IDrawable drawable;
     private final IDrawable icon;
 
     public GsGuiCategory(IGuiHelper guiHelper) {
-        drawable = guiHelper.createDrawable(Assets.JEI_SELECTION.get(), 0, 0, 135, 18);
-        icon = guiHelper.createDrawable(Assets.JEI_SELECTION.get(), 135, 0, 18, 18);
+        drawable = guiHelper.createDrawable(Assets.JEI_SELECTION.get(), 0, 0, 162, 72);
+        icon = guiHelper.createDrawable(Assets.JEI_SELECTION.get(), 162, 54, 18, 18);
     }
 
     @Override
@@ -50,30 +51,40 @@ public class GsGuiCategory implements IRecipeCategory<GsGuiWrapper> {
 
     @Override
     public void setRecipe(IRecipeLayout iRecipeLayout, @NotNull GsGuiWrapper gsGuiWrapper, IIngredients iIngredients) {
-        // Trigger Items
-        int index = 0;
-        iRecipeLayout.getItemStacks().init(index, true, 0, 0);
-        iRecipeLayout.getItemStacks().set(index, iIngredients.getInputs(VanillaTypes.ITEM).get(index));
-
-        // Input Items
-        index++;
-        iRecipeLayout.getItemStacks().init(index, true, 38, 0);
-        iRecipeLayout.getItemStacks().set(index, iIngredients.getInputs(VanillaTypes.ITEM).get(index));
-
-        // Main Hand
-        index++;
-        iRecipeLayout.getItemStacks().init(index, true, 64, 0);
-        iRecipeLayout.getItemStacks().set(index, iIngredients.getInputs(VanillaTypes.ITEM).get(index));
-
-        // Off Hand
-        index++;
-        iRecipeLayout.getItemStacks().init(index, true, 90, 0);
-        iRecipeLayout.getItemStacks().set(index, iIngredients.getInputs(VanillaTypes.ITEM).get(index));
+        final int INDEX_OUTPUT = 0;
+        final int INDEX_TRIGGER = 0;
+        final int INDEX_MAINHAND = 1;
+        final int INDEX_OFFHAND = 2;
+        final int INDEX_INPUT = 3;
 
         // Output Items
-        index++;
-        iRecipeLayout.getItemStacks().init(index, false, 117, 0);
-        iRecipeLayout.getItemStacks().set(index, iIngredients.getOutputs(VanillaTypes.ITEM).get(0));
+        AtomicInteger index = new AtomicInteger();
+        AtomicInteger slot = new AtomicInteger();
+        iRecipeLayout.getItemStacks().init(index.get(), false, 72, 27);
+        iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getOutputs(VanillaTypes.ITEM).get(INDEX_OUTPUT));
+
+        // Trigger Items
+        index.getAndIncrement();
+        iRecipeLayout.getItemStacks().init(index.get(), true, 72, 0);
+        iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_TRIGGER));
+
+        // Main Hand
+        index.getAndIncrement();
+        iRecipeLayout.getItemStacks().init(index.get(), true, 126, 27);
+        iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_MAINHAND));
+
+        // Offhand
+        index.getAndIncrement();
+        iRecipeLayout.getItemStacks().init(index.get(), true, 18, 27);
+        iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_OFFHAND));
+
+        // Input Items
+        iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_INPUT).forEach(input -> {
+            index.getAndIncrement();
+            iRecipeLayout.getItemStacks().init(index.get(), true, 18 * slot.get(), 54);
+            iRecipeLayout.getItemStacks().set(index.get(), input);
+            slot.getAndIncrement();
+        });
     }
 
     @Override

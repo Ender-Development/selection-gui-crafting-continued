@@ -25,7 +25,9 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static net.minecraft.client.gui.Gui.drawModalRectWithCustomSizedTexture;
@@ -40,6 +42,7 @@ public class GsGuiWrapper implements IRecipeWrapper {
     private final List<ItemStack> output = new ArrayList<>();
     private final List<Double> inputChance = new ArrayList<>();
     private final List<Double> outputChance = new ArrayList<>();
+    private final List<List<Double>> triggerStats = new ArrayList<>();
 
     public GsGuiWrapper(Recipe recipe) {
         this.recipe = recipe;
@@ -48,10 +51,27 @@ public class GsGuiWrapper implements IRecipeWrapper {
 
     @Override
     public void getIngredients(@NotNull IIngredients iIngredients) {
+        trigger.clear();
+        mainHand.clear();
+        offHand.clear();
+        input.clear();
+        output.clear();
+        inputChance.clear();
+        outputChance.clear();
 
         trigger.addAll(Register.getCategoryByID(recipe.getCategory()).getTriggerItems().stream().map(ItemTrigger::getTriggerItem).collect(Collectors.toList()));
+        triggerStats.addAll(Register.getCategoryByID(recipe.getCategory()).getTriggerItems().stream().map(itemTrigger -> new ArrayList<Double>() {{
+            add(itemTrigger.getDamageMultiplier());
+            add(itemTrigger.getTimeMultiplier());
+            add(itemTrigger.getXpMultiplier());
+        }}).collect(Collectors.toList()));
 
         trigger.addAll(Register.getCategoryByID(recipe.getCategory()).getTriggerBlocks().stream().map(BlockTrigger::getTriggerBlock).map(ItemStack::new).collect(Collectors.toList()));
+        triggerStats.addAll(Register.getCategoryByID(recipe.getCategory()).getTriggerBlocks().stream().map(blockTrigger -> new ArrayList<Double>() {{
+            add(blockTrigger.getDamageMultiplier());
+            add(blockTrigger.getTimeMultiplier());
+            add(blockTrigger.getXpMultiplier());
+        }}).collect(Collectors.toList()));
 
         input.addAll(recipe.getInputs().stream().map(RecipeInput::getIngredient).map(Ingredient::getMatchingStacks).flatMap(Arrays::stream).map(itemStack -> {
             ItemStack stack = new ItemStack(itemStack.getItem());
@@ -78,7 +98,7 @@ public class GsGuiWrapper implements IRecipeWrapper {
             offHand.add(ItemStack.EMPTY);
         }
 
-        List<List<ItemStack>> inputs = Arrays.asList(trigger, input, mainHand, offHand);
+        List<List<ItemStack>> inputs = Arrays.asList(trigger, mainHand, offHand, input);
         List<List<ItemStack>> outputs = Collections.singletonList(output);
 
         iIngredients.setInputLists(VanillaTypes.ITEM, inputs);
@@ -90,35 +110,37 @@ public class GsGuiWrapper implements IRecipeWrapper {
         if (minecraft.currentScreen == null) {
             return;
         }
-        GlStateManager.pushMatrix();
-        GlStateManager.disableLighting();
-        minecraft.getTextureManager().bindTexture(Assets.JEI_LOCKED.get());
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        drawModalRectWithCustomSizedTexture(64, 0, 0, 0, 18, 18, 18, 18);
-        GlStateManager.popMatrix();
+        minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.mainhand"), 114, 45, Color.WHITE.getRGB());
+        minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.offhand"), 8, 45, Color.WHITE.getRGB());
     }
 
     @Override
     public @NotNull List<String> getTooltipStrings(int mouseX, int mouseY) {
-        if (isMouseOver(mouseX, mouseY, 87, 0, 23, 18)) {
-            ArrayList<String> tooltips = new ArrayList<>();
-            tooltips.addAll(output.stream().map(itemStack -> I18n.format("jei.selectionguicrafting.output", itemStack.getCount(), itemStack.getDisplayName(), outputChance.get(output.indexOf(itemStack)) * 100)).collect(Collectors.toList()));
-            tooltips.addAll(input.stream().map(itemStack -> I18n.format("jei.selectionguicrafting.input", itemStack.getCount(), itemStack.getDisplayName(), inputChance.get(input.indexOf(itemStack)) * 100)).collect(Collectors.toList()));
-            return tooltips;
+        ArrayList<String> tooltips = new ArrayList<>();
+        if (isMouseOver(mouseX, mouseY, 42, 28, 24, 16) || isMouseOver(mouseX, mouseY, 96, 28, 24, 16)) {
+            tooltips.add(I18n.format("jei.selectionguicrafting.output"));
+            tooltips.addAll(output.stream().map(itemStack -> "- " + I18n.format("jei.selectionguicrafting.output.entry", itemStack.getCount(), itemStack.getDisplayName(), outputChance.get(output.indexOf(itemStack)) * 100)).collect(Collectors.toList()));
+            tooltips.add(I18n.format("jei.selectionguicrafting.input"));
+            tooltips.addAll(input.stream().map(itemStack -> "- " + I18n.format("jei.selectionguicrafting.input.entry", itemStack.getCount(), itemStack.getDisplayName(), inputChance.get(input.indexOf(itemStack)) * 100)).collect(Collectors.toList()));
         }
-//        if (isMouseOver(mouseX, mouseY, 64, 0, 18, 18) && secondary.isEmpty()) {
-//            return Collections.singletonList(I18n.format("jei.selectionguicrafting.no_second"));
-//        }
-//        if (isMouseOver(mouseX, mouseY, 57, 6, 6, 6) && !secondary.isEmpty()) {
-//            if (secondaryChance == 1) {
-//                return Collections.singletonList(I18n.format("jei.selectionguicrafting.secondary_all"));
-//            } else if (secondaryChance == 0) {
-//                return Collections.singletonList(I18n.format("jei.selectionguicrafting.secondary_none"));
-//            } else {
-//                return Collections.singletonList(I18n.format("jei.selectionguicrafting.secondary_chance", secondaryChance * 100));
-//            }
-//        }
-        return Collections.emptyList();
+        if (isMouseOver(mouseX, mouseY, 54, 0, 18, 18) || isMouseOver(mouseX, mouseY, 90, 0, 18, 18)) {
+            tooltips.add(I18n.format("jei.selectionguicrafting.trigger"));
+            trigger.forEach(item -> {
+                double damage = triggerStats.get(trigger.indexOf(item)).get(0);
+                double time = triggerStats.get(trigger.indexOf(item)).get(1);
+                double xp = triggerStats.get(trigger.indexOf(item)).get(2);
+                tooltips.add(I18n.format("jei.selectionguicrafting.trigger.item", item.getDisplayName()));
+                if (damage != 1.0)
+                    tooltips.add(I18n.format("jei.selectionguicrafting.trigger.damage", damage));
+                if (time != 1.0)
+                    tooltips.add(I18n.format("jei.selectionguicrafting.trigger.time", time));
+                if (xp != 1.0)
+                    tooltips.add(I18n.format("jei.selectionguicrafting.trigger.xp", xp));
+                if (damage == 1.0 && time == 1.0 && xp == 1.0)
+                    tooltips.add(I18n.format("jei.selectionguicrafting.trigger.nomodifier"));
+            });
+        }
+        return tooltips;
     }
 
     @Override
