@@ -9,12 +9,17 @@ public interface IRegisterObject {
     Validation ErrorCheck = new Validation();
 
     /**
+     * @return get the error check of the object
+     */
+    Validation getErrorCheck();
+
+    /**
      * Register the object in the registry.
      */
     IRegisterObject register();
 
     /**
-     * Check if the object is valid.
+     * @return true if the error check is valid
      */
     boolean validate();
 }

@@ -6,6 +6,7 @@ import io.enderdev.selectionguicrafting.registry.IRegisterObject;
 import io.enderdev.selectionguicrafting.registry.Register;
 import io.enderdev.selectionguicrafting.registry.util.Particle;
 import io.enderdev.selectionguicrafting.registry.util.Sound;
+import io.enderdev.selectionguicrafting.registry.util.Validation;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class Category implements IRegisterObject {
@@ -34,10 +36,11 @@ public class Category implements IRegisterObject {
     /* --------------------- */
 
     public Category id(String id) {
-        if (Register.getCategories().stream().anyMatch(ctg -> ctg.getID().equals(id))) {
+        String sanitize = id.toLowerCase(Locale.ROOT).replace(" ", "_");
+        if (Register.getCategories().stream().anyMatch(ctg -> ctg.getID().equals(sanitize))) {
             ErrorCheck.error("ID already exists");
         } else {
-            this.id = id;
+            this.id = sanitize;
         }
         return this;
     }
@@ -70,6 +73,11 @@ public class Category implements IRegisterObject {
         return this;
     }
 
+    public Category trigger(ItemTrigger itemTrigger) {
+        trigger(itemTrigger.getTriggerItem(), itemTrigger.getDamageMultiplier(), itemTrigger.getTimeMultiplier(), itemTrigger.getXpMultiplier());
+        return this;
+    }
+
     public Category trigger(ItemStack input, double damageMultiplier, double timeMultiplier, double xpMultiplier) {
         if (Register.getTriggerItems().stream().map(ItemTrigger::getTriggerItem).anyMatch(input::equals)) {
             ErrorCheck.error("Invalid Trigger Item " + input.getDisplayName() + " is already registered as Trigger.");
@@ -95,6 +103,11 @@ public class Category implements IRegisterObject {
 
     public Category trigger(Block input) {
         trigger(input, 1, 1, 1);
+        return this;
+    }
+
+    public Category trigger(BlockTrigger blockTrigger) {
+        trigger(blockTrigger.getTriggerBlock(), blockTrigger.getDamageMultiplier(), blockTrigger.getTimeMultiplier(), blockTrigger.getXpMultiplier());
         return this;
     }
 
@@ -132,6 +145,10 @@ public class Category implements IRegisterObject {
         }
         Register.addCategory(this);
         return this;
+    }
+
+    public Validation getErrorCheck() {
+        return ErrorCheck;
     }
 
     /* --------------------- */
