@@ -7,6 +7,7 @@ import io.enderdev.selectionguicrafting.registry.category.SoundType;
 import io.enderdev.selectionguicrafting.registry.util.Particle;
 import io.enderdev.selectionguicrafting.registry.util.Sound;
 import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -22,15 +23,9 @@ public class RecipeData {
     private SoundType soundType;
 
     public RecipeData() {
-        // Default values
-        this.frame = Assets.FRAME_DEFAULT.get();
-        this.progressBar = Assets.BAR_DEFAULT.get();
-
-        this.outputType = OutputType.INVENTORY;
-        this.queueable = QueueType.YES;
-        this.soundType = SoundType.RANDOM;
     }
 
+    @Nullable
     public ResourceLocation getFrame() {
         return frame;
     }
@@ -40,6 +35,7 @@ public class RecipeData {
         return this;
     }
 
+    @Nullable
     public ResourceLocation getProgressBar() {
         return progressBar;
     }
@@ -49,6 +45,7 @@ public class RecipeData {
         return this;
     }
 
+    @Nullable
     public OutputType getOutputType() {
         return outputType;
     }
@@ -58,6 +55,7 @@ public class RecipeData {
         return this;
     }
 
+    @Nullable
     public QueueType getQueueable() {
         return queueable;
     }
@@ -67,6 +65,7 @@ public class RecipeData {
         return this;
     }
 
+    @Nullable
     public SoundType getSoundType() {
         return soundType;
     }

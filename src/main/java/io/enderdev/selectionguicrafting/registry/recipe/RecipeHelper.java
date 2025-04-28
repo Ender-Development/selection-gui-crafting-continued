@@ -1,6 +1,5 @@
 package io.enderdev.selectionguicrafting.registry.recipe;
 
-import io.enderdev.selectionguicrafting.gui.Assets;
 import io.enderdev.selectionguicrafting.registry.Register;
 import io.enderdev.selectionguicrafting.registry.category.*;
 import io.enderdev.selectionguicrafting.registry.util.Particle;
@@ -26,48 +25,23 @@ public class RecipeHelper {
     }
 
     public ResourceLocation getFrame() {
-        if (!recipeData.getFrame().toString().equals(Assets.FRAME_DEFAULT.get().toString())) {
-            return recipeData.getFrame();
-        } else if (!categoryData.getFrame().toString().equals(Assets.FRAME_DEFAULT.get().toString())) {
-            return recipeData.getFrame();
-        }
-        return categoryData.getFrame();
+        return recipeData.getFrame() != null ? recipeData.getFrame() : categoryData.getFrame();
     }
 
     public ResourceLocation getProgressBar() {
-        if (!recipeData.getProgressBar().toString().equals(Assets.BAR_DEFAULT.get().toString())) {
-            return recipeData.getProgressBar();
-        } else if (!categoryData.getProgressBar().toString().equals(Assets.BAR_DEFAULT.get().toString())) {
-            return recipeData.getProgressBar();
-        }
-        return categoryData.getProgressBar();
+        return recipeData.getProgressBar() != null ? recipeData.getProgressBar() : categoryData.getProgressBar();
     }
 
     public OutputType getOutputType() {
-        if (recipeData.getOutputType() != OutputType.INVENTORY) {
-            return recipeData.getOutputType();
-        } else if (categoryData.getOutputType() != OutputType.INVENTORY) {
-            return recipeData.getOutputType();
-        }
-        return categoryData.getOutputType();
+        return recipeData.getOutputType() != null ? recipeData.getOutputType() : categoryData.getOutputType();
     }
 
     public QueueType getQueueable() {
-        if (recipeData.getQueueable() != QueueType.YES) {
-            return recipeData.getQueueable();
-        } else if (categoryData.getQueueable() != QueueType.YES) {
-            return recipeData.getQueueable();
-        }
-        return categoryData.getQueueable();
+        return recipeData.getQueueable() != null ? recipeData.getQueueable() : categoryData.getQueueable();
     }
 
     public SoundType getSoundType() {
-        if (recipeData.getSoundType() != SoundType.RANDOM) {
-            return recipeData.getSoundType();
-        } else if (categoryData.getSoundType() != SoundType.RANDOM) {
-            return recipeData.getSoundType();
-        }
-        return categoryData.getSoundType();
+        return recipeData.getSoundType() != null ? recipeData.getSoundType() : categoryData.getSoundType();
     }
 
     public ArrayList<Sound> getSounds() {
