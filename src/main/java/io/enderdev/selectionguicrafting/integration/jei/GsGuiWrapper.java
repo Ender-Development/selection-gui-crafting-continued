@@ -1,10 +1,6 @@
 package io.enderdev.selectionguicrafting.integration.jei;
 
-import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.gui.Assets;
-import io.enderdev.selectionguicrafting.registry.GsOutput;
-import io.enderdev.selectionguicrafting.registry.GsRecipe;
-import io.enderdev.selectionguicrafting.registry.GsTool;
 import io.enderdev.selectionguicrafting.registry.Register;
 import io.enderdev.selectionguicrafting.registry.category.BlockTrigger;
 import io.enderdev.selectionguicrafting.registry.category.ItemTrigger;
@@ -15,14 +11,10 @@ import io.enderdev.selectionguicrafting.registry.recipe.RecipeOutput;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -110,20 +102,29 @@ public class GsGuiWrapper implements IRecipeWrapper {
         if (minecraft.currentScreen == null) {
             return;
         }
-        minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.mainhand"), 114, 45, Color.WHITE.getRGB());
-        minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.offhand"), 8, 45, Color.WHITE.getRGB());
+        minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.crafting_time", String.format("%.1f", ((float) recipe.getTime() / 20))), 0, 150, Color.WHITE.getRGB());
+        if (recipeHelper.hasMainHand()) {
+            minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.mainhand"), 12, 0, Color.WHITE.getRGB());
+            minecraft.getTextureManager().bindTexture(Assets.JEI_SELECTION.get());
+            drawModalRectWithCustomSizedTexture(21, 9, 160, 40, 18, 18, 256, 256);
+        }
+        if (recipeHelper.hasOffHand()) {
+            minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.offhand"), 12, 67, Color.WHITE.getRGB());
+            minecraft.getTextureManager().bindTexture(Assets.JEI_SELECTION.get());
+            drawModalRectWithCustomSizedTexture(21, 49, 160, 58, 18, 18, 256, 256);
+        }
     }
 
     @Override
     public @NotNull List<String> getTooltipStrings(int mouseX, int mouseY) {
         ArrayList<String> tooltips = new ArrayList<>();
-        if (isMouseOver(mouseX, mouseY, 42, 28, 24, 16) || isMouseOver(mouseX, mouseY, 96, 28, 24, 16)) {
+        if (isMouseOver(mouseX, mouseY, 114, 31, 18, 14)) {
             tooltips.add(I18n.format("jei.selectionguicrafting.output"));
             tooltips.addAll(output.stream().map(itemStack -> "- " + I18n.format("jei.selectionguicrafting.output.entry", itemStack.getCount(), itemStack.getDisplayName(), outputChance.get(output.indexOf(itemStack)) * 100)).collect(Collectors.toList()));
             tooltips.add(I18n.format("jei.selectionguicrafting.input"));
             tooltips.addAll(input.stream().map(itemStack -> "- " + I18n.format("jei.selectionguicrafting.input.entry", itemStack.getCount(), itemStack.getDisplayName(), inputChance.get(input.indexOf(itemStack)) * 100)).collect(Collectors.toList()));
         }
-        if (isMouseOver(mouseX, mouseY, 54, 0, 18, 18) || isMouseOver(mouseX, mouseY, 90, 0, 18, 18)) {
+        if (isMouseOver(mouseX, mouseY, 0, 31, 6, 14)) {
             tooltips.add(I18n.format("jei.selectionguicrafting.trigger"));
             trigger.forEach(item -> {
                 double damage = triggerStats.get(trigger.indexOf(item)).get(0);
@@ -139,6 +140,9 @@ public class GsGuiWrapper implements IRecipeWrapper {
                 if (damage == 1.0 && time == 1.0 && xp == 1.0)
                     tooltips.add(I18n.format("jei.selectionguicrafting.trigger.nomodifier"));
             });
+        }
+        if (isMouseOver(mouseX, mouseY, 37, 30, 16, 16)) {
+            // NO-OP
         }
         return tooltips;
     }

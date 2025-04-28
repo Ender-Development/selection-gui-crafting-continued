@@ -20,8 +20,8 @@ public class GsGuiCategory implements IRecipeCategory<GsGuiWrapper> {
     private final IDrawable icon;
 
     public GsGuiCategory(IGuiHelper guiHelper) {
-        drawable = guiHelper.createDrawable(Assets.JEI_SELECTION.get(), 0, 0, 162, 72);
-        icon = guiHelper.createDrawable(Assets.JEI_SELECTION.get(), 162, 54, 18, 18);
+        drawable = guiHelper.createDrawable(Assets.JEI_SELECTION.get(), 0, 0, 160, 76);
+        icon = guiHelper.createDrawable(Assets.JEI_SELECTION.get(), 160, 0, 18, 18);
     }
 
     @Override
@@ -60,28 +60,28 @@ public class GsGuiCategory implements IRecipeCategory<GsGuiWrapper> {
         // Output Items
         AtomicInteger index = new AtomicInteger();
         AtomicInteger slot = new AtomicInteger();
-        iRecipeLayout.getItemStacks().init(index.get(), false, 72, 27);
+        iRecipeLayout.getItemStacks().init(index.get(), false, 138, 29);
         iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getOutputs(VanillaTypes.ITEM).get(INDEX_OUTPUT));
 
         // Trigger Items
         index.getAndIncrement();
-        iRecipeLayout.getItemStacks().init(index.get(), true, 72, 0);
+        iRecipeLayout.getItemStacks().init(index.get(), true, 13, 29);
         iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_TRIGGER));
 
         // Main Hand
         index.getAndIncrement();
-        iRecipeLayout.getItemStacks().init(index.get(), true, 126, 27);
+        iRecipeLayout.getItemStacks().init(index.get(), true, 21, 9);
         iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_MAINHAND));
 
         // Offhand
         index.getAndIncrement();
-        iRecipeLayout.getItemStacks().init(index.get(), true, 18, 27);
+        iRecipeLayout.getItemStacks().init(index.get(), true, 21, 49);
         iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_OFFHAND));
 
         // Input Items
         iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_INPUT).forEach(input -> {
             index.getAndIncrement();
-            iRecipeLayout.getItemStacks().init(index.get(), true, 18 * slot.get(), 54);
+            iRecipeLayout.getItemStacks().init(index.get(), true, 58 + 18 * (slot.get() % 3), 11 + 18 * (slot.get() / 3));
             iRecipeLayout.getItemStacks().set(index.get(), input);
             slot.getAndIncrement();
         });

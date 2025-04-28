@@ -19,6 +19,13 @@ public class CategoryData extends RecipeData {
         this.border = Assets.BG_DEFAULT.get();
         this.decoration = Assets.DECOR_DEFAULT.get();
 
+        this.setProgressBar(Assets.BAR_DEFAULT.get());
+        this.setFrame(Assets.FRAME_DEFAULT.get());
+
+        this.setQueueable(QueueType.YES);
+        this.setOutputType(OutputType.INVENTORY);
+        this.setSoundType(SoundType.RANDOM);
+
         this.backgroundType = BackgroundType.TILE;
     }
 

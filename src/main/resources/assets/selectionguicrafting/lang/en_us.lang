@@ -20,12 +20,13 @@ jei.selectionguicrafting.secondary_chance=Catalyst consumption chance: %s%%
 
 jei.selectionguicrafting.trigger=§c[Trigger]§r
 jei.selectionguicrafting.trigger.item=§a%s§r
-jei.selectionguicrafting.trigger.damage=- Tool Damage: %s
-jei.selectionguicrafting.trigger.time=- Crafting Time: %s
-jei.selectionguicrafting.trigger.xp=- XP Multiplier: %s
-jei.selectionguicrafting.trigger.nomodifier=- No Modifiers
+jei.selectionguicrafting.trigger.damage=- Tool Damage: §7x%s§r
+jei.selectionguicrafting.trigger.time=- Crafting Time: §7x%s§r
+jei.selectionguicrafting.trigger.xp=- XP Multiplier: §7x%s§r
+jei.selectionguicrafting.trigger.nomodifier=§7- No Modifiers§r
 jei.selectionguicrafting.mainhand=Main Hand
 jei.selectionguicrafting.offhand=Offhand
+jei.selectionguicrafting.crafting_time=%ss
 
 config.selectionguicrafting.client=Client
 
