@@ -145,14 +145,14 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Set the queueable type for the recipe. Possible values: YES, NO")
-        public CTCategoryBuilder queueType(String queueType) {
+        public CTCategoryBuilder queueable(String queueType) {
             category.setQueueable(QueueType.valueOf(queueType));
             return this;
         }
 
         @ZenMethod
         @ZenDoc("Set the queueable type for the recipe. Possible values: true, false")
-        public CTCategoryBuilder queueType(boolean queueType) {
+        public CTCategoryBuilder queueable(boolean queueType) {
             category.setQueueable(queueType ? QueueType.YES : QueueType.NO);
             return this;
         }
