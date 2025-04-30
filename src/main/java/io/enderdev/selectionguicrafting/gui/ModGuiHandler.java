@@ -44,16 +44,16 @@ public class ModGuiHandler implements IGuiHandler {
             trigger = Register.getTriggerBlock(rayBlock);
         }
 
-        /* OFFHAND: LOWEST PRIORITY */
-        if (trigger == null) {
-            ItemStack heldStackOffhand = player.getHeldItemOffhand();
-            trigger = Register.getTriggerItem(heldStackOffhand);
-        }
-
         /* MAINHAND: HIGHER PRIORITY */
         if (trigger == null) {
             ItemStack heldStackMainhand = player.getHeldItemMainhand();
             trigger = Register.getTriggerItem(heldStackMainhand);
+        }
+
+        /* OFFHAND: LOWEST PRIORITY */
+        if (trigger == null) {
+            ItemStack heldStackOffhand = player.getHeldItemOffhand();
+            trigger = Register.getTriggerItem(heldStackOffhand);
         }
 
         Category recipeCategory = null;

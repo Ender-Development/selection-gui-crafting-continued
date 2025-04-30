@@ -2,9 +2,11 @@ package io.enderdev.selectionguicrafting.events;
 
 import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import io.enderdev.selectionguicrafting.Tags;
+import io.enderdev.selectionguicrafting.config.SelectionConfig;
 import io.enderdev.selectionguicrafting.gui.ModGuiHandler;
 import io.enderdev.selectionguicrafting.registry.Register;
-import net.minecraft.block.Block;
+import net.minecraft.block.*;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -12,8 +14,23 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Mod.EventBusSubscriber(modid = Tags.MOD_ID)
 public class EventRightClick {
+
+    private static final List<Class<?>> blacklistBlocks = new ArrayList<Class<?>>() {{
+        Arrays.asList(SelectionConfig.GENERAL.blacklistClasses).forEach(entry -> {
+            try {
+                Class<?> clazz = Class.forName(entry);
+                if (Block.class.isAssignableFrom(clazz)) add(clazz);
+            } catch (ClassNotFoundException e) {
+                SelectionGuiCrafting.LOGGER.error(e);
+            }
+        });
+    }};
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void rightClickItem(PlayerInteractEvent.RightClickItem event) {
@@ -39,13 +56,23 @@ public class EventRightClick {
             return;
         }
 
+        IBlockState eventState = player.getEntityWorld().getBlockState(event.getPos());
+        Block eventBlock = eventState.getBlock();
+
+        // ignore TileEntities
+        if (eventBlock.hasTileEntity(eventState)) {
+            return;
+        }
+
+        if (blacklistBlocks.stream().anyMatch(clazz -> eventBlock.getClass().equals(clazz))) {
+            return;
+        }
+
         if (checkItems(player)) {
             event.setCanceled(true);
             openGui(player);
             return;
         }
-
-        Block eventBlock = player.getEntityWorld().getBlockState(event.getPos()).getBlock();
 
         if (Register.isTriggerBlock(eventBlock)) {
             event.setCanceled(true);

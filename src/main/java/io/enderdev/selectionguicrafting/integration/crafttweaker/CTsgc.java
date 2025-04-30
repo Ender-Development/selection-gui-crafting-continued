@@ -7,6 +7,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.IBlock;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import io.enderdev.selectionguicrafting.registry.category.*;
 import io.enderdev.selectionguicrafting.registry.recipe.Recipe;
 import io.enderdev.selectionguicrafting.registry.Register;
@@ -17,8 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public final class CTsgc {
@@ -300,7 +305,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Adds an input to the recipe")
         public CTRecipeBuilder input(IIngredient input) {
-            recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()));
+            recipe.input(Ingredient.merge(OreDictionary.getOres((String) input.getInternal()).stream().map(Ingredient::fromStacks).collect(Collectors.toList())));
             return this;
         }
 
@@ -314,7 +319,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Adds an input to the recipe")
         public CTRecipeBuilder input(IIngredient input, int damage) {
-            recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()), damage);
+            recipe.input(Ingredient.merge(OreDictionary.getOres((String) input.getInternal()).stream().map(Ingredient::fromStacks).collect(Collectors.toList())), damage);
             return this;
         }
 
@@ -328,7 +333,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Adds an input to the recipe")
         public CTRecipeBuilder input(IIngredient input, double chance) {
-            recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()), chance);
+            recipe.input(Ingredient.merge(OreDictionary.getOres((String) input.getInternal()).stream().map(Ingredient::fromStacks).collect(Collectors.toList())), chance);
             return this;
         }
 
@@ -342,7 +347,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Adds an input to the recipe")
         public CTRecipeBuilder input(IIngredient input, int damage, double chance) {
-            recipe.input(Ingredient.fromStacks((ItemStack) input.getInternal()), chance, damage);
+            recipe.input(Ingredient.merge(OreDictionary.getOres((String) input.getInternal()).stream().map(Ingredient::fromStacks).collect(Collectors.toList())), chance, damage);
             return this;
         }
 
@@ -356,7 +361,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Adds a main hand input to the recipe")
         public CTRecipeBuilder mainHand(IIngredient input) {
-            recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()));
+            recipe.mainHand(Ingredient.merge(OreDictionary.getOres((String) input.getInternal()).stream().map(Ingredient::fromStacks).collect(Collectors.toList())));
             return this;
         }
 
@@ -370,7 +375,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Adds a main hand input to the recipe")
         public CTRecipeBuilder mainHand(IIngredient input, int damage) {
-            recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()), damage);
+            recipe.mainHand(Ingredient.merge(OreDictionary.getOres((String) input.getInternal()).stream().map(Ingredient::fromStacks).collect(Collectors.toList())), damage);
             return this;
         }
 
@@ -384,7 +389,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Adds a main hand input to the recipe")
         public CTRecipeBuilder mainHand(IIngredient input, double chance) {
-            recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance);
+            recipe.mainHand(Ingredient.merge(OreDictionary.getOres((String) input.getInternal()).stream().map(Ingredient::fromStacks).collect(Collectors.toList())), chance);
             return this;
         }
 
@@ -398,7 +403,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Adds a main hand input to the recipe")
         public CTRecipeBuilder mainHand(IIngredient input, int damage, double chance) {
-            recipe.mainHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance, damage);
+            recipe.mainHand(Ingredient.merge(OreDictionary.getOres((String) input.getInternal()).stream().map(Ingredient::fromStacks).collect(Collectors.toList())), chance, damage);
             return this;
         }
 
@@ -412,7 +417,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Adds an off hand input to the recipe")
         public CTRecipeBuilder offHand(IIngredient input) {
-            recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()));
+            recipe.offHand(Ingredient.merge(OreDictionary.getOres((String) input.getInternal()).stream().map(Ingredient::fromStacks).collect(Collectors.toList())));
             return this;
         }
 
@@ -426,7 +431,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Adds an off hand input to the recipe")
         public CTRecipeBuilder offHand(IIngredient input, int damage) {
-            recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()), damage);
+            recipe.offHand(Ingredient.merge(OreDictionary.getOres((String) input.getInternal()).stream().map(Ingredient::fromStacks).collect(Collectors.toList())), damage);
             return this;
         }
 
@@ -440,7 +445,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Adds an off hand input to the recipe")
         public CTRecipeBuilder offHand(IIngredient input, double chance) {
-            recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance);
+            recipe.offHand(Ingredient.merge(OreDictionary.getOres((String) input.getInternal()).stream().map(Ingredient::fromStacks).collect(Collectors.toList())), chance);
             return this;
         }
 
@@ -454,7 +459,7 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Adds an off hand input to the recipe")
         public CTRecipeBuilder offHand(IIngredient input, int damage, double chance) {
-            recipe.offHand(Ingredient.fromStacks((ItemStack) input.getInternal()), chance, damage);
+            recipe.offHand(Ingredient.merge(OreDictionary.getOres((String) input.getInternal()).stream().map(Ingredient::fromStacks).collect(Collectors.toList())), chance, damage);
             return this;
         }
 

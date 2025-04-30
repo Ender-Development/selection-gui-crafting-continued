@@ -14,7 +14,6 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -65,7 +64,7 @@ public class GsGuiWrapper implements IRecipeWrapper {
             add(blockTrigger.getXpMultiplier());
         }}).collect(Collectors.toList()));
 
-        input.addAll(recipe.getInputs().stream().map(RecipeInput::getIngredient).map(Ingredient::getMatchingStacks).flatMap(Arrays::stream).map(itemStack -> {
+        input.addAll(recipe.getInputs().stream().map(RecipeInput::getIngredient).map(ingredient -> ingredient.getMatchingStacks()[0]).map(itemStack -> {
             ItemStack stack = new ItemStack(itemStack.getItem());
             stack.setCount(itemStack.getCount());
             stack.setItemDamage(itemStack.getItemDamage());

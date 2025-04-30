@@ -29,6 +29,8 @@ jei.selectionguicrafting.offhand=Offhand
 jei.selectionguicrafting.crafting_time=%ss
 
 config.selectionguicrafting.client=Client
+config.selectionguicrafting.general=General
+selectionguicrafting.general.blacklistclasses=Blacklist Classes
 
 groovyscript.wiki.selectionguicrafting.category.title=Crafting Category
 groovyscript.wiki.selectionguicrafting.category.description=All recipes in the mod are divided into categories. Each category has its own set of recipes. Each category can have its own texture for the background, border, frame, decoration, and progress bar. The category can also have its own sounds, particles, can specify how the sounds are played, if recipes in the category can be added to the crafting queue, and how the output items are handed to the player.
