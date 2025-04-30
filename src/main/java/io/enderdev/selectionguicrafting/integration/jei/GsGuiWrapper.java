@@ -14,6 +14,7 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -29,7 +30,7 @@ public class GsGuiWrapper implements IRecipeWrapper {
     private final List<ItemStack> trigger = new ArrayList<>();
     private final List<ItemStack> mainHand = new ArrayList<>();
     private final List<ItemStack> offHand = new ArrayList<>();
-    private final List<ItemStack> input = new ArrayList<>();
+    private final List<List<ItemStack>> input = new ArrayList<>();
     private final List<ItemStack> output = new ArrayList<>();
     private final List<Double> inputChance = new ArrayList<>();
     private final List<Double> outputChance = new ArrayList<>();
@@ -64,13 +65,7 @@ public class GsGuiWrapper implements IRecipeWrapper {
             add(blockTrigger.getXpMultiplier());
         }}).collect(Collectors.toList()));
 
-        input.addAll(recipe.getInputs().stream().map(RecipeInput::getIngredient).map(ingredient -> ingredient.getMatchingStacks()[0]).map(itemStack -> {
-            ItemStack stack = new ItemStack(itemStack.getItem());
-            stack.setCount(itemStack.getCount());
-            stack.setItemDamage(itemStack.getItemDamage());
-            stack.setTagCompound(itemStack.getTagCompound());
-            return stack;
-        }).collect(Collectors.toList()));
+        input.addAll(recipe.getInputs().stream().map(RecipeInput::getIngredient).map(Ingredient::getMatchingStacks).map(itemStacks -> Arrays.stream(itemStacks).collect(Collectors.toList())).collect(Collectors.toList()));
 
         inputChance.addAll(recipe.getInputs().stream().map(RecipeInput::getChance).collect(Collectors.toList()));
 
@@ -89,7 +84,11 @@ public class GsGuiWrapper implements IRecipeWrapper {
             offHand.add(ItemStack.EMPTY);
         }
 
-        List<List<ItemStack>> inputs = Arrays.asList(trigger, mainHand, offHand, input);
+        List<List<ItemStack>> inputs = new ArrayList<>();
+        inputs.add(trigger);
+        inputs.add(mainHand);
+        inputs.add(offHand);
+        inputs.addAll(input);
         List<List<ItemStack>> outputs = Collections.singletonList(output);
 
         iIngredients.setInputLists(VanillaTypes.ITEM, inputs);
@@ -120,8 +119,8 @@ public class GsGuiWrapper implements IRecipeWrapper {
         if (isMouseOver(mouseX, mouseY, 114, 31, 18, 14)) {
             tooltips.add(I18n.format("jei.selectionguicrafting.output"));
             tooltips.addAll(output.stream().map(itemStack -> "- " + I18n.format("jei.selectionguicrafting.output.entry", itemStack.getCount(), itemStack.getDisplayName(), outputChance.get(output.indexOf(itemStack)) * 100)).collect(Collectors.toList()));
-            tooltips.add(I18n.format("jei.selectionguicrafting.input"));
-            tooltips.addAll(input.stream().map(itemStack -> "- " + I18n.format("jei.selectionguicrafting.input.entry", itemStack.getCount(), itemStack.getDisplayName(), inputChance.get(input.indexOf(itemStack)) * 100)).collect(Collectors.toList()));
+//            tooltips.add(I18n.format("jei.selectionguicrafting.input"));
+//            tooltips.addAll(input.stream().map(itemStack -> "- " + I18n.format("jei.selectionguicrafting.input.entry", itemStack.getCount(), itemStack.getDisplayName(), inputChance.get(input.indexOf(itemStack)) * 100)).collect(Collectors.toList()));
         }
         if (isMouseOver(mouseX, mouseY, 0, 31, 6, 14)) {
             tooltips.add(I18n.format("jei.selectionguicrafting.trigger"));

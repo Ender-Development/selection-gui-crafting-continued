@@ -79,12 +79,12 @@ public class GsGuiCategory implements IRecipeCategory<GsGuiWrapper> {
         iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_OFFHAND));
 
         // Input Items
-        iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_INPUT).forEach(input -> {
+        for (int i = INDEX_INPUT; i < iIngredients.getInputs(VanillaTypes.ITEM).size(); i++) {
             index.getAndIncrement();
             iRecipeLayout.getItemStacks().init(index.get(), true, 58 + 18 * (slot.get() % 3), 11 + 18 * (slot.get() / 3));
-            iRecipeLayout.getItemStacks().set(index.get(), input);
+            iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getInputs(VanillaTypes.ITEM).get(i));
             slot.getAndIncrement();
-        });
+        }
     }
 
     @Override

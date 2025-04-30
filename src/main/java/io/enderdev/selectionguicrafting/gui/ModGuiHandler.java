@@ -1,9 +1,5 @@
 package io.enderdev.selectionguicrafting.gui;
 
-import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
-import io.enderdev.selectionguicrafting.registry.GsRecipe;
-import io.enderdev.selectionguicrafting.registry.GsRegistry;
-import io.enderdev.selectionguicrafting.registry.GsTool;
 import io.enderdev.selectionguicrafting.registry.Register;
 import io.enderdev.selectionguicrafting.registry.category.AbstractTrigger;
 import io.enderdev.selectionguicrafting.registry.category.BlockTrigger;
@@ -13,12 +9,9 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-
-import java.util.Arrays;
 
 public class ModGuiHandler implements IGuiHandler {
     public static final int CRAFTING_GUI_ID = 0;
