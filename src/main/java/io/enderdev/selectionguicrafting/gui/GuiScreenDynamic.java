@@ -1,8 +1,5 @@
 package io.enderdev.selectionguicrafting.gui;
 
-import io.enderdev.selectionguicrafting.registry.GsCategory;
-import io.enderdev.selectionguicrafting.registry.GsEnum;
-import io.enderdev.selectionguicrafting.registry.GsRegistry;
 import io.enderdev.selectionguicrafting.registry.Register;
 import io.enderdev.selectionguicrafting.registry.category.BackgroundType;
 import io.enderdev.selectionguicrafting.registry.category.Category;
@@ -10,8 +7,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
@@ -19,11 +18,11 @@ import org.lwjgl.opengl.GL11;
 import java.io.IOException;
 import java.util.List;
 
-public abstract class GuiScreenDynamic extends GuiScreen {
+public abstract class GuiScreenDynamic extends GuiContainer {
 
     // Container size
-    private int guiWidth;
-    private int guiHeight;
+    public int guiWidth;
+    public int guiHeight;
 
     // Offsets
     public int top;
@@ -39,6 +38,15 @@ public abstract class GuiScreenDynamic extends GuiScreen {
 
     // Stencil value
     private int stencilValue;
+
+    public GuiScreenDynamic() {
+        super(new Container() {
+            @Override
+            public boolean canInteractWith(@NotNull EntityPlayer playerIn) {
+                return false;
+            }
+        });
+    }
 
     // Must be increment of 16!
     void updateContainerSize(int newGuiWidth, int newGuiHeight, Category category) {
@@ -60,10 +68,16 @@ public abstract class GuiScreenDynamic extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        drawDefaultBackground();
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f); // Reset color
         drawDynamicBackground();
         drawDynamicBorder();
         drawDynamicDecoration();
+    }
+
+    @Override
+    public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        // NO-OP
     }
 
     // Draw labels and buttons (replacing super.drawScreen() call)

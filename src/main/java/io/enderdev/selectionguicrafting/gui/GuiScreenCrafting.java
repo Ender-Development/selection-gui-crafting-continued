@@ -31,7 +31,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
@@ -136,7 +135,6 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-
         super.drawScreen(mouseX, mouseY, partialTicks); // Background
 
         drawRecipes(mouseX, mouseY); // Items
@@ -155,6 +153,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             recipeTime = selectedRecipe.getTime();
         }
 
+        // Recipe is finished
         if (craftingProgress >= 1.0f) {
             SelectionPacketHandler.SELECTION_NETWORK_WRAPPER.sendToServer(new SelectionMessageProcessRecipe(validRecipes.get(0).getCategory(), recipeSelectedIndex, player.getName(), selectedRecipeHelper.getAbsoluteXP(xpMultiplier), damageMultiplier));
 
@@ -430,6 +429,12 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
         // Draw labels
         redrawLabels();
+
+        // update the default minecraft variables
+        this.guiLeft = left;
+        this.guiTop = top;
+        this.xSize = guiWidth;
+        this.ySize = guiHeight;
     }
 
     // Called when needing to propagate the window with new information
@@ -464,11 +469,6 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 mc.setIngameFocus();
             }
         }
-    }
-
-    @Override
-    public boolean doesGuiPauseGame() {
-        return false;
     }
 
     @Override

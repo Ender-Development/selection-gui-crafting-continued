@@ -77,9 +77,9 @@ public class RecipeHelper {
         if (hasOffHand() && (offHand.isEmpty() || !recipe.getOffHand().compare(offHand, multiplier)))
             return false;
 
-        // this'll only work for a whole itemslot having a good amount of items
+        // this will only work for a whole inventory slot having a good amount of items
         // if you'd want to also check for the items being spread out across multiple slots (like 3 slots each with 1 snow blocks and the recipe requiring 3 snow blocks)
-        // you'd probably want to consume the recipeinput instead of consuming itemstacks, and at the end check if any inputs haven't been fully consumed
+        // you'd probably want to consume the recipe input instead of consuming item stacks, and at the end check if any inputs haven't been fully consumed
 
         // go through all recipeInputs, if all can be found in the simplified inventory, return true
         for (RecipeInput input : recipe.getInputs()) {
