@@ -33,6 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -197,48 +198,32 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     @Override
     public void drawHoveringText(@NotNull List<String> textLines, int x, int y, @NotNull FontRenderer font) {
         RecipeHelper hoveredRecipeHelper = new RecipeHelper(hoveredRecipe);
-        if (wrongInput) {
+        ItemStack mainHand = player.getHeldItemMainhand();
+        ItemStack offHand = player.getHeldItemOffhand();
+        if (!noQueue) {
             if (hoveredRecipeHelper.hasMainHand()) {
-                textLines.add("Main Hand:");
-                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_input", hoveredRecipe.getMainHand().getIngredient().getMatchingStacks()[0].getDisplayName()));
+                textLines.add(I18n.format("gui.selectionguicrafting.mainhand"));
+                textLines.add((hoveredRecipeHelper.checkMainHand(mainHand, damageMultiplier) ? TextFormatting.GREEN : TextFormatting.RED) + I18n.format("gui." + Tags.MOD_ID + ".wrong_input", formatItemName(hoveredRecipe.getMainHand().getIngredient().getMatchingStacks()[0])) + TextFormatting.RESET);
             }
             if (hoveredRecipeHelper.hasOffHand()) {
-                textLines.add("Off Hand:");
-                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_input", hoveredRecipe.getOffHand().getIngredient().getMatchingStacks()[0].getDisplayName()));
+                textLines.add(I18n.format("gui.selectionguicrafting.offhand"));
+                textLines.add((hoveredRecipeHelper.checkOffHand(offHand, damageMultiplier) ? TextFormatting.GREEN : TextFormatting.RED) + I18n.format("gui." + Tags.MOD_ID + ".wrong_input", formatItemName(hoveredRecipe.getOffHand().getIngredient().getMatchingStacks()[0])) + TextFormatting.RESET);
             }
             if (!hoveredRecipe.getInputs().isEmpty()) {
-                textLines.add("Inputs:");
+                textLines.add(I18n.format("gui.selectionguicrafting.input"));
                 for (RecipeInput input : hoveredRecipe.getInputs()) {
-                    textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_input", input.getIngredient().getMatchingStacks()[0].getDisplayName()));
+                    textLines.add((player.inventory.mainInventory.stream().anyMatch(itemStack -> input.compare(itemStack, damageMultiplier)) ? TextFormatting.GREEN : TextFormatting.RED) + I18n.format("gui." + Tags.MOD_ID + ".wrong_input", formatItemName(input.getIngredient().getMatchingStacks()[0])) + TextFormatting.RESET);
                 }
             }
-            wrongInput = false;
-        }
-//        if (wrongAmount) {
-//            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_amount", hoveredRecipe.getInputStackSize(offHand), offHand.getDisplayName(), offHand.getCount()));
-//            wrongAmount = false;
-//        }
-//        if (wrongCatalyst && hoveredRecipe.getCatalyst() != null) {
-//            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_catalyst", hoveredRecipe.getCatalyst().getIngredient().getMatchingStacks()[0].getDisplayName()));
-//            wrongCatalyst = false;
-//        }
-//        if (correctAmount) {
-//            textLines.add(I18n.format("gui." + Tags.MOD_ID + ".correct_amount", hoveredRecipe.getInputStackSize(offHand)));
-//            correctAmount = false;
-//        }
-        if (noQueue) {
+        } else {
             textLines.add(I18n.format("gui." + Tags.MOD_ID + ".no_queue"));
             noQueue = false;
         }
-//        if (wrongDurability) {
-//            if (player.getHeldItemMainhand().isItemStackDamageable()) {
-//                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_durability", mainHand.getDisplayName()));
-//            } else {
-//                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".wrong_amount", Objects.requireNonNull(hoveredRecipe.getTool(mainHand)).getItemStack().getCount(), mainHand.getDisplayName(), mainHand.getCount()));
-//            }
-//            wrongDurability = false;
-//        }
         super.drawHoveringText(textLines, x, y, font);
+    }
+
+    private String formatItemName(ItemStack stack) {
+        return stack.getCount() == 1 ? stack.getDisplayName() : String.format("%dx %s", stack.getCount(), stack.getDisplayName());
     }
 
     private void drawRecipes(int mouseX, int mouseY) {
@@ -293,28 +278,6 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 }
             } else if (!recipeHelper.canCraft(player, damageMultiplier)) {
                 drawScaledCustomSizeModalRect(iconX, iconY, 0, 16, 16, 16, 8, 8, 32, 32); // Red X
-                if (isHovered) {
-                    wrongInput = true;
-                }
-//            } else if (!recipe.isToolValid(player.getHeldItemMainhand())) {
-//                if (player.getHeldItemMainhand().isItemStackDamageable()) {
-//                    drawScaledCustomSizeModalRect(iconX, iconY, 16, 16, 16, 16, 8, 8, 32, 32); // Anvil
-//                } else {
-//                    drawScaledCustomSizeModalRect(iconX, iconY, 0, 0, 16, 16, 8, 8, 32, 32); // Pouch
-//                }
-//                if (isHovered) {
-//                    wrongDurability = true;
-//                }
-//            } else if (!recipe.isInputValid(player.getHeldItemOffhand())) {
-//                drawScaledCustomSizeModalRect(iconX, iconY, 0, 0, 16, 16, 8, 8, 32, 32); // Pouch
-//                if (isHovered) {
-//                    wrongAmount = true;
-//                }
-//            } else if (!recipe.isCatalystValid(player)) {
-//                drawScaledCustomSizeModalRect(iconX, iconY, 16, 0, 16, 16, 8, 8, 32, 32); // Magnifying glass
-//                if (isHovered) {
-//                    wrongCatalyst = true;
-//                }
             } else if (isHovered) {
                 drawGradientRect(xPos, yPos, xPos + 16, yPos + 16, -2130706433, -2130706433);
                 correctAmount = true;

@@ -72,9 +72,9 @@ public class RecipeHelper {
         ItemStack offHand = player.getHeldItemOffhand();
         ArrayList<ItemStack> inventory = new ArrayList<>(player.inventory.mainInventory);
 
-        if (hasMainHand() && (mainHand.isEmpty() || !recipe.getMainHand().compare(mainHand, multiplier)))
+        if (!checkMainHand(mainHand, multiplier))
             return false;
-        if (hasOffHand() && (offHand.isEmpty() || !recipe.getOffHand().compare(offHand, multiplier)))
+        if (!checkOffHand(offHand, multiplier))
             return false;
 
         // this will only work for a whole inventory slot having a good amount of items
@@ -107,5 +107,13 @@ public class RecipeHelper {
 
     public boolean hasOffHand() {
         return recipe.getOffHand() != null && recipe.getOffHand().getIngredient().getMatchingStacks().length != 0;
+    }
+
+    public boolean checkMainHand(ItemStack hand, double multiplier) {
+        return !hasMainHand() || (!hand.isEmpty() && recipe.getMainHand().compare(hand, multiplier));
+    }
+
+    public boolean checkOffHand(ItemStack hand, double multiplier) {
+        return !hasOffHand() || (!hand.isEmpty() && recipe.getOffHand().compare(hand, multiplier));
     }
 }
