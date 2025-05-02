@@ -36,7 +36,8 @@ public class SelectionConfig {
                 "net.minecraft.block.BlockWorkbench",
                 "net.minecraft.block.BlockLever",
                 "net.minecraft.block.BlockButton",
-                "net.minecraft.block.BlockAnvil"
+                "net.minecraft.block.BlockAnvil",
+                "net.minecraft.block.BlockRedstoneRepeater",
         };
     }
 
