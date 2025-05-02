@@ -100,14 +100,14 @@ public class GsGuiWrapper implements IRecipeWrapper {
         if (minecraft.currentScreen == null) {
             return;
         }
-        minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.crafting_time", String.format("%.1f", ((float) recipe.getTime() / 20))), 0, 150, Color.WHITE.getRGB());
+        minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.crafting_time", String.format("%.1f", ((float) recipe.getTime() / 20))), recipeWidth - 20, 0, Color.WHITE.getRGB());
         if (recipeHelper.hasMainHand()) {
             minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.mainhand"), 12, 0, Color.WHITE.getRGB());
             minecraft.getTextureManager().bindTexture(Assets.JEI_SELECTION.get());
             drawModalRectWithCustomSizedTexture(21, 9, 160, 40, 18, 18, 256, 256);
         }
         if (recipeHelper.hasOffHand()) {
-            minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.offhand"), 12, 67, Color.WHITE.getRGB());
+            minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.offhand"), 12, recipeHeight - 9, Color.WHITE.getRGB());
             minecraft.getTextureManager().bindTexture(Assets.JEI_SELECTION.get());
             drawModalRectWithCustomSizedTexture(21, 49, 160, 58, 18, 18, 256, 256);
         }
@@ -118,7 +118,7 @@ public class GsGuiWrapper implements IRecipeWrapper {
         ArrayList<String> tooltips = new ArrayList<>();
         if (isMouseOver(mouseX, mouseY, 114, 31, 18, 14)) {
             tooltips.add(I18n.format("jei.selectionguicrafting.output"));
-            tooltips.addAll(output.stream().map(itemStack -> "- " + I18n.format("jei.selectionguicrafting.output.entry", itemStack.getCount(), itemStack.getDisplayName(), outputChance.get(output.indexOf(itemStack)) * 100)).collect(Collectors.toList()));
+            tooltips.addAll(output.stream().map(itemStack -> "- " + I18n.format("jei.selectionguicrafting.output.entry", itemStack.getCount(), itemStack.getDisplayName(), String.format("%.2f", outputChance.get(output.indexOf(itemStack)) * 100))).collect(Collectors.toList()));
 //            tooltips.add(I18n.format("jei.selectionguicrafting.input"));
 //            tooltips.addAll(input.stream().map(itemStack -> "- " + I18n.format("jei.selectionguicrafting.input.entry", itemStack.getCount(), itemStack.getDisplayName(), inputChance.get(input.indexOf(itemStack)) * 100)).collect(Collectors.toList()));
         }

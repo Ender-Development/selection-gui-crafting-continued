@@ -55,6 +55,14 @@ public class Register {
         return allTriggerItems;
     }
 
+    public static boolean removeTriggerItem(Category category) {
+        return allTriggerItems.removeAll(category.getTriggerItems());
+    }
+
+    public static boolean removeTriggerBlock(Category category) {
+        return allTriggerBlocks.removeAll(category.getTriggerBlocks());
+    }
+
     public static ArrayList<BlockTrigger> getTriggerBlocks() {
         return allTriggerBlocks;
     }

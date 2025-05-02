@@ -1,5 +1,6 @@
 package io.enderdev.selectionguicrafting.integration.groovyscript;
 
+import com.cleanroommc.groovyscript.api.GroovyBlacklist;
 import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.IIngredient;
 import com.cleanroommc.groovyscript.api.documentation.annotations.*;
@@ -18,15 +19,16 @@ import net.minecraft.util.SoundEvent;
 import org.jetbrains.annotations.Nullable;
 
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
-public class GroovyCategory extends VirtualizedRegistry<Category> {
+public class Category extends VirtualizedRegistry<io.enderdev.selectionguicrafting.registry.category.Category> {
+    @GroovyBlacklist
     @Override
     public void onReload() {
-        Register.getCategories().removeAll(removeScripted());
-        Register.getCategories().addAll(restoreFromBackup());
+        removeScripted().forEach(Register::removeCategory);
+        restoreFromBackup().forEach(Register::addCategory);
     }
 
     @MethodDescription(type = MethodDescription.Type.ADDITION)
-    public void add(Category category) {
+    public void add(io.enderdev.selectionguicrafting.registry.category.Category category) {
         if (category != null) {
             addScripted(category);
             Register.addCategory(category);
@@ -34,7 +36,7 @@ public class GroovyCategory extends VirtualizedRegistry<Category> {
     }
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL)
-    public boolean remove(Category category) {
+    public boolean remove(io.enderdev.selectionguicrafting.registry.category.Category category) {
         if (Register.removeCategory(category)) {
             addBackup(category);
             return true;
@@ -42,13 +44,13 @@ public class GroovyCategory extends VirtualizedRegistry<Category> {
         return false;
     }
 
-    @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example(value = "'dummy_category_1'"), description = "sgc.groovyscript.category.remove_by_name")
+    @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example(value = "'dummy_category_1'"), description = "groovyscript.wiki.selectionguicrafting.category.remove_by_name")
     public boolean removeByName(String name) {
         return remove(Register.getCategoryByID(name));
     }
 
     @MethodDescription(type = MethodDescription.Type.QUERY)
-    public SimpleObjectStream<Category> streamCategories() {
+    public SimpleObjectStream<io.enderdev.selectionguicrafting.registry.category.Category> streamCategories() {
         return new SimpleObjectStream<>(Register.getCategories()).setRemover(this::remove);
     }
 
@@ -75,12 +77,37 @@ public class GroovyCategory extends VirtualizedRegistry<Category> {
     @Property(property = "frame", defaultValue = "selectionguicrafting:textures/gui/frame/default.png")
     @Property(property = "progressBar", defaultValue = "selectionguicrafting:textures/gui/progress/default.png")
     @Property(property = "backgroundType", defaultValue = "TILE")
-    @Property(property = "outputType", defaultValue = "DROP")
+    @Property(property = "outputType", defaultValue = "INVENTORY")
     @Property(property = "queueable", defaultValue = "YES")
     @Property(property = "soundType", defaultValue = "RANDOM")
-    @Property(property = "sounds", defaultValue = "null")
-    @Property(property = "particles", defaultValue = "null")
-    public static class CategoryBuilder extends Category implements IRecipeBuilder<Category> {
+    @Property(property = "sound", defaultValue = "null")
+    @Property(property = "particle", defaultValue = "null")
+    public static class CategoryBuilder extends io.enderdev.selectionguicrafting.registry.category.Category implements IRecipeBuilder<io.enderdev.selectionguicrafting.registry.category.Category> {
+        @Property
+        private ResourceLocation border;
+        @Property
+        private Sound sound;
+        @Property
+        private OutputType outputType;
+        @Property
+        private AbstractTrigger trigger;
+        @Property
+        private ResourceLocation background;
+        @Property
+        private ResourceLocation progressBar;
+        @Property
+        private Particle particle;
+        @Property
+        private QueueType queueable;
+        @Property
+        private ResourceLocation decoration;
+        @Property
+        private ResourceLocation backgroundType;
+        @Property
+        private SoundType soundType;
+        @Property
+        private ResourceLocation frame;
+
         // Register
         @Override
         public boolean validate() {
@@ -91,7 +118,7 @@ public class GroovyCategory extends VirtualizedRegistry<Category> {
 
         @Override
         @RecipeBuilderRegistrationMethod
-        public @Nullable Category register() {
+        public @Nullable io.enderdev.selectionguicrafting.registry.category.Category register() {
             if (!validate()) {
                 return null;
             }
@@ -260,65 +287,65 @@ public class GroovyCategory extends VirtualizedRegistry<Category> {
 
         // Effects
         // Sounds
-        @RecipeBuilderMethodDescription(field = "sounds")
+        @RecipeBuilderMethodDescription(field = "sound")
         public CategoryBuilder sound(Sound sound) {
             super.addSound(sound);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "sounds")
+        @RecipeBuilderMethodDescription(field = "sound")
         public CategoryBuilder sound(ResourceLocation sound, float volume, float pitch) {
             return sound(new Sound(sound, volume, pitch));
         }
 
-        @RecipeBuilderMethodDescription(field = "sounds")
+        @RecipeBuilderMethodDescription(field = "sound")
         public CategoryBuilder sound(ResourceLocation sound) {
             return sound(new Sound(sound));
         }
 
-        @RecipeBuilderMethodDescription(field = "sounds")
+        @RecipeBuilderMethodDescription(field = "sound")
         public CategoryBuilder sound(String sound, float volume, float pitch) {
             return sound(new ResourceLocation(sound), volume, pitch);
         }
 
-        @RecipeBuilderMethodDescription(field = "sounds")
+        @RecipeBuilderMethodDescription(field = "sound")
         public CategoryBuilder sound(String sound) {
             return sound(new ResourceLocation(sound));
         }
 
-        @RecipeBuilderMethodDescription(field = "sounds")
+        @RecipeBuilderMethodDescription(field = "sound")
         public CategoryBuilder sound(SoundEvent sound, float volume, float pitch) {
             return sound(sound.getSoundName(), volume, pitch);
         }
 
-        @RecipeBuilderMethodDescription(field = "sounds")
+        @RecipeBuilderMethodDescription(field = "sound")
         public CategoryBuilder sound(SoundEvent sound) {
             return sound(sound.getSoundName());
         }
 
         // Particles
-        @RecipeBuilderMethodDescription(field = "particles")
+        @RecipeBuilderMethodDescription(field = "particle")
         public CategoryBuilder particle(Particle particle) {
             super.addParticle(particle);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "particles")
+        @RecipeBuilderMethodDescription(field = "particle")
         public CategoryBuilder particle(EnumParticleTypes particle, int count, float speed) {
             return  particle(new Particle(particle, count, speed));
         }
 
-        @RecipeBuilderMethodDescription(field = "particles")
+        @RecipeBuilderMethodDescription(field = "particle")
         public CategoryBuilder particle(EnumParticleTypes particle) {
             return  particle(new Particle(particle));
         }
 
-        @RecipeBuilderMethodDescription(field = "particles")
+        @RecipeBuilderMethodDescription(field = "particle")
         public CategoryBuilder particle(String particle, int count, float speed) {
             return particle(EnumParticleTypes.valueOf(particle), count, speed);
         }
 
-        @RecipeBuilderMethodDescription(field = "particles")
+        @RecipeBuilderMethodDescription(field = "particle")
         public CategoryBuilder particle(String particle) {
             return particle(EnumParticleTypes.valueOf(particle));
         }

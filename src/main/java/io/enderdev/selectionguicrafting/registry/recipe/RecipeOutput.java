@@ -7,21 +7,21 @@ import java.util.Random;
 public class RecipeOutput {
     private final Random random = new Random();
 
-    private final ItemStack input;
+    private final ItemStack output;
     private final double chance;
 
-    public RecipeOutput(ItemStack input, double chance) {
-        this.input = input;
+    public RecipeOutput(ItemStack output, double chance) {
+        this.output = output;
         this.chance = chance;
     }
 
-    public RecipeOutput(ItemStack input) {
-        this.input = input;
+    public RecipeOutput(ItemStack output) {
+        this.output = output;
         this.chance = 1.0;
     }
 
     public ItemStack getItemStack() {
-        return input;
+        return output;
     }
 
     public double getChance() {
