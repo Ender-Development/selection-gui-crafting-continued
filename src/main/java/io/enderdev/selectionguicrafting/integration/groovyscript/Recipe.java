@@ -101,7 +101,7 @@ public class Recipe extends VirtualizedRegistry<io.enderdev.selectionguicrafting
             @Example(".category('blub').input(item('minecraft:diamond')).output(item('minecraft:wheat_seeds') * 5, 0.5f)"),
             @Example(".category('dummy_category').input(item('minecraft:stone') * 32).output(item('minecraft:diamond') * 50, 0.5f).output(item('minecraft:clay') * 2, 0.1f).time(200).xp(1).sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
             @Example(".category('dead').input(item('minecraft:wheat_seeds') * 3).output(item('minecraft:sand') * 2).time(40).queueable(false).outputType('DROP').xp(1)"),
-            @Example(".category('dead').input(item('minecraft:stick') * 3).output(item('minecraft:sand') * 2).frame('selectionguicrafting:textures/gui/frame/iron.png').time(40).queueable(false)")
+            @Example(".category('dead').input(item('minecraft:stick') * 3).output(item('minecraft:sand') * 2).frame('selectionguicrafting:textures/gui/frame/iron.png').time(40).queueable(false).command('kill @p')")
     })
     public RecipeBuilder recipeBuilder() {
         return new RecipeBuilder();
@@ -121,6 +121,7 @@ public class Recipe extends VirtualizedRegistry<io.enderdev.selectionguicrafting
     @Property(property = "outputType", defaultValue = "null")
     @Property(property = "queueable", defaultValue = "null")
     @Property(property = "soundType", defaultValue = "null")
+    @Property(property = "command", defaultValue = "null")
     public static class RecipeBuilder extends io.enderdev.selectionguicrafting.registry.recipe.Recipe implements IRecipeBuilder<io.enderdev.selectionguicrafting.registry.recipe.Recipe> {
         @Property
         private RecipeInput mainhand;
@@ -144,6 +145,8 @@ public class Recipe extends VirtualizedRegistry<io.enderdev.selectionguicrafting
         private SoundType soundType;
         @Property
         private ResourceLocation frame;
+        @Property
+        private String command;
 
         // Register
         @Override
@@ -471,6 +474,13 @@ public class Recipe extends VirtualizedRegistry<io.enderdev.selectionguicrafting
         @RecipeBuilderMethodDescription(field = "time")
         public RecipeBuilder time(int ticks) {
             super.time(ticks);
+            return this;
+        }
+
+        // Command
+        @RecipeBuilderMethodDescription(field = "command")
+        public RecipeBuilder command(String command) {
+            super.command(command);
             return this;
         }
     }

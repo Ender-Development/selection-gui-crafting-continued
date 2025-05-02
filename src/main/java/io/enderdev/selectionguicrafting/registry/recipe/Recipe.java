@@ -28,6 +28,7 @@ public class Recipe implements IRegisterObject {
     private RecipeInput offHand;
     private Integer time;
     private Integer xp;
+    private String command;
 
     public Recipe() {
         this.time = 20;
@@ -270,6 +271,19 @@ public class Recipe implements IRegisterObject {
 
     public int getXP() {
         return xp;
+    }
+
+    /* --------------------- */
+    /* ----- COMMAND ------- */
+    /* --------------------- */
+
+    public Recipe command(String command) {
+        this.command = command;
+        return this;
+    }
+
+    public String getCommand() {
+        return command;
     }
 
     /* --------------------- */

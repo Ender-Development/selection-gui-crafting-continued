@@ -1,16 +1,22 @@
 package io.enderdev.selectionguicrafting.registry.recipe;
 
+import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.registry.Register;
 import io.enderdev.selectionguicrafting.registry.category.Category;
 import io.enderdev.selectionguicrafting.registry.category.OutputType;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RecipeHandler {
+public class RecipeHandler implements ICommandSender {
     private final EntityPlayer player;
     private final Category category;
     private final Recipe recipe;
@@ -62,5 +68,29 @@ public class RecipeHandler {
         }
 
         player.addExperience(xp);
+
+        if (recipe.getCommand() != null && !recipe.getCommand().isEmpty() && getServer() != null) {
+            getServer().getCommandManager().executeCommand(this, recipe.getCommand());
+        }
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return Tags.MOD_NAME;
+    }
+
+    @Override
+    public boolean canUseCommand(int permLevel, @NotNull String commandName) {
+        return permLevel <= 2;
+    }
+
+    @Override
+    public @NotNull World getEntityWorld() {
+        return player.getEntityWorld();
+    }
+
+    @Override
+    public @Nullable MinecraftServer getServer() {
+        return player.getServer();
     }
 }

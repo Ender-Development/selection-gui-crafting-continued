@@ -513,6 +513,13 @@ public final class CTsgc {
         }
 
         @ZenMethod
+        @ZenDoc("Set the to execute when crafting the recipe")
+        public CTRecipeBuilder command(String command) {
+            recipe.command(command);
+            return this;
+        }
+
+        @ZenMethod
         @ZenDoc("Register the recipe")
         public void register() {
             if (!recipe.validate()) {

@@ -90,6 +90,7 @@ mods.selectionguicrafting.recipe.recipeBuilder()
     .frame('selectionguicrafting:textures/gui/frame/iron.png')
     .time(40)
     .queueable(false)
+    .command('kill @p')
     .register()
 
 
