@@ -520,6 +520,27 @@ public final class CTsgc {
         }
 
         @ZenMethod
+        @ZenDoc("Set the to execute when crafting the recipe")
+        public CTRecipeBuilder advancement(String advancement) {
+            recipe.advancement(advancement);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Set the to execute when crafting the recipe")
+        public CTRecipeBuilder gamestage(String gamestage) {
+            recipe.gamestage(gamestage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Set the to execute when crafting the recipe")
+        public CTRecipeBuilder skill(String skill, int level) {
+            recipe.skill(skill, level);
+            return this;
+        }
+
+        @ZenMethod
         @ZenDoc("Register the recipe")
         public void register() {
             if (!recipe.validate()) {

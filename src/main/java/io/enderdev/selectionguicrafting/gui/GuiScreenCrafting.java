@@ -35,6 +35,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -88,11 +89,6 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     private final double timeMultiplier;
     private final double xpMultiplier;
 
-    private boolean wrongInput = false;
-    private boolean wrongAmount = false;
-    private boolean wrongDurability = false;
-    private boolean wrongCatalyst = false;
-    private boolean correctAmount = false;
     private boolean noQueue = false;
 
     public GuiScreenCrafting(Category recipeCategory, AbstractTrigger trigger, EntityPlayer player, World world) {
@@ -215,6 +211,18 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                     textLines.add((player.inventory.mainInventory.stream().anyMatch(itemStack -> input.compare(itemStack, damageMultiplier)) ? TextFormatting.GREEN : TextFormatting.RED) + I18n.format("gui." + Tags.MOD_ID + ".wrong_input", formatItemName(input.getIngredient().getMatchingStacks()[0])) + TextFormatting.RESET);
                 }
             }
+            if (!hoveredRecipe.getAdvancements().isEmpty()) {
+                textLines.add(I18n.format("gui.selectionguicrafting.advancement"));
+                hoveredRecipe.getAdvancements().forEach(advancement -> textLines.add(I18n.format("gui.selectionguicrafting.advancement.advancement", advancement.getPath())));
+            }
+            if (!hoveredRecipe.getGamestages().isEmpty() && Loader.isModLoaded("gamestages")) {
+                textLines.add(I18n.format("gui.selectionguicrafting.gamestage"));
+                hoveredRecipe.getGamestages().forEach(stage -> textLines.add(I18n.format("gui.selectionguicrafting.gamestage.gamestage", stage)));
+            }
+            if (!hoveredRecipe.getSkills().isEmpty() && Loader.isModLoaded("reskillable")) {
+                textLines.add(I18n.format("gui.selectionguicrafting.skill"));
+                hoveredRecipe.getSkills().forEach((skill, level) -> textLines.add(I18n.format("gui.selectionguicrafting.skill.skill", skill, level)));
+            }
         } else {
             textLines.add(I18n.format("gui." + Tags.MOD_ID + ".no_queue"));
             noQueue = false;
@@ -280,7 +288,6 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 drawScaledCustomSizeModalRect(iconX, iconY, 0, 16, 16, 16, 8, 8, 32, 32); // Red X
             } else if (isHovered) {
                 drawGradientRect(xPos, yPos, xPos + 16, yPos + 16, -2130706433, -2130706433);
-                correctAmount = true;
             }
             GlStateManager.popMatrix();
 

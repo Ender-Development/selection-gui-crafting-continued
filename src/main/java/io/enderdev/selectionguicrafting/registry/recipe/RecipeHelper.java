@@ -1,15 +1,24 @@
 package io.enderdev.selectionguicrafting.registry.recipe;
 
+import codersafterdark.reskillable.api.data.PlayerDataHandler;
+import codersafterdark.reskillable.api.data.PlayerSkillInfo;
 import io.enderdev.selectionguicrafting.registry.Register;
 import io.enderdev.selectionguicrafting.registry.category.*;
 import io.enderdev.selectionguicrafting.registry.util.Particle;
 import io.enderdev.selectionguicrafting.registry.util.Sound;
+import net.darkhax.gamestages.GameStageHelper;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class RecipeHelper {
     private final Recipe recipe;
@@ -68,14 +77,16 @@ public class RecipeHelper {
     }
 
     public boolean canCraft(EntityPlayer player, double multiplier) {
+        if (!checkAdvancement(player)) return false;
+        if (!checkGamestage(player)) return false;
+        if (!checkSkill(player)) return false;
+
         ItemStack mainHand = player.getHeldItemMainhand();
         ItemStack offHand = player.getHeldItemOffhand();
         ArrayList<ItemStack> inventory = new ArrayList<>(player.inventory.mainInventory);
 
-        if (!checkMainHand(mainHand, multiplier))
-            return false;
-        if (!checkOffHand(offHand, multiplier))
-            return false;
+        if (!checkMainHand(mainHand, multiplier)) return false;
+        if (!checkOffHand(offHand, multiplier)) return false;
 
         // this will only work for a whole inventory slot having a good amount of items
         // if you'd want to also check for the items being spread out across multiple slots (like 3 slots each with 1 snow blocks and the recipe requiring 3 snow blocks)
@@ -115,5 +126,33 @@ public class RecipeHelper {
 
     public boolean checkOffHand(ItemStack hand, double multiplier) {
         return !hasOffHand() || (!hand.isEmpty() && recipe.getOffHand().compare(hand, multiplier));
+    }
+
+    public boolean checkAdvancement(EntityPlayer player) {
+        if (recipe.getAdvancements().isEmpty()) return true;
+        MinecraftServer server = player.world.getMinecraftServer();
+        if (server == null) return false;
+        List<Advancement> advancementList = recipe.getAdvancements().stream().map(res -> server.getAdvancementManager().getAdvancement(res)).filter(Objects::nonNull).collect(Collectors.toList());
+        return advancementList.stream().allMatch(advancement -> server.getPlayerList().getPlayerAdvancements((EntityPlayerMP) player).getProgress(advancement).isDone());
+    }
+
+    public boolean checkGamestage(EntityPlayer player) {
+        if (!Loader.isModLoaded("gamestages") || recipe.getGamestages().isEmpty()) return true;
+        return GameStageHelper.hasAllOf(player, recipe.getGamestages());
+    }
+
+    public boolean checkSkill(EntityPlayer player) {
+        if (!Loader.isModLoaded("reskillable") || recipe.getSkills().isEmpty()) return true;
+        Map<String, Integer> playerData = new HashMap<>();
+        boolean check = true;
+        PlayerDataHandler.get(player).getAllSkillInfo().forEach(playerSkillInfo -> playerData.put(playerSkillInfo.skill.getKey(), playerSkillInfo.getLevel()));
+        for (Map.Entry<String, Integer> entry : recipe.getSkills().entrySet()) {
+            String skill = entry.getKey();
+            Integer level = entry.getValue();
+            if (!playerData.containsKey(skill) || playerData.get(skill) < level) {
+                check = false;
+            }
+        }
+        return check;
     }
 }

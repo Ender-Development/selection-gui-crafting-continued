@@ -92,4 +92,12 @@ dependencies {
 
     // HEI
     implementation "mezz:jei:4.28.0"
+
+    // Game Stages
+    implementation rfg.deobf("curse.maven:bookshelf-228525:2836960")
+    implementation rfg.deobf("curse.maven:game-stages-268655:2951840")
+
+    // Reskillable
+    implementation rfg.deobf("curse.maven:reskillable-fork-976391:5117948")
+    implementation rfg.deobf("curse.maven:compatskills-fork-976405:5656530")
 }

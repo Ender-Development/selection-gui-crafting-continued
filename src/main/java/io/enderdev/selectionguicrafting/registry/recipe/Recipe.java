@@ -9,11 +9,14 @@ import io.enderdev.selectionguicrafting.registry.category.SoundType;
 import io.enderdev.selectionguicrafting.registry.util.Particle;
 import io.enderdev.selectionguicrafting.registry.util.Sound;
 import io.enderdev.selectionguicrafting.registry.util.Validation;
+import net.minecraft.advancements.AdvancementList;
+import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Recipe implements IRegisterObject {
     private final Validation ErrorCheck = new Validation();
@@ -29,6 +32,11 @@ public class Recipe implements IRegisterObject {
     private Integer time;
     private Integer xp;
     private String command;
+
+    // optional integration
+    private ArrayList<ResourceLocation> advancements = new ArrayList<>();
+    private ArrayList<String> gamestages = new ArrayList<>();
+    private Map<String, Integer> skills = new HashMap<>();
 
     public Recipe() {
         this.time = 20;
@@ -56,7 +64,7 @@ public class Recipe implements IRegisterObject {
         if (inputs.isEmpty() && mainHand == null && offHand == null) {
             ErrorCheck.error("At least one input must be set.");
         }
-	    if (outputs.isEmpty()) {
+        if (outputs.isEmpty()) {
             ErrorCheck.error("At least one output must be set.");
         }
         if (!ErrorCheck.valid()) {
@@ -284,6 +292,56 @@ public class Recipe implements IRegisterObject {
 
     public String getCommand() {
         return command;
+    }
+
+    /* --------------------- */
+    /* ---- INTEGRATION ---- */
+    /* --------------------- */
+
+    public Recipe advancement(ResourceLocation advancement) {
+        this.advancements.add(advancement);
+        return this;
+    }
+
+    public Recipe advancement(String advancement) {
+        return advancement(new ResourceLocation(advancement));
+    }
+
+    public Recipe advancement(ResourceLocation... advancement) {
+        this.advancements.addAll(Arrays.asList(advancement));
+        return this;
+    }
+
+    public Recipe advancement(String... advancement) {
+        this.advancements.addAll(Arrays.stream(advancement).map(ResourceLocation::new).collect(Collectors.toList()));
+        return this;
+    }
+
+    public ArrayList<ResourceLocation> getAdvancements() {
+        return advancements;
+    }
+
+    public Recipe gamestage(String stage) {
+        this.gamestages.add(stage);
+        return this;
+    }
+
+    public Recipe gamestage(String... stage) {
+        this.gamestages.addAll(Arrays.asList(stage));
+        return this;
+    }
+
+    public ArrayList<String> getGamestages() {
+        return gamestages;
+    }
+
+    public Recipe skill(String skill, int level) {
+        this.skills.put(skill, level);
+        return this;
+    }
+
+    public Map<String, Integer> getSkills() {
+        return skills;
     }
 
     /* --------------------- */
