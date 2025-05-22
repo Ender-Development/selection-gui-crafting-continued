@@ -2,13 +2,17 @@ package io.enderdev.selectionguicrafting.registry.recipe;
 
 import codersafterdark.reskillable.api.data.PlayerDataHandler;
 import codersafterdark.reskillable.api.data.PlayerSkillInfo;
+import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import io.enderdev.selectionguicrafting.registry.Register;
 import io.enderdev.selectionguicrafting.registry.category.*;
 import io.enderdev.selectionguicrafting.registry.util.Particle;
 import io.enderdev.selectionguicrafting.registry.util.Sound;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.PlayerAdvancements;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.multiplayer.ClientAdvancementManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -130,10 +134,7 @@ public class RecipeHelper {
 
     public boolean checkAdvancement(EntityPlayer player) {
         if (recipe.getAdvancements().isEmpty()) return true;
-        MinecraftServer server = player.world.getMinecraftServer();
-        if (server == null) return false;
-        List<Advancement> advancementList = recipe.getAdvancements().stream().map(res -> server.getAdvancementManager().getAdvancement(res)).filter(Objects::nonNull).collect(Collectors.toList());
-        return advancementList.stream().allMatch(advancement -> server.getPlayerList().getPlayerAdvancements((EntityPlayerMP) player).getProgress(advancement).isDone());
+        return recipe.getAdvancements().stream().allMatch(advancement -> hasAdvancement(player, advancement));
     }
 
     public boolean checkGamestage(EntityPlayer player) {
@@ -154,5 +155,29 @@ public class RecipeHelper {
             }
         }
         return check;
+    }
+
+    /*
+     * <https://github.com/Ender-Development/EndExpansion-TheLamentedIslands/blob/32b02b3ebc31ff632952b653989b5a9bf26a1813/src/main/java/com/example/structure/proxy/ClientProxy.java#L109>
+     * <https://github.com/Ender-Development/EndExpansion-TheLamentedIslands/blob/32b02b3ebc31ff632952b653989b5a9bf26a1813/src/main/java/com/example/structure/proxy/CommonProxy.java#L107>
+     */
+    private boolean hasAdvancement(EntityPlayer player, ResourceLocation locAdvancement) {
+        Advancement advancement;
+        if(player instanceof EntityPlayerSP) {
+            ClientAdvancementManager manager = ((EntityPlayerSP) player).connection.getAdvancementManager();
+            advancement = manager.getAdvancementList().getAdvancement(locAdvancement);
+            if(advancement == null) {
+                SelectionGuiCrafting.LOGGER.debug("Advancement is null: {}", locAdvancement);
+                return false;
+            }
+            AdvancementProgress progress = manager.advancementToProgress.get(advancement);
+            return progress != null && progress.isDone();
+        }
+        if (player instanceof EntityPlayerMP) {
+            advancement = ((EntityPlayerMP) player).getServerWorld().getAdvancementManager().getAdvancement(locAdvancement);
+            return advancement != null && ((EntityPlayerMP) player).getAdvancements().getProgress(advancement).isDone();
+        }
+        SelectionGuiCrafting.LOGGER.debug("Unable to locate Advancement: {}", locAdvancement);
+        return false;
     }
 }
