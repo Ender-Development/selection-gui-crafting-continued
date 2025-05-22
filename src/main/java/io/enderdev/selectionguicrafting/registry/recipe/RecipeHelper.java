@@ -137,6 +137,11 @@ public class RecipeHelper {
         return !hasOffHand() || (!hand.isEmpty() && recipe.getOffHand().compare(hand, multiplier));
     }
 
+    // Additional Requirements
+    public boolean hasAdditionalInfo() {
+        return !recipe.getGamestages().isEmpty() || !recipe.getAdvancements().isEmpty() || !recipe.getSkills().isEmpty();
+    }
+
     // Gamestage
     public boolean checkGamestage(EntityPlayer player) {
         if (!Loader.isModLoaded("gamestages") || recipe.getGamestages().isEmpty()) return true;

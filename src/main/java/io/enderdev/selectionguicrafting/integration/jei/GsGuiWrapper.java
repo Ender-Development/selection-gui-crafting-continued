@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.text.TextFormatting;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -100,7 +101,8 @@ public class GsGuiWrapper implements IRecipeWrapper {
         if (minecraft.currentScreen == null) {
             return;
         }
-        minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.crafting_time", String.format("%.1f", ((float) recipe.getTime() / 20))), recipeWidth - 20, 0, Color.WHITE.getRGB());
+        String time = I18n.format("jei.selectionguicrafting.crafting_time", String.format("%.1f", ((float) recipe.getTime() / 20)));
+        minecraft.fontRenderer.drawString(time, recipeWidth - minecraft.fontRenderer.getStringWidth(time), recipeHeight - minecraft.fontRenderer.FONT_HEIGHT, Color.WHITE.getRGB());
         if (recipeHelper.hasMainHand()) {
             minecraft.fontRenderer.drawString(I18n.format("jei.selectionguicrafting.mainhand"), 12, 0, Color.WHITE.getRGB());
             minecraft.getTextureManager().bindTexture(Assets.JEI_SELECTION.get());
@@ -111,17 +113,21 @@ public class GsGuiWrapper implements IRecipeWrapper {
             minecraft.getTextureManager().bindTexture(Assets.JEI_SELECTION.get());
             drawModalRectWithCustomSizedTexture(21, 49, 160, 58, 18, 18, 256, 256);
         }
+        if (recipeHelper.hasAdditionalInfo()) {
+            minecraft.getTextureManager().bindTexture(Assets.JEI_SELECTION.get());
+            drawModalRectWithCustomSizedTexture(recipeWidth - 10, 0, 160, 30, 10, 10, 256, 256);
+        }
     }
 
     @Override
     public @NotNull List<String> getTooltipStrings(int mouseX, int mouseY) {
         ArrayList<String> tooltips = new ArrayList<>();
+        // ->
         if (isMouseOver(mouseX, mouseY, 114, 31, 18, 14)) {
             tooltips.add(I18n.format("jei.selectionguicrafting.output"));
             tooltips.addAll(output.stream().map(itemStack -> "- " + I18n.format("jei.selectionguicrafting.output.entry", itemStack.getCount(), itemStack.getDisplayName(), String.format("%.2f", outputChance.get(output.indexOf(itemStack)) * 100))).collect(Collectors.toList()));
-//            tooltips.add(I18n.format("jei.selectionguicrafting.input"));
-//            tooltips.addAll(input.stream().map(itemStack -> "- " + I18n.format("jei.selectionguicrafting.input.entry", itemStack.getCount(), itemStack.getDisplayName(), inputChance.get(input.indexOf(itemStack)) * 100)).collect(Collectors.toList()));
         }
+        // !
         if (isMouseOver(mouseX, mouseY, 0, 31, 6, 14)) {
             tooltips.add(I18n.format("jei.selectionguicrafting.trigger"));
             trigger.forEach(item -> {
@@ -139,8 +145,24 @@ public class GsGuiWrapper implements IRecipeWrapper {
                     tooltips.add(I18n.format("jei.selectionguicrafting.trigger.nomodifier"));
             });
         }
+        // +
         if (isMouseOver(mouseX, mouseY, 37, 30, 16, 16)) {
             // NO-OP
+        }
+        // i
+        if (isMouseOver(mouseX, mouseY, 150, 0, 10, 10) && recipeHelper.hasAdditionalInfo()) {
+            if (!recipe.getGamestages().isEmpty()) {
+                tooltips.add(I18n.format("gui.selectionguicrafting.gamestage"));
+                recipe.getGamestages().forEach(stage -> tooltips.add(I18n.format("gui.selectionguicrafting.gamestage.gamestage", recipeHelper.translateGamestage(stage))));
+            }
+            if (!recipe.getAdvancements().isEmpty()) {
+                tooltips.add(I18n.format("gui.selectionguicrafting.advancement"));
+                recipe.getAdvancements().forEach(advancement -> tooltips.add(I18n.format("gui.selectionguicrafting.advancement.advancement", recipeHelper.translateAdvancement(Minecraft.getMinecraft().player, advancement))));
+            }
+            if (!recipe.getSkills().isEmpty()) {
+                tooltips.add(I18n.format("gui.selectionguicrafting.skill"));
+                recipe.getSkills().forEach((skill, level) -> tooltips.add(I18n.format("gui.selectionguicrafting.skill.skill", recipeHelper.translateSkill(skill), level)));
+            }
         }
         return tooltips;
     }
