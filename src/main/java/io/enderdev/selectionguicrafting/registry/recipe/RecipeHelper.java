@@ -132,16 +132,18 @@ public class RecipeHelper {
         return !hasOffHand() || (!hand.isEmpty() && recipe.getOffHand().compare(hand, multiplier));
     }
 
-    public boolean checkAdvancement(EntityPlayer player) {
-        if (recipe.getAdvancements().isEmpty()) return true;
-        return recipe.getAdvancements().stream().allMatch(advancement -> hasAdvancement(player, advancement));
-    }
-
+    // Gamestage
     public boolean checkGamestage(EntityPlayer player) {
         if (!Loader.isModLoaded("gamestages") || recipe.getGamestages().isEmpty()) return true;
         return GameStageHelper.hasAllOf(player, recipe.getGamestages());
     }
 
+    public boolean hasGamestage(EntityPlayer player, String gamestage) {
+        if (!Loader.isModLoaded("gamestages")) return true;
+        return GameStageHelper.hasStage(player, gamestage);
+    }
+
+    // Skill
     public boolean checkSkill(EntityPlayer player) {
         if (!Loader.isModLoaded("reskillable") || recipe.getSkills().isEmpty()) return true;
         Map<String, Integer> playerData = new HashMap<>();
@@ -157,16 +159,29 @@ public class RecipeHelper {
         return check;
     }
 
+    public boolean hasSkill(EntityPlayer player, String skill, int level) {
+        if (!Loader.isModLoaded("reskillable")) return true;
+        Map<String, Integer> skillTuple = new HashMap<>();
+        PlayerDataHandler.get(player).getAllSkillInfo().forEach(playerSkillInfo -> skillTuple.put(playerSkillInfo.skill.getKey(), playerSkillInfo.getLevel()));
+        return skillTuple.containsKey(skill) && skillTuple.get(skill) >= level;
+    }
+
+    // Advancement
+    public boolean checkAdvancement(EntityPlayer player) {
+        if (recipe.getAdvancements().isEmpty()) return true;
+        return recipe.getAdvancements().stream().allMatch(advancement -> hasAdvancement(player, advancement));
+    }
+
     /*
      * <https://github.com/Ender-Development/EndExpansion-TheLamentedIslands/blob/32b02b3ebc31ff632952b653989b5a9bf26a1813/src/main/java/com/example/structure/proxy/ClientProxy.java#L109>
      * <https://github.com/Ender-Development/EndExpansion-TheLamentedIslands/blob/32b02b3ebc31ff632952b653989b5a9bf26a1813/src/main/java/com/example/structure/proxy/CommonProxy.java#L107>
      */
-    private boolean hasAdvancement(EntityPlayer player, ResourceLocation locAdvancement) {
+    public boolean hasAdvancement(EntityPlayer player, ResourceLocation locAdvancement) {
         Advancement advancement;
-        if(player instanceof EntityPlayerSP) {
+        if (player instanceof EntityPlayerSP) {
             ClientAdvancementManager manager = ((EntityPlayerSP) player).connection.getAdvancementManager();
             advancement = manager.getAdvancementList().getAdvancement(locAdvancement);
-            if(advancement == null) {
+            if (advancement == null) {
                 SelectionGuiCrafting.LOGGER.debug("Advancement is null: {}", locAdvancement);
                 return false;
             }
