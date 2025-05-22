@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.0.0] - 2025-05-XX
+
+### Changed
+- rewrote the entire mod again
+
 ## [2.0.2] - 2025-01-27
 
 ### Changed
