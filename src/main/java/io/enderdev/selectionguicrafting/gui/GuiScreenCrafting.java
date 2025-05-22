@@ -213,15 +213,15 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             }
             if (!hoveredRecipe.getAdvancements().isEmpty()) {
                 textLines.add(I18n.format("gui.selectionguicrafting.advancement"));
-                hoveredRecipe.getAdvancements().forEach(advancement -> textLines.add((hoveredRecipeHelper.hasAdvancement(player, advancement) ? TextFormatting.GREEN : TextFormatting.RED) + I18n.format("gui.selectionguicrafting.advancement.advancement", advancement.getPath()) + TextFormatting.RESET));
+                hoveredRecipe.getAdvancements().forEach(advancement -> textLines.add((hoveredRecipeHelper.hasAdvancement(player, advancement) ? TextFormatting.GREEN : TextFormatting.RED) + I18n.format("gui.selectionguicrafting.advancement.advancement", hoveredRecipeHelper.translateAdvancement(player, advancement)) + TextFormatting.RESET));
             }
             if (!hoveredRecipe.getGamestages().isEmpty() && Loader.isModLoaded("gamestages")) {
                 textLines.add(I18n.format("gui.selectionguicrafting.gamestage"));
-                hoveredRecipe.getGamestages().forEach(stage -> textLines.add((hoveredRecipeHelper.hasGamestage(player, stage) ? TextFormatting.GREEN : TextFormatting.RED) + I18n.format("gui.selectionguicrafting.gamestage.gamestage", stage) + TextFormatting.RESET));
+                hoveredRecipe.getGamestages().forEach(stage -> textLines.add((hoveredRecipeHelper.hasGamestage(player, stage) ? TextFormatting.GREEN : TextFormatting.RED) + I18n.format("gui.selectionguicrafting.gamestage.gamestage", hoveredRecipeHelper.translateGamestage(stage)) + TextFormatting.RESET));
             }
             if (!hoveredRecipe.getSkills().isEmpty() && Loader.isModLoaded("reskillable")) {
                 textLines.add(I18n.format("gui.selectionguicrafting.skill"));
-                hoveredRecipe.getSkills().forEach((skill, level) -> textLines.add((hoveredRecipeHelper.hasSkill(player, skill, level) ? TextFormatting.GREEN : TextFormatting.RED) + I18n.format("gui.selectionguicrafting.skill.skill", skill, level) + TextFormatting.RESET));
+                hoveredRecipe.getSkills().forEach((skill, level) -> textLines.add((hoveredRecipeHelper.hasSkill(player, skill, level) ? TextFormatting.GREEN : TextFormatting.RED) + I18n.format("gui.selectionguicrafting.skill.skill", hoveredRecipeHelper.translateSkill(skill), level) + TextFormatting.RESET));
             }
         } else {
             textLines.add(I18n.format("gui." + Tags.MOD_ID + ".no_queue"));

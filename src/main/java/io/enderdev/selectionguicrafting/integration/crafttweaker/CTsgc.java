@@ -521,7 +521,7 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Set the command to execute when crafting the recipe")
-        public CTRecipeBuilder command(String... command) {
+        public CTRecipeBuilder command(String[] command) {
             recipe.command(command);
             return this;
         }
@@ -535,7 +535,7 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Lock the recipe behind an advancement")
-        public CTRecipeBuilder advancement(String... advancement) {
+        public CTRecipeBuilder advancement(String[] advancement) {
             recipe.advancement(advancement);
             return this;
         }
@@ -549,7 +549,7 @@ public final class CTsgc {
 
         @ZenMethod
         @ZenDoc("Lock the recipe behind a gamestage")
-        public CTRecipeBuilder gamestage(String... gamestage) {
+        public CTRecipeBuilder gamestage(String[] gamestage) {
             recipe.gamestage(gamestage);
             return this;
         }

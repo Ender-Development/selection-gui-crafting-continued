@@ -100,4 +100,7 @@ dependencies {
     // Reskillable
     implementation rfg.deobf("curse.maven:reskillable-fork-976391:5117948")
     implementation rfg.deobf("curse.maven:compatskills-fork-976405:5656530")
+
+    // Ender's Modpack Tweaks
+    implementation rfg.deobf("curse.maven:ender-modpack-tweaks-1221029:6553337")
 }

@@ -1,7 +1,10 @@
 package io.enderdev.selectionguicrafting.registry.recipe;
 
+import codersafterdark.reskillable.api.ReskillableRegistries;
 import codersafterdark.reskillable.api.data.PlayerDataHandler;
 import codersafterdark.reskillable.api.data.PlayerSkillInfo;
+import codersafterdark.reskillable.api.skill.Skill;
+import io.enderdev.endermodpacktweaks.config.CfgTweaks;
 import io.enderdev.selectionguicrafting.SelectionGuiCrafting;
 import io.enderdev.selectionguicrafting.registry.Register;
 import io.enderdev.selectionguicrafting.registry.category.*;
@@ -9,10 +12,12 @@ import io.enderdev.selectionguicrafting.registry.util.Particle;
 import io.enderdev.selectionguicrafting.registry.util.Sound;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ClientAdvancementManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -143,6 +148,12 @@ public class RecipeHelper {
         return GameStageHelper.hasStage(player, gamestage);
     }
 
+    public String translateGamestage(String gamestage) {
+        if (!Loader.isModLoaded("gamestages") || !Loader.isModLoaded("endermodpacktweaks")) return gamestage;
+        if (CfgTweaks.GAME_STAGES.enable && CfgTweaks.GAME_STAGES.localizeRecipeStages) return I18n.format("emt.game_stages." + gamestage.toLowerCase(Locale.ROOT).trim());
+        return gamestage;
+    }
+
     // Skill
     public boolean checkSkill(EntityPlayer player) {
         if (!Loader.isModLoaded("reskillable") || recipe.getSkills().isEmpty()) return true;
@@ -164,6 +175,11 @@ public class RecipeHelper {
         Map<String, Integer> skillTuple = new HashMap<>();
         PlayerDataHandler.get(player).getAllSkillInfo().forEach(playerSkillInfo -> skillTuple.put(playerSkillInfo.skill.getKey(), playerSkillInfo.getLevel()));
         return skillTuple.containsKey(skill) && skillTuple.get(skill) >= level;
+    }
+
+    public String translateSkill(String skill) {
+        if (!Loader.isModLoaded("reskillable")) return skill;
+        return ReskillableRegistries.SKILLS.getValuesCollection().stream().filter(skill1 -> skill1.getKey().equals(skill)).map(Skill::getName).findFirst().orElse(skill);
     }
 
     // Advancement
@@ -194,5 +210,18 @@ public class RecipeHelper {
         }
         SelectionGuiCrafting.LOGGER.debug("Unable to locate Advancement: {}", locAdvancement);
         return false;
+    }
+
+    public String translateAdvancement(EntityPlayer player, ResourceLocation locAdvancement) {
+        Advancement advancement = null;
+        if (player instanceof EntityPlayerSP) {
+            ClientAdvancementManager manager = ((EntityPlayerSP) player).connection.getAdvancementManager();
+            advancement = manager.getAdvancementList().getAdvancement(locAdvancement);
+        }
+        if (player instanceof EntityPlayerMP) {
+            advancement = ((EntityPlayerMP) player).getServerWorld().getAdvancementManager().getAdvancement(locAdvancement);
+        }
+        if (advancement == null) return locAdvancement.getPath();
+        return advancement.getDisplayText().getUnformattedText().substring(1, advancement.getDisplayText().getUnformattedText().length() - 1);
     }
 }
