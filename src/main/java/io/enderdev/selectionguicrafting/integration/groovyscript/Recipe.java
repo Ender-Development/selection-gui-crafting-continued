@@ -122,6 +122,9 @@ public class Recipe extends VirtualizedRegistry<io.enderdev.selectionguicrafting
     @Property(property = "queueable", defaultValue = "null")
     @Property(property = "soundType", defaultValue = "null")
     @Property(property = "command", defaultValue = "null")
+    @Property(property = "skill", defaultValue = "null")
+    @Property(property = "gamestage", defaultValue = "null")
+    @Property(property = "advancement", defaultValue = "null")
     public static class RecipeBuilder extends io.enderdev.selectionguicrafting.registry.recipe.Recipe implements IRecipeBuilder<io.enderdev.selectionguicrafting.registry.recipe.Recipe> {
         @Property
         private RecipeInput mainhand;
@@ -147,6 +150,12 @@ public class Recipe extends VirtualizedRegistry<io.enderdev.selectionguicrafting
         private ResourceLocation frame;
         @Property
         private String command;
+        @Property
+        private String skill;
+        @Property
+        private ResourceLocation advancement;
+        @Property
+        private String gamestage;
 
         // Register
         @Override
@@ -481,6 +490,57 @@ public class Recipe extends VirtualizedRegistry<io.enderdev.selectionguicrafting
         @RecipeBuilderMethodDescription(field = "command")
         public RecipeBuilder command(String command) {
             super.command(command);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "command")
+        public RecipeBuilder command(String... command) {
+            super.command(command);
+            return this;
+        }
+
+        // Gamestage
+        @RecipeBuilderMethodDescription(field = "gamestage")
+        public RecipeBuilder gamestage(String stage) {
+            super.gamestage(stage);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "gamestage")
+        public RecipeBuilder gamestage(String... stage) {
+            super.gamestage(stage);
+            return this;
+        }
+
+        // Advancement
+        @RecipeBuilderMethodDescription(field = "advancement")
+        public RecipeBuilder advancement(String advancement) {
+            super.advancement(advancement);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "advancement")
+        public RecipeBuilder advancement(String... advancement) {
+            super.advancement(advancement);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "advancement")
+        public RecipeBuilder advancement(ResourceLocation advancement) {
+            super.advancement(advancement);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "advancement")
+        public RecipeBuilder advancement(ResourceLocation... advancement) {
+            super.advancement(advancement);
+            return this;
+        }
+
+        // Skill
+        @RecipeBuilderMethodDescription(field = "skill")
+        public RecipeBuilder skill(String skill, int level) {
+            super.skill(skill, level);
             return this;
         }
     }

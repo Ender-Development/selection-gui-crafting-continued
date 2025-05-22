@@ -9,8 +9,6 @@ import io.enderdev.selectionguicrafting.registry.category.SoundType;
 import io.enderdev.selectionguicrafting.registry.util.Particle;
 import io.enderdev.selectionguicrafting.registry.util.Sound;
 import io.enderdev.selectionguicrafting.registry.util.Validation;
-import net.minecraft.advancements.AdvancementList;
-import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
@@ -31,12 +29,12 @@ public class Recipe implements IRegisterObject {
     private RecipeInput offHand;
     private Integer time;
     private Integer xp;
-    private String command;
 
     // optional integration
-    private ArrayList<ResourceLocation> advancements = new ArrayList<>();
-    private ArrayList<String> gamestages = new ArrayList<>();
-    private Map<String, Integer> skills = new HashMap<>();
+    private final ArrayList<String> commands = new ArrayList<>();
+    private final ArrayList<ResourceLocation> advancements = new ArrayList<>();
+    private final ArrayList<String> gamestages = new ArrayList<>();
+    private final Map<String, Integer> skills = new HashMap<>();
 
     public Recipe() {
         this.time = 20;
@@ -286,12 +284,17 @@ public class Recipe implements IRegisterObject {
     /* --------------------- */
 
     public Recipe command(String command) {
-        this.command = command;
+        this.commands.add(command);
         return this;
     }
 
-    public String getCommand() {
-        return command;
+    public Recipe command(String... command) {
+        this.commands.addAll(Arrays.asList(command));
+        return this;
+    }
+
+    public ArrayList<String> getCommands() {
+        return commands;
     }
 
     /* --------------------- */

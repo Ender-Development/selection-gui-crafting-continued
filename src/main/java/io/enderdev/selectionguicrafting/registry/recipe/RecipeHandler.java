@@ -69,8 +69,8 @@ public class RecipeHandler implements ICommandSender {
 
         player.addExperience(xp);
 
-        if (recipe.getCommand() != null && !recipe.getCommand().isEmpty() && getServer() != null) {
-            getServer().getCommandManager().executeCommand(this, recipe.getCommand());
+        if (!recipe.getCommands().isEmpty() && getServer() != null) {
+            recipe.getCommands().forEach(command -> getServer().getCommandManager().executeCommand(this, command));
         }
     }
 

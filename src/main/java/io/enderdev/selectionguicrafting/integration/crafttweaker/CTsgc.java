@@ -513,28 +513,49 @@ public final class CTsgc {
         }
 
         @ZenMethod
-        @ZenDoc("Set the to execute when crafting the recipe")
+        @ZenDoc("Set the command to execute when crafting the recipe")
         public CTRecipeBuilder command(String command) {
             recipe.command(command);
             return this;
         }
 
         @ZenMethod
-        @ZenDoc("Set the to execute when crafting the recipe")
+        @ZenDoc("Set the command to execute when crafting the recipe")
+        public CTRecipeBuilder command(String... command) {
+            recipe.command(command);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Lock the recipe behind an advancement")
         public CTRecipeBuilder advancement(String advancement) {
             recipe.advancement(advancement);
             return this;
         }
 
         @ZenMethod
-        @ZenDoc("Set the to execute when crafting the recipe")
+        @ZenDoc("Lock the recipe behind an advancement")
+        public CTRecipeBuilder advancement(String... advancement) {
+            recipe.advancement(advancement);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Lock the recipe behind a gamestage")
         public CTRecipeBuilder gamestage(String gamestage) {
             recipe.gamestage(gamestage);
             return this;
         }
 
         @ZenMethod
-        @ZenDoc("Set the to execute when crafting the recipe")
+        @ZenDoc("Lock the recipe behind a gamestage")
+        public CTRecipeBuilder gamestage(String... gamestage) {
+            recipe.gamestage(gamestage);
+            return this;
+        }
+
+        @ZenMethod
+        @ZenDoc("Lock the recipe behind a skill level")
         public CTRecipeBuilder skill(String skill, int level) {
             recipe.skill(skill, level);
             return this;
