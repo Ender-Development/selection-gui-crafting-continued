@@ -9,8 +9,10 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION)
+@Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION, dependencies = SelectionGuiCrafting.DEPENDENCIES)
 public class SelectionGuiCrafting {
+
+    public static final String DEPENDENCIES = "after:jei@[4.28.0,);";
 
     public static final Logger LOGGER = LogManager.getLogger(Tags.MOD_NAME);
 
@@ -22,19 +24,16 @@ public class SelectionGuiCrafting {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-
         proxy.preInit(event);
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-
         proxy.init(event);
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-
         proxy.postInit(event);
     }
 

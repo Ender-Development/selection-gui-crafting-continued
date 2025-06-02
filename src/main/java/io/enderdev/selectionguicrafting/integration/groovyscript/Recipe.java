@@ -9,47 +9,52 @@ import com.cleanroommc.groovyscript.helper.recipe.IRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.registry.*;
+import io.enderdev.selectionguicrafting.registry.category.OutputType;
+import io.enderdev.selectionguicrafting.registry.category.QueueType;
+import io.enderdev.selectionguicrafting.registry.category.SoundType;
+import io.enderdev.selectionguicrafting.registry.recipe.RecipeInput;
+import io.enderdev.selectionguicrafting.registry.recipe.RecipeOutput;
+import io.enderdev.selectionguicrafting.registry.util.Particle;
+import io.enderdev.selectionguicrafting.registry.util.Sound;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("unused")
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
-public class Recipe extends VirtualizedRegistry<GsRecipe> {
-    @Override
+public class Recipe extends VirtualizedRegistry<io.enderdev.selectionguicrafting.registry.recipe.Recipe> {
     @GroovyBlacklist
+    @Override
     public void onReload() {
-        GsRegistry.getRecipes().removeAll(removeScripted());
-        GsRegistry.getRecipes().addAll(restoreFromBackup());
+        removeScripted().forEach(Register::removeRecipe);
+        restoreFromBackup().forEach(Register::addRecipe);
     }
 
-    public void add(GsRecipe recipe) {
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
+    public void add(io.enderdev.selectionguicrafting.registry.recipe.Recipe recipe) {
         if (recipe != null) {
             addScripted(recipe);
-            GsRegistry.registerRecipe(recipe);
+            Register.addRecipe(recipe);
         }
     }
 
-    public boolean remove(GsRecipe recipe) {
-        if (GsRegistry.removeRecipe(recipe.getCategory(), recipe.getOutput())) {
+    @MethodDescription(type = MethodDescription.Type.REMOVAL)
+    public boolean remove(io.enderdev.selectionguicrafting.registry.recipe.Recipe recipe) {
+        if (Register.removeRecipe(recipe)) {
             addBackup(recipe);
             return true;
         }
         return false;
     }
 
-    @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example(value = "'dummy_category'", commented = true), description = "sgc.groovyscript.recipe.remove_by_category")
+    @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example(value = "'dummy_category'", commented = true), description = "groovyscript.wiki.selectionguicrafting.recipe.remove_by_category")
     public boolean removeByCategory(String category) {
-        return GsRegistry.getRecipes().removeIf(recipe -> {
+        return Register.getRecipes().removeIf(recipe -> {
             if (recipe.getCategory().equals(category)) {
                 addBackup(recipe);
                 return true;
@@ -60,8 +65,8 @@ public class Recipe extends VirtualizedRegistry<GsRecipe> {
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example("item('minecraft:stone')"))
     public boolean removeByOutput(IIngredient output) {
-        return GsRegistry.getRecipes().removeIf(recipe -> {
-            if (recipe.getOutput().stream().map(GsOutput::getItemStack).anyMatch(output)) {
+        return Register.getRecipes().removeIf(recipe -> {
+            if (recipe.getOutputs().stream().map(RecipeOutput::getItemStack).anyMatch(output)) {
                 addBackup(recipe);
                 return true;
             }
@@ -71,19 +76,8 @@ public class Recipe extends VirtualizedRegistry<GsRecipe> {
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example("item('minecraft:cobblestone')"))
     public boolean removeByInput(IIngredient input) {
-        return GsRegistry.getRecipes().removeIf(recipe -> {
-            if (recipe.getInput().contains(input.toMcIngredient())) {
-                addBackup(recipe);
-                return true;
-            }
-            return false;
-        });
-    }
-
-    @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example("item('minecraft:wool')"), description = "sgc.groovyscript.recipe.remove_by_tool")
-    public boolean removeByTool(IIngredient tool) {
-        return GsRegistry.getRecipes().removeIf(recipe -> {
-            if (recipe.getTool().stream().map(GsTool::getItemStack).anyMatch(tool)) {
+        return Register.getRecipes().removeIf(recipe -> {
+            if (recipe.getInputs().stream().map(RecipeInput::getIngredient).anyMatch(ingredient -> ingredient.equals(input.toMcIngredient()))) {
                 addBackup(recipe);
                 return true;
             }
@@ -92,288 +86,461 @@ public class Recipe extends VirtualizedRegistry<GsRecipe> {
     }
 
     @MethodDescription(type = MethodDescription.Type.QUERY)
-    public SimpleObjectStream<GsRecipe> streamRecipes() {
-        return new SimpleObjectStream<>(GsRegistry.getRecipes()).setRemover(this::remove);
+    public SimpleObjectStream<io.enderdev.selectionguicrafting.registry.recipe.Recipe> streamRecipes() {
+        return new SimpleObjectStream<>(Register.getRecipes()).setRemover(this::remove);
     }
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, priority = 2000, example = @Example(commented = true))
     public void removeAll() {
-        GsRegistry.getRecipes().forEach(this::addBackup);
-        GsRegistry.getRecipes().clear();
+        Register.getRecipes().forEach(this::addBackup);
+        Register.getRecipes().clear();
     }
 
     @RecipeBuilderDescription(example = {
-            @Example(".category('dummy_category').input(item('minecraft:stone') * 3).output(item('minecraft:cobblestone') * 2, 0.5f).tool(item('minecraft:wooden_pickaxe'), 1.0f).time(200).xp(1).sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
-            @Example(".category('blub').input(item('minecraft:diamond')).output(item('minecraft:wheat_seeds') * 5, 0.5f).tool(item('minecraft:grass') * 5, 1.0f)"),
-            @Example(".category('dummy_category').input(item('minecraft:stone') * 32).output(item('minecraft:diamond') * 50, 0.5f).output(item('minecraft:clay') * 2, 0.1f).tool(item('minecraft:wooden_pickaxe'), 1.0f).tool(item('minecraft:diamond_pickaxe'), 10.0f, 10.0f).durability(10).time(200).xp(1).sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
-            @Example(".category('dead').input(item('minecraft:wheat_seeds') * 3).output(item('minecraft:sand') * 2).tool(item('minecraft:wooden_pickaxe'), 1.0f, 1.1f).tool(item('minecraft:golden_pickaxe'), 0.5f, 1.5f).catalyst(item('minecraft:apple') * 2, 0.9f).time(40).durability(1).queueType(false).outputType('INVENTORY').xp(1)"),
-            @Example(".category('dead').input(item('minecraft:stick') * 3).output(item('minecraft:sand') * 2).tool(item('minecraft:wooden_pickaxe'), 1.0f, 1.1f).tool(item('minecraft:golden_pickaxe'), 0.5f, 1.5f).catalyst(item('minecraft:apple') * 2, 0.9f).frame('selectionguicrafting:textures/gui/frame/iron.png').time(40).durability(1).queueType(false)")
+            @Example(".category('dummy_category').input(item('minecraft:stone') * 3).output(item('minecraft:cobblestone') * 2, 0.5f).time(200).xp(1).sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
+            @Example(".category('blub').input(item('minecraft:diamond')).output(item('minecraft:wheat_seeds') * 5, 0.5f)"),
+            @Example(".category('dummy_category').input(item('minecraft:stone') * 32).output(item('minecraft:diamond') * 50, 0.5f).output(item('minecraft:clay') * 2, 0.1f).time(200).xp(1).sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
+            @Example(".category('dead').input(item('minecraft:wheat_seeds') * 3).output(item('minecraft:sand') * 2).time(40).queueable(false).outputType('DROP').xp(1)"),
+            @Example(".category('dead').input(item('minecraft:stick') * 3).output(item('minecraft:sand') * 2).frame('selectionguicrafting:textures/gui/frame/iron.png').time(40).queueable(false).command('kill @p')")
     })
     public RecipeBuilder recipeBuilder() {
         return new RecipeBuilder();
     }
 
     @Property(property = "category", comp = @Comp(not = "null", unique = "groovyscript.wiki.selectionguicrafting.recipe.unique_category"))
-    @Property(property = "input", comp = @Comp(gte = 1))
+    @Property(property = "input", comp = @Comp(gte = 0))
     @Property(property = "output", comp = @Comp(gte = 1))
-    @Property(property = "tool", comp = @Comp(gte = 1))
-    @Property(property = "catalyst", comp = @Comp(gte = 0, lte = 1))
-    @Property(property = "time", comp = @Comp(gte = 0))
-    @Property(property = "xp", comp = @Comp(gte = 0))
-    @Property(property = "durability", comp = @Comp(gte = 0))
-    @Property(property = "sounds", defaultValue = "null")
+    @Property(property = "mainhand", comp = @Comp(gte = 0, lte = 1))
+    @Property(property = "offhand", comp = @Comp(gte = 0, lte = 1))
+    @Property(property = "time", comp = @Comp(gte = 0), defaultValue = "20")
+    @Property(property = "xp", comp = @Comp(gte = 0), defaultValue = "0")
+    @Property(property = "sound", defaultValue = "null")
     @Property(property = "particles", defaultValue = "null")
     @Property(property = "frame", defaultValue = "selectionguicrafting:textures/gui/frame/default.png")
     @Property(property = "progressBar", defaultValue = "selectionguicrafting:textures/gui/progress/default.png")
     @Property(property = "outputType", defaultValue = "null")
     @Property(property = "queueable", defaultValue = "null")
     @Property(property = "soundType", defaultValue = "null")
-    public static class RecipeBuilder extends GsRecipe implements IRecipeBuilder<GsRecipe> {
+    @Property(property = "command", defaultValue = "null")
+    @Property(property = "skill", defaultValue = "null")
+    @Property(property = "gamestage", defaultValue = "null")
+    @Property(property = "advancement", defaultValue = "null")
+    public static class RecipeBuilder extends io.enderdev.selectionguicrafting.registry.recipe.Recipe implements IRecipeBuilder<io.enderdev.selectionguicrafting.registry.recipe.Recipe> {
+        @Property
+        private RecipeInput mainhand;
+        @Property
+        private OutputType outputType;
+        @Property
+        private RecipeInput offhand;
+        @Property
+        private RecipeOutput output;
+        @Property
+        private RecipeInput input;
+        @Property
+        private Sound sound;
+        @Property
+        private ResourceLocation progressBar;
+        @Property
+        private QueueType queueable;
+        @Property
+        private Particle particle;
+        @Property
+        private SoundType soundType;
+        @Property
+        private ResourceLocation frame;
+        @Property
+        private String command;
+        @Property
+        private String skill;
+        @Property
+        private ResourceLocation advancement;
+        @Property
+        private String gamestage;
 
+        // Register
+        @Override
+        public boolean validate() {
+            GroovyLog.Msg msg = GroovyLog.msg(String.format("Error adding %s recipe!", Tags.MOD_NAME)).error();
+            getErrorCheck().listMsg().forEach(msg::add);
+            return !msg.postIfNotEmpty();
+        }
+
+        @Override
+        @RecipeBuilderRegistrationMethod
+        public @Nullable io.enderdev.selectionguicrafting.registry.recipe.Recipe register() {
+            if (!validate()) {
+                return null;
+            }
+            GSPlugin.instance.recipe.add(this);
+            return this;
+        }
+
+        // Init
         @RecipeBuilderMethodDescription(field = "category")
         public RecipeBuilder category(String category) {
-            super.setCategory(category);
+            super.category(category);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "frame")
-        public RecipeBuilder frame(String frame) {
-            super.setFrame(new ResourceLocation(frame));
-            return this;
-        }
-
+        // Frame
         @RecipeBuilderMethodDescription(field = "frame")
         public RecipeBuilder frame(ResourceLocation frame) {
             super.setFrame(frame);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "progressBar")
-        public RecipeBuilder progressBar(String progressBar) {
-            super.setProgressBar(new ResourceLocation(progressBar));
-            return this;
+        @RecipeBuilderMethodDescription(field = "frame")
+        public RecipeBuilder frame(String frame) {
+            return frame(new ResourceLocation(frame));
         }
 
+        // Progress Bar
         @RecipeBuilderMethodDescription(field = "progressBar")
         public RecipeBuilder progressBar(ResourceLocation progressBar) {
             super.setProgressBar(progressBar);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "outputType")
-        public RecipeBuilder outputType(String outputType) {
-            super.setOutputType(GsEnum.OutputType.valueOf(outputType));
-            return this;
+        @RecipeBuilderMethodDescription(field = "progressBar")
+        public RecipeBuilder progressBar(String progressBar) {
+            return progressBar(new ResourceLocation(progressBar));
         }
 
+        // Output Type
         @RecipeBuilderMethodDescription(field = "outputType")
-        public RecipeBuilder outputType(GsEnum.OutputType outputType) {
+        public RecipeBuilder outputType(OutputType outputType) {
             super.setOutputType(outputType);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "queueable")
-        public RecipeBuilder queueable(String queueable) {
-            super.setQueueable(GsEnum.QueueType.valueOf(queueable));
-            return this;
+        @RecipeBuilderMethodDescription(field = "outputType")
+        public RecipeBuilder outputType(String outputType) {
+            return outputType(OutputType.valueOf(outputType));
         }
 
-        @RecipeBuilderMethodDescription(field = "queueable")
-        public RecipeBuilder queueType(boolean queueable) {
-            super.setQueueable(queueable ? GsEnum.QueueType.YES : GsEnum.QueueType.NO);
-            return this;
-        }
-
-        @RecipeBuilderMethodDescription(field = "queueable")
-        public RecipeBuilder queueable(GsEnum.QueueType queueable) {
-            super.setQueueable(queueable);
+        // Sound Type
+        @RecipeBuilderMethodDescription(field = "soundType")
+        public RecipeBuilder soundType(SoundType soundType) {
+            super.setSoundType(soundType);
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "soundType")
         public RecipeBuilder soundType(String soundType) {
-            super.setSoundType(GsEnum.SoundType.valueOf(soundType));
+            return soundType(SoundType.valueOf(soundType));
+        }
+
+        // Queue Type
+        @RecipeBuilderMethodDescription(field = "queueable")
+        public RecipeBuilder queueable(QueueType queueable) {
+            super.setQueueable(queueable);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "soundType")
-        public RecipeBuilder soundType(GsEnum.SoundType soundType) {
-            super.setSoundType(soundType);
+        @RecipeBuilderMethodDescription(field = "queueable")
+        public RecipeBuilder queueable(String queueable) {
+            return queueable(QueueType.valueOf(queueable));
+        }
+
+        @RecipeBuilderMethodDescription(field = "queueable")
+        public RecipeBuilder queueable(boolean queueable) {
+            return queueable(queueable ? QueueType.YES : QueueType.NO);
+        }
+
+        // Effects
+        // Sounds
+        @RecipeBuilderMethodDescription(field = "sound")
+        public RecipeBuilder sound(Sound sound) {
+            super.addSound(sound);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "sounds")
-        public RecipeBuilder sound(String sound, float volume, float pitch) {
-            super.addSound(new ResourceLocation(sound), volume, pitch);
-            return this;
-        }
-
-        @RecipeBuilderMethodDescription(field = "sounds")
+        @RecipeBuilderMethodDescription(field = "sound")
         public RecipeBuilder sound(ResourceLocation sound, float volume, float pitch) {
-            super.addSound(sound, volume, pitch);
-            return this;
+            return sound(new Sound(sound, volume, pitch));
         }
 
-        @RecipeBuilderMethodDescription(field = "sounds")
+        @RecipeBuilderMethodDescription(field = "sound")
+        public RecipeBuilder sound(ResourceLocation sound) {
+            return sound(new Sound(sound));
+        }
+
+        @RecipeBuilderMethodDescription(field = "sound")
+        public RecipeBuilder sound(String sound, float volume, float pitch) {
+            return sound(new ResourceLocation(sound), volume, pitch);
+        }
+
+        @RecipeBuilderMethodDescription(field = "sound")
+        public RecipeBuilder sound(String sound) {
+            return sound(new ResourceLocation(sound));
+        }
+
+        @RecipeBuilderMethodDescription(field = "sound")
         public RecipeBuilder sound(SoundEvent sound, float volume, float pitch) {
-            super.addSound(sound.getSoundName(), volume, pitch);
+            return sound(sound.getSoundName(), volume, pitch);
+        }
+
+        @RecipeBuilderMethodDescription(field = "sound")
+        public RecipeBuilder sound(SoundEvent sound) {
+            return sound(sound.getSoundName());
+        }
+
+        // Particles
+        @RecipeBuilderMethodDescription(field = "particle")
+        public RecipeBuilder particle(Particle particle) {
+            super.addParticle(particle);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "sounds")
-        public RecipeBuilder sound(GsSound sound) {
-            super.addSound(sound.getSound(), sound.getVolume(), sound.getPitch());
-            return this;
-        }
-
-        @RecipeBuilderMethodDescription(field = "particles")
-        public RecipeBuilder particle(String particle, int count, float speed) {
-            super.addParticle(EnumParticleTypes.valueOf(particle), count, speed);
-            return this;
-        }
-
-        @RecipeBuilderMethodDescription(field = "particles")
+        @RecipeBuilderMethodDescription(field = "particle")
         public RecipeBuilder particle(EnumParticleTypes particle, int count, float speed) {
-            super.addParticle(particle, count, speed);
+            return particle(new Particle(particle, count, speed));
+        }
+
+        @RecipeBuilderMethodDescription(field = "particle")
+        public RecipeBuilder particle(EnumParticleTypes particle) {
+            return particle(new Particle(particle));
+        }
+
+        @RecipeBuilderMethodDescription(field = "particle")
+        public RecipeBuilder particle(String particle, int count, float speed) {
+            return particle(EnumParticleTypes.valueOf(particle), count, speed);
+        }
+
+        @RecipeBuilderMethodDescription(field = "particle")
+        public RecipeBuilder particle(String particle) {
+            return particle(EnumParticleTypes.valueOf(particle));
+        }
+
+        // Input
+        @RecipeBuilderMethodDescription(field = "input")
+        public RecipeBuilder input(IIngredient input, double chance, int damage) {
+            super.input(input.toMcIngredient(), chance, damage);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "particles")
-        public RecipeBuilder particle(GsParticle particle) {
-            super.addParticle(particle.getType(), particle.getCount(), particle.getSpeed());
+        @RecipeBuilderMethodDescription(field = "input")
+        public RecipeBuilder input(IIngredient input, int damage) {
+            super.input(input.toMcIngredient(), damage);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "input")
+        public RecipeBuilder input(IIngredient input, double chance) {
+            super.input(input.toMcIngredient(), chance);
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "input")
         public RecipeBuilder input(IIngredient input) {
-            super.addInput(input.toMcIngredient());
+            super.input(input.toMcIngredient());
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "input")
         public RecipeBuilder input(IIngredient... input) {
-            ArrayList<Ingredient> ingredients = Arrays.stream(input).map(IIngredient::toMcIngredient).collect(Collectors.toCollection(ArrayList::new));
-            super.addInput(ingredients);
+            super.input(Arrays.stream(input).map(IIngredient::toMcIngredient).collect(Collectors.toList()));
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "input")
-        public RecipeBuilder input(Collection<IIngredient> inputs) {
-            ArrayList<Ingredient> ingredients = inputs.stream().map(IIngredient::toMcIngredient).collect(Collectors.toCollection(ArrayList::new));
-            super.addInput(ingredients);
+        public RecipeBuilder input(RecipeInput input) {
+            super.input(input);
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "input")
+        public RecipeBuilder input(RecipeInput... input) {
+            super.input(input);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "input")
+        public RecipeBuilder input(Collection<?> inputs) {
+            inputs.forEach(entry -> {
+                if (entry instanceof RecipeInput) {
+                    input((RecipeInput) entry);
+                } else if (entry instanceof IIngredient) {
+                    input((IIngredient) entry);
+                }
+            });
+            return this;
+        }
+
+        // Output
         @RecipeBuilderMethodDescription(field = "output")
-        public RecipeBuilder output(ItemStack output, float chance) {
-            super.addOutput(output, chance);
+        public RecipeBuilder output(ItemStack output, double chance) {
+            super.output(output, chance);
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "output")
         public RecipeBuilder output(ItemStack output) {
-            super.addOutput(output, 1);
+            super.output(output);
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "output")
         public RecipeBuilder output(ItemStack... output) {
-            super.addOutput(Arrays.stream(output).map(stack -> new GsOutput(stack, 1)).collect(Collectors.toCollection(ArrayList::new)));
+            super.output(output);
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "output")
-        public RecipeBuilder output(GsOutput output) {
-            super.addOutput(output.getItemStack(), output.getChance());
+        public RecipeBuilder output(RecipeOutput output) {
+            super.output(output);
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "output")
-        public RecipeBuilder output(GsOutput... output) {
-            super.addOutput(Arrays.stream(output).collect(Collectors.toCollection(ArrayList::new)));
+        public RecipeBuilder output(RecipeOutput... output) {
+            super.output(output);
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "output")
-        public <output> RecipeBuilder output(Collection<output> output) {
-            ArrayList<GsOutput> outputs = output.stream().map(o -> {
-                if (o instanceof GsOutput) {
-                    return (GsOutput) o;
-                } else if (o instanceof ItemStack) {
-                    return new GsOutput((ItemStack) o, 1);
+        public RecipeBuilder output(Collection<?> outputs) {
+            outputs.forEach(entry -> {
+                if (entry instanceof RecipeOutput) {
+                    output((RecipeOutput) entry);
+                } else if (entry instanceof ItemStack) {
+                    output((ItemStack) entry);
                 }
-                return null;
-            }).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new));
-            super.addOutput(outputs);
+            });
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "tool")
-        public RecipeBuilder tool(IIngredient tool, float damageMultiplier, float timeMultiplier) {
-            super.addTool(tool.getMatchingStacks()[0], damageMultiplier, timeMultiplier);
+        // Mainhand
+        @RecipeBuilderMethodDescription(field = "mainhand")
+        public RecipeBuilder mainhand(RecipeInput input) {
+            super.mainHand(input);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "tool")
-        public RecipeBuilder tool(IIngredient tool, float timeMultiplier) {
-            super.addTool(tool.getMatchingStacks()[0], 1, timeMultiplier);
+        @RecipeBuilderMethodDescription(field = "mainhand")
+        public RecipeBuilder mainhand(IIngredient input) {
+            super.mainHand(input.toMcIngredient());
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "tool")
-        public RecipeBuilder tool(IIngredient tool) {
-            super.addTool(tool.getMatchingStacks()[0], 1, 1);
+        @RecipeBuilderMethodDescription(field = "mainhand")
+        public RecipeBuilder mainhand(IIngredient input, int damage) {
+            super.mainHand(input.toMcIngredient(), damage);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "catalyst")
-        public RecipeBuilder catalyst(IIngredient catalyst, float chance) {
-            super.setCatalyst(catalyst.toMcIngredient(), chance);
+        @RecipeBuilderMethodDescription(field = "mainhand")
+        public RecipeBuilder mainhand(IIngredient input, double chance) {
+            super.mainHand(input.toMcIngredient(), chance);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "catalyst")
-        public RecipeBuilder catalyst(IIngredient catalyst) {
-            super.setCatalyst(catalyst.toMcIngredient(), 1);
+        @RecipeBuilderMethodDescription(field = "mainhand")
+        public RecipeBuilder mainhand(IIngredient input, double chance, int damage) {
+            super.mainHand(input.toMcIngredient(), chance, damage);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "time")
-        public RecipeBuilder time(int time) {
-            super.setTime(time);
+        // Offhand
+        @RecipeBuilderMethodDescription(field = "offhand")
+        public RecipeBuilder offhand(RecipeInput input) {
+            super.offHand(input);
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "offhand")
+        public RecipeBuilder offhand(IIngredient input) {
+            super.offHand(input.toMcIngredient());
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "offhand")
+        public RecipeBuilder offhand(IIngredient input, int damage) {
+            super.offHand(input.toMcIngredient(), damage);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "offhand")
+        public RecipeBuilder offhand(IIngredient input, double chance) {
+            super.offHand(input.toMcIngredient(), chance);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "offhand")
+        public RecipeBuilder offhand(IIngredient input, double chance, int damage) {
+            super.offHand(input.toMcIngredient(), chance, damage);
+            return this;
+        }
+
+        // XP
         @RecipeBuilderMethodDescription(field = "xp")
         public RecipeBuilder xp(int xp) {
-            super.setXp(xp);
+            super.xp(xp);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "durability")
-        public RecipeBuilder durability(int durability) {
-            super.setDurability(durability);
+        // Time
+        @RecipeBuilderMethodDescription(field = "time")
+        public RecipeBuilder time(int ticks) {
+            super.time(ticks);
             return this;
         }
 
-        @Override
-        public boolean validate() {
-            GroovyLog.Msg msg = GroovyLog.msg("Error adding SelectionGUI Crafting recipe").error();
-            msg.add(super.getCategory() == null, "Category can not be null");
-            msg.add(super.getInput().isEmpty(), "Input can not be empty");
-            msg.add(super.getOutput().isEmpty(), "Output can not be empty");
-            msg.add(super.getTool().isEmpty(), "Tool can not be empty");
-            msg.add(GsRegistry.getCategories().stream().noneMatch(category -> Objects.equals(category.getId(), super.getCategory())), "Category not found. Has the category been registered?");
-            return !msg.postIfNotEmpty();
+        // Command
+        @RecipeBuilderMethodDescription(field = "command")
+        public RecipeBuilder command(String command) {
+            super.command(command);
+            return this;
         }
 
-        @Override
-        @RecipeBuilderRegistrationMethod
-        public @Nullable GsRecipe register() {
-            if (!validate()) {
-                return null;
-            }
-            GSPlugin.instance.recipe.add(this);
+        @RecipeBuilderMethodDescription(field = "command")
+        public RecipeBuilder command(String... command) {
+            super.command(command);
+            return this;
+        }
+
+        // Gamestage
+        @RecipeBuilderMethodDescription(field = "gamestage")
+        public RecipeBuilder gamestage(String stage) {
+            super.gamestage(stage);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "gamestage")
+        public RecipeBuilder gamestage(String... stage) {
+            super.gamestage(stage);
+            return this;
+        }
+
+        // Advancement
+        @RecipeBuilderMethodDescription(field = "advancement")
+        public RecipeBuilder advancement(String advancement) {
+            super.advancement(advancement);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "advancement")
+        public RecipeBuilder advancement(String... advancement) {
+            super.advancement(advancement);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "advancement")
+        public RecipeBuilder advancement(ResourceLocation advancement) {
+            super.advancement(advancement);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "advancement")
+        public RecipeBuilder advancement(ResourceLocation... advancement) {
+            super.advancement(advancement);
+            return this;
+        }
+
+        // Skill
+        @RecipeBuilderMethodDescription(field = "skill")
+        public RecipeBuilder skill(String skill, int level) {
+            super.skill(skill, level);
             return this;
         }
     }

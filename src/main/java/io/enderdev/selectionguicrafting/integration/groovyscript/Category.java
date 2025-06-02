@@ -2,276 +2,352 @@ package io.enderdev.selectionguicrafting.integration.groovyscript;
 
 import com.cleanroommc.groovyscript.api.GroovyBlacklist;
 import com.cleanroommc.groovyscript.api.GroovyLog;
+import com.cleanroommc.groovyscript.api.IIngredient;
 import com.cleanroommc.groovyscript.api.documentation.annotations.*;
 import com.cleanroommc.groovyscript.helper.SimpleObjectStream;
 import com.cleanroommc.groovyscript.helper.recipe.IRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import io.enderdev.selectionguicrafting.Tags;
 import io.enderdev.selectionguicrafting.registry.*;
+import io.enderdev.selectionguicrafting.registry.category.*;
+import io.enderdev.selectionguicrafting.registry.util.Particle;
+import io.enderdev.selectionguicrafting.registry.util.Sound;
+import net.minecraft.block.Block;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
-@SuppressWarnings("unused")
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
-public class Category extends VirtualizedRegistry<GsCategory> {
-    @Override
+public class Category extends VirtualizedRegistry<io.enderdev.selectionguicrafting.registry.category.Category> {
     @GroovyBlacklist
+    @Override
     public void onReload() {
-        GsRegistry.getCategories().removeAll(removeScripted());
-        GsRegistry.getCategories().addAll(restoreFromBackup());
+        removeScripted().forEach(Register::removeCategory);
+        restoreFromBackup().forEach(Register::addCategory);
     }
 
-    public void add(GsCategory category) {
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
+    public void add(io.enderdev.selectionguicrafting.registry.category.Category category) {
         if (category != null) {
             addScripted(category);
-            GsRegistry.registerCategory(category);
+            Register.addCategory(category);
         }
     }
 
-    public boolean remove(GsCategory category) {
-        if (GsRegistry.removeCategory(category.getId())) {
+    @MethodDescription(type = MethodDescription.Type.REMOVAL)
+    public boolean remove(io.enderdev.selectionguicrafting.registry.category.Category category) {
+        if (Register.removeCategory(category)) {
             addBackup(category);
             return true;
         }
         return false;
     }
 
-    @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example(value = "'dummy_category_1'"), description = "sgc.groovyscript.category.remove_by_name")
+    @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example(value = "'dummy_category_1'"), description = "groovyscript.wiki.selectionguicrafting.category.remove_by_name")
     public boolean removeByName(String name) {
-        if (GsRegistry.removeCategory(name)) {
-            addBackup(GsRegistry.getCategory(name));
-            return true;
-        }
-        return false;
+        return remove(Register.getCategoryByID(name));
     }
 
     @MethodDescription(type = MethodDescription.Type.QUERY)
-    public SimpleObjectStream<GsCategory> streamCategories() {
-        return new SimpleObjectStream<>(GsRegistry.getCategories()).setRemover(this::remove);
+    public SimpleObjectStream<io.enderdev.selectionguicrafting.registry.category.Category> streamCategories() {
+        return new SimpleObjectStream<>(Register.getCategories()).setRemover(this::remove);
     }
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, priority = 2000, example = @Example(commented = true))
     public void removeAll() {
-        GsRegistry.getCategories().forEach(this::addBackup);
-        GsRegistry.getCategories().clear();
+        Register.getCategories().forEach(this::addBackup);
+        Register.getCategories().clear();
     }
 
     @RecipeBuilderDescription(example = {
-            @Example(".id('dummy_category').displayName('Your first Category').background('selectionguicrafting:textures/gui/background/wood.png')"),
-            @Example(".id('blub').displayName('Pick your recipe').background('selectionguicrafting:textures/gui/background/lake.png').backgroundType('SINGLE_CUT')"),
-            @Example(".id('dead').displayName('This is another dummy category to test').background('selectionguicrafting:textures/gui/background/deadlands.png').decoration('selectionguicrafting:textures/gui/decor/gold.png').border('selectionguicrafting:textures/gui/background/wood.png').backgroundType('SINGLE_CUT')")
+            @Example(".id('dummy_category').trigger(item('minecraft:diamond')).background('selectionguicrafting:textures/gui/background/wood.png')"),
+            @Example(".id('blub').trigger(item('minecraft:stone_shovel')).background('selectionguicrafting:textures/gui/background/lake.png').backgroundType('SINGLE_CUT')"),
+            @Example(".id('dead').trigger(block('minecraft:snow')).background('selectionguicrafting:textures/gui/background/deadlands.png').decoration('selectionguicrafting:textures/gui/decor/gold.png').border('selectionguicrafting:textures/gui/background/wood.png').backgroundType('SINGLE_CUT')")
     })
     public CategoryBuilder categoryBuilder() {
         return new CategoryBuilder();
     }
 
     @Property(property = "id", comp = @Comp(not = "null", unique = "groovyscript.wiki.selectionguicrafting.category.unique_id"))
-    @Property(property = "displayName", comp = @Comp(not = "null", unique = "groovyscript.wiki.selectionguicrafting.category.unique_display_name"))
+    @Property(property = "trigger", comp = @Comp(not = "null", unique = "groovyscript.wiki.selectionguicrafting.category.trigger"))
     @Property(property = "background", defaultValue = "selectionguicrafting:textures/gui/background/default.png")
     @Property(property = "border", defaultValue = "selectionguicrafting:textures/gui/background/default.png")
     @Property(property = "decoration", defaultValue = "selectionguicrafting:textures/gui/decor/default.png")
     @Property(property = "frame", defaultValue = "selectionguicrafting:textures/gui/frame/default.png")
     @Property(property = "progressBar", defaultValue = "selectionguicrafting:textures/gui/progress/default.png")
     @Property(property = "backgroundType", defaultValue = "TILE")
-    @Property(property = "outputType", defaultValue = "DROP")
+    @Property(property = "outputType", defaultValue = "INVENTORY")
     @Property(property = "queueable", defaultValue = "YES")
     @Property(property = "soundType", defaultValue = "RANDOM")
-    @Property(property = "sounds", defaultValue = "null")
-    @Property(property = "particles", defaultValue = "null")
-    public static class CategoryBuilder extends GsCategory implements IRecipeBuilder<GsCategory> {
-        // Init
-        @RecipeBuilderMethodDescription(field = "id")
-        public CategoryBuilder id(String id) {
-            super.setId(id);
+    @Property(property = "sound", defaultValue = "null")
+    @Property(property = "particle", defaultValue = "null")
+    public static class CategoryBuilder extends io.enderdev.selectionguicrafting.registry.category.Category implements IRecipeBuilder<io.enderdev.selectionguicrafting.registry.category.Category> {
+        @Property
+        private ResourceLocation border;
+        @Property
+        private Sound sound;
+        @Property
+        private OutputType outputType;
+        @Property
+        private AbstractTrigger trigger;
+        @Property
+        private ResourceLocation background;
+        @Property
+        private ResourceLocation progressBar;
+        @Property
+        private Particle particle;
+        @Property
+        private QueueType queueable;
+        @Property
+        private ResourceLocation decoration;
+        @Property
+        private ResourceLocation backgroundType;
+        @Property
+        private SoundType soundType;
+        @Property
+        private ResourceLocation frame;
+
+        // Register
+        @Override
+        public boolean validate() {
+            GroovyLog.Msg msg = GroovyLog.msg(String.format("Error adding %s category!", Tags.MOD_NAME)).error();
+            getErrorCheck().listMsg().forEach(msg::add);
+            return !msg.postIfNotEmpty();
+        }
+
+        @Override
+        @RecipeBuilderRegistrationMethod
+        public @Nullable io.enderdev.selectionguicrafting.registry.category.Category register() {
+            if (!validate()) {
+                return null;
+            }
+            GSPlugin.instance.category.add(this);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "displayName")
-        public CategoryBuilder displayName(String displayName) {
-            super.setDisplayName(displayName);
+        // Init
+        @RecipeBuilderMethodDescription(field = "id")
+        public CategoryBuilder id(String id) {
+            super.id(id);
+            return this;
+        }
+
+        // Trigger
+        @RecipeBuilderMethodDescription(field = "trigger")
+        public CategoryBuilder trigger(ItemTrigger itemTrigger) {
+            super.trigger(itemTrigger);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "trigger")
+        public CategoryBuilder trigger(IIngredient ingredient, double damageMultiplier, double timeMultiplier, double xpMultiplier) {
+            super.trigger(ingredient.toMcIngredient(), damageMultiplier, timeMultiplier, xpMultiplier);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "trigger")
+        public CategoryBuilder trigger(IIngredient ingredient) {
+            super.trigger(ingredient.toMcIngredient());
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "trigger")
+        public CategoryBuilder trigger(BlockTrigger blockTrigger) {
+            super.trigger(blockTrigger);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "trigger")
+        public CategoryBuilder trigger(Block block, double damageMultiplier, double timeMultiplier, double xpMultiplier) {
+            super.trigger(block, damageMultiplier, timeMultiplier, xpMultiplier);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = "trigger")
+        public CategoryBuilder trigger(Block block) {
+            super.trigger(block);
             return this;
         }
 
         // Textures
-        @RecipeBuilderMethodDescription(field = "background")
-        public CategoryBuilder background(String background) {
-            super.setBackground(new ResourceLocation(background));
-            return this;
-        }
-
+        // Background
         @RecipeBuilderMethodDescription(field = "background")
         public CategoryBuilder background(ResourceLocation background) {
             super.setBackground(background);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "border")
-        public CategoryBuilder border(String border) {
-            super.setBorder(new ResourceLocation(border));
-            return this;
+        @RecipeBuilderMethodDescription(field = "background")
+        public CategoryBuilder background(String background) {
+            return background(new ResourceLocation(background));
         }
 
+        // Border
         @RecipeBuilderMethodDescription(field = "border")
         public CategoryBuilder border(ResourceLocation border) {
             super.setBorder(border);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "frame")
-        public CategoryBuilder frame(String frame) {
-            super.setFrame(new ResourceLocation(frame));
-            return this;
+        @RecipeBuilderMethodDescription(field = "border")
+        public CategoryBuilder border(String border) {
+            return border(new ResourceLocation(border));
         }
 
+        // Frame
         @RecipeBuilderMethodDescription(field = "frame")
         public CategoryBuilder frame(ResourceLocation frame) {
             super.setFrame(frame);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "progressBar")
-        public CategoryBuilder bar(String progressBar) {
-            super.setProgressBar(new ResourceLocation(progressBar));
-            return this;
+        @RecipeBuilderMethodDescription(field = "frame")
+        public CategoryBuilder frame(String frame) {
+            return frame(new ResourceLocation(frame));
         }
 
+        // Progress Bar
         @RecipeBuilderMethodDescription(field = "progressBar")
         public CategoryBuilder bar(ResourceLocation progressBar) {
             super.setProgressBar(progressBar);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "decoration")
-        public CategoryBuilder decoration(String decoration) {
-            super.setDecoration(new ResourceLocation(decoration));
-            return this;
+        @RecipeBuilderMethodDescription(field = "progressBar")
+        public CategoryBuilder bar(String progressBar) {
+            return bar(new ResourceLocation(progressBar));
         }
 
+        // Decoration
         @RecipeBuilderMethodDescription(field = "decoration")
         public CategoryBuilder decoration(ResourceLocation decoration) {
             super.setDecoration(decoration);
             return this;
         }
 
+        @RecipeBuilderMethodDescription(field = "decoration")
+        public CategoryBuilder decoration(String decoration) {
+            return decoration(new ResourceLocation(decoration));
+        }
+
         // Types
+        // Output
         @RecipeBuilderMethodDescription(field = "outputType")
-        public CategoryBuilder outputType(String outputType) {
-            super.setOutputType(GsEnum.OutputType.valueOf(outputType));
+        public CategoryBuilder outputType(OutputType outputType) {
+            super.setOutputType(outputType);
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "outputType")
-        public CategoryBuilder outputType(GsEnum.OutputType outputType) {
-            super.setOutputType(outputType);
+        public CategoryBuilder outputType(String outputType) {
+            return outputType(OutputType.valueOf(outputType));
+        }
+
+        // Sound
+        @RecipeBuilderMethodDescription(field = "soundType")
+        public CategoryBuilder soundType(SoundType soundType) {
+            super.setSoundType(soundType);
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "soundType")
         public CategoryBuilder soundType(String soundType) {
-            super.setSoundType(GsEnum.SoundType.valueOf(soundType));
-            return this;
+            return soundType(SoundType.valueOf(soundType));
         }
 
-        @RecipeBuilderMethodDescription(field = "soundType")
-        public CategoryBuilder soundType(GsEnum.SoundType soundType) {
-            super.setSoundType(soundType);
+        // Background
+        @RecipeBuilderMethodDescription(field = "backgroundType")
+        public CategoryBuilder backgroundType(BackgroundType backgroundType) {
+            super.setBackgroundType(backgroundType);
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "backgroundType")
         public CategoryBuilder backgroundType(String backgroundType) {
-            super.setBackgroundType(GsEnum.BackgroundType.valueOf(backgroundType));
-            return this;
+            return backgroundType(BackgroundType.valueOf(backgroundType));
         }
 
-        @RecipeBuilderMethodDescription(field = "backgroundType")
-        public CategoryBuilder backgroundType(GsEnum.BackgroundType backgroundType) {
-            super.setBackgroundType(backgroundType);
-            return this;
-        }
-
+        // Queue
         @RecipeBuilderMethodDescription(field = "queueable")
-        public CategoryBuilder queueType(String queueable) {
-            super.setQueueable(GsEnum.QueueType.valueOf(queueable));
-            return this;
-        }
-
-        @RecipeBuilderMethodDescription(field = "queueable")
-        public CategoryBuilder queueType(GsEnum.QueueType queueable) {
+        public CategoryBuilder queueType(QueueType queueable) {
             super.setQueueable(queueable);
             return this;
         }
 
         @RecipeBuilderMethodDescription(field = "queueable")
+        public CategoryBuilder queueType(String queueable) {
+            return queueType(QueueType.valueOf(queueable));
+        }
+
+        @RecipeBuilderMethodDescription(field = "queueable")
         public CategoryBuilder queueType(boolean queueable) {
-            super.setQueueable(queueable ? GsEnum.QueueType.YES : GsEnum.QueueType.NO);
+            return queueType(queueable ? QueueType.YES : QueueType.NO);
+        }
+
+        // Effects
+        // Sounds
+        @RecipeBuilderMethodDescription(field = "sound")
+        public CategoryBuilder sound(Sound sound) {
+            super.addSound(sound);
             return this;
         }
 
-        // Sounds and Particles
-        @RecipeBuilderMethodDescription(field = "sounds")
-        public CategoryBuilder sound(String sound, float volume, float pitch) {
-            super.addSound(new ResourceLocation(sound), volume, pitch);
-            return this;
-        }
-
-        @RecipeBuilderMethodDescription(field = "sounds")
+        @RecipeBuilderMethodDescription(field = "sound")
         public CategoryBuilder sound(ResourceLocation sound, float volume, float pitch) {
-            super.addSound(sound, volume, pitch);
-            return this;
+            return sound(new Sound(sound, volume, pitch));
         }
 
-        @RecipeBuilderMethodDescription(field = "sounds")
+        @RecipeBuilderMethodDescription(field = "sound")
+        public CategoryBuilder sound(ResourceLocation sound) {
+            return sound(new Sound(sound));
+        }
+
+        @RecipeBuilderMethodDescription(field = "sound")
+        public CategoryBuilder sound(String sound, float volume, float pitch) {
+            return sound(new ResourceLocation(sound), volume, pitch);
+        }
+
+        @RecipeBuilderMethodDescription(field = "sound")
+        public CategoryBuilder sound(String sound) {
+            return sound(new ResourceLocation(sound));
+        }
+
+        @RecipeBuilderMethodDescription(field = "sound")
         public CategoryBuilder sound(SoundEvent sound, float volume, float pitch) {
-            super.addSound(sound.getSoundName(), volume, pitch);
+            return sound(sound.getSoundName(), volume, pitch);
+        }
+
+        @RecipeBuilderMethodDescription(field = "sound")
+        public CategoryBuilder sound(SoundEvent sound) {
+            return sound(sound.getSoundName());
+        }
+
+        // Particles
+        @RecipeBuilderMethodDescription(field = "particle")
+        public CategoryBuilder particle(Particle particle) {
+            super.addParticle(particle);
             return this;
         }
 
-        @RecipeBuilderMethodDescription(field = "sounds")
-        public CategoryBuilder sound(GsSound sound) {
-            super.addSound(sound.getSound(), sound.getVolume(), sound.getPitch());
-            return this;
-        }
-
-        @RecipeBuilderMethodDescription(field = "particles")
-        public CategoryBuilder particle(String particle, int count, float speed) {
-            super.addParticle(EnumParticleTypes.valueOf(particle), count, speed);
-            return this;
-        }
-
-        @RecipeBuilderMethodDescription(field = "particles")
+        @RecipeBuilderMethodDescription(field = "particle")
         public CategoryBuilder particle(EnumParticleTypes particle, int count, float speed) {
-            super.addParticle(particle, count, speed);
-            return this;
+            return  particle(new Particle(particle, count, speed));
         }
 
-        @RecipeBuilderMethodDescription(field = "particles")
-        public CategoryBuilder particle(GsParticle particle) {
-            super.addParticle(particle.getType(), particle.getCount(), particle.getSpeed());
-            return this;
+        @RecipeBuilderMethodDescription(field = "particle")
+        public CategoryBuilder particle(EnumParticleTypes particle) {
+            return  particle(new Particle(particle));
         }
 
-        @Override
-        public boolean validate() {
-            GroovyLog.Msg msg = GroovyLog.msg("Error adding SelectionGUI Crafting recipe").error();
-            msg.add(super.getId() == null, "ID can not be null");
-            msg.add(super.getDisplayName() == null, "Display Name can not be null");
-            msg.add(GsRegistry.getCategories().stream().anyMatch(category -> Objects.equals(category.getId(), super.getId())), "ID already exists");
-            return !msg.postIfNotEmpty();
+        @RecipeBuilderMethodDescription(field = "particle")
+        public CategoryBuilder particle(String particle, int count, float speed) {
+            return particle(EnumParticleTypes.valueOf(particle), count, speed);
         }
 
-        @Override
-        @RecipeBuilderRegistrationMethod
-        public @Nullable GsCategory register() {
-            if (!validate()) {
-                return null;
-            }
-            GSPlugin.instance.category.add(this);
-            return this;
+        @RecipeBuilderMethodDescription(field = "particle")
+        public CategoryBuilder particle(String particle) {
+            return particle(EnumParticleTypes.valueOf(particle));
         }
     }
 }

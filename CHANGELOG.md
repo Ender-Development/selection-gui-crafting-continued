@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.0] - 2025-06-02
+
+### Changed
+- rewrote the entire mod again
+- now allows a much more modular approach
+- GUI can be bound to item or block
+
 ## [2.0.2] - 2025-01-27
 
 ### Changed

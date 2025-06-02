@@ -26,12 +26,6 @@ public class CommonProxy implements IProxy {
     public void postInit(FMLPostInitializationEvent postEvent) {
     }
 
-    public void serverStart(FMLServerStartingEvent serverStartEvent) {
-    }
-
-    public void onIdMapping(FMLModIdMappingEvent idMappingEvent) {
-    }
-
     public EntityPlayer getPlayerClient() {
         return null;
     }

@@ -1,16 +1,22 @@
-package io.enderdev.selectionguicrafting.registry;
+package io.enderdev.selectionguicrafting.registry.util;
 
 import net.minecraft.util.EnumParticleTypes;
 
-public class GsParticle {
+public class Particle {
     private final EnumParticleTypes particleType;
     private final Integer particleCount;
     private final Float particleSpeed;
 
-    public GsParticle(EnumParticleTypes particleType, Integer particleCount, Float particleSpeed) {
+    public Particle(EnumParticleTypes particleType, Integer particleCount, Float particleSpeed) {
         this.particleType = particleType;
         this.particleCount = particleCount;
         this.particleSpeed = particleSpeed;
+    }
+
+    public Particle(EnumParticleTypes particleType) {
+        this.particleType = particleType;
+        this.particleCount = 10;
+        this.particleSpeed = 0.1F;
     }
 
     public EnumParticleTypes getType() {
