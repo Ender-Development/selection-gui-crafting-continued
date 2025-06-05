@@ -88,7 +88,7 @@ dependencies {
     implementation "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.698"
 
     // GroovyScript
-    implementation("com.cleanroommc:groovyscript:1.2.2") { transitive = false } // so it doesn't installs JEI
+    implementation("com.cleanroommc:groovyscript:1.2.4") { transitive = false } // so it doesn't installs JEI
 
     // HEI
     implementation "mezz:jei:4.28.0"

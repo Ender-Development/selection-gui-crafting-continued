@@ -97,10 +97,10 @@ public class Recipe extends VirtualizedRegistry<io.enderdev.selectionguicrafting
     }
 
     @RecipeBuilderDescription(example = {
-            @Example(".category('dummy_category').input(item('minecraft:stone') * 3).output(item('minecraft:cobblestone') * 2, 0.5f).time(200).xp(1).sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
-            @Example(".category('blub').input(item('minecraft:diamond')).output(item('minecraft:wheat_seeds') * 5, 0.5f)"),
-            @Example(".category('dummy_category').input(item('minecraft:stone') * 32).output(item('minecraft:diamond') * 50, 0.5f).output(item('minecraft:clay') * 2, 0.1f).time(200).xp(1).sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
-            @Example(".category('dead').input(item('minecraft:wheat_seeds') * 3).output(item('minecraft:sand') * 2).time(40).queueable(false).outputType('DROP').xp(1)"),
+            @Example(".category('dummy_category').input(item('minecraft:stone') * 3).output(item('minecraft:cobblestone') * 2, 0.5).time(200).xp(1).sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
+            @Example(".category('blub').input(item('minecraft:diamond')).output(item('minecraft:wheat_seeds') * 5, 0.5)"),
+            @Example(".category('dummy_category').input(item('minecraft:stone') * 32).output(item('minecraft:diamond') * 50, 0.5).output(item('minecraft:clay') * 2, 0.1).time(200).xp(10).sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
+            @Example(".category('dead').input(item('minecraft:wheat_seeds') * 3).output(item('minecraft:sand') * 2).time(40).queueable(false).outputType('DROP').xp(100)"),
             @Example(".category('dead').input(item('minecraft:stick') * 3).output(item('minecraft:sand') * 2).frame('selectionguicrafting:textures/gui/frame/iron.png').time(40).queueable(false).command('kill @p')")
     })
     public RecipeBuilder recipeBuilder() {
