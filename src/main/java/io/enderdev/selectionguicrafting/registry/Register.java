@@ -84,7 +84,17 @@ public class Register {
     }
 
     public static boolean isTriggerItem(ItemStack itemStack) {
-        return allTriggerItems.stream().anyMatch(triggerItem -> triggerItem.getTriggerItem().isItemEqualIgnoreDurability(itemStack));
+        return allTriggerItems.stream().anyMatch(triggerItem -> {
+            boolean match = triggerItem.getTriggerItem().isItemEqualIgnoreDurability(itemStack);
+            if (triggerItem.getTriggerItem().hasTagCompound() && triggerItem.getTriggerItem().getTagCompound() != null) {
+                if (!itemStack.hasTagCompound() || itemStack.getTagCompound() == null) {
+                    return false; // If the trigger item has a tag compound, the item stack must also have one
+                }
+                if (!match) return false;
+                return triggerItem.getTriggerItem().getTagCompound().equals(itemStack.getTagCompound());
+            }
+            return match;
+        });
     }
 
     @Nullable
