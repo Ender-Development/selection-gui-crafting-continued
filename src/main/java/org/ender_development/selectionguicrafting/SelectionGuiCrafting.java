@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026 Ender-Development.org
+ * Copyright (c) 2023-2026 Ender-Development.org
  * SPDX-License-Identifier: MIT
  */
 
