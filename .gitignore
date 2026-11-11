@@ -1,28 +1,164 @@
-# eclipse
-bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
+# v2.1.0
 
-# idea
-out
+# =====================================================================================
+#  BUILDSCRIPT-MANAGED .gitignore
+# =====================================================================================
+#  Everything ABOVE the "USER SECTION" marker at the bottom is overwritten whenever the
+#  buildscript is updated (./gradlew updateBuildScript). Do not edit it.
+#  Add your own ignore rules BELOW the marker; that part is never touched by updates.
+#
+#  The first line ("# v<version>") is the version header, generated from
+#  'buildscript_version' by ./gradlew syncBuildScriptVersion. Keep it on line 1.
+#
+#  Sections:
+#    1. Build tools         build output, Gradle, Maven, sbt/Scala, Kotlin
+#    2. IDEs and editors    IntelliJ, Eclipse, NetBeans, VS Code, temporary files
+#    3. Runtime output      crash dumps, profiling output, logs
+#    4. Minecraft           run directory, logs, crash reports
+#    5. Operating systems   OS-generated files
+#    6. GroovyScript        generated example files
+#    7. Buildscript         secrets and generated sources
+#
+#  Patterns starting with "!" re-include paths under src/ that would otherwise be
+#  caught by a broad rule (e.g. a package named "build" or "run").
+# =====================================================================================
+
+# ---- 1. Build tools -----------------------------------------------------------------
+
+# Build output
+build/
+!**/src/**/build/
+out/
+!**/src/**/out/
+bin/
+!**/src/**/bin/
+target/
+!**/src/**/target/
+classes/
+!**/src/**/classes/
+dist/
+!**/src/**/dist/
+*.class
+*.tasty
+
+# Gradle
+.gradle/
+gradle-app.setting
+.gradletasknamecache
+local.properties
+!**/gradle/wrapper/gradle-wrapper.jar
+
+# Maven
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+release.properties
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+dependency-reduced-pom.xml
+buildNumber.properties
+.flattened-pom.xml
+
+# sbt and Scala
+.bsp/
+.bloop/
+.metals/
+.scala-build/
+project/project/
+project/target/
+.scala_dependencies
+.worksheet
+
+# Kotlin
+.kotlin/
+*.kotlin_module
+.kotlin_native/
+
+# ---- 2. IDEs and editors ------------------------------------------------------------
+
+# IntelliJ IDEA
+.idea/*
+*.iml
 *.ipr
 *.iws
-*.iml
-.idea
+.idea_modules/
+atlassian-ide-plugin.xml
 
-# gradle
-build
-.gradle
+# Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+.apt_generated/
+.apt_generated_tests/
+.factorypath
+.springBeans
+.sts4-cache/
 
-# other
-eclipse
-run
+# NetBeans
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
 
-# groovyscript
-jei.groovy
-main.groovy
-runConfig.json
-minecraft.groovy
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Editors and temporary files
+*.swp
+*.swo
+*~
+*.bak
+*.orig
+*.rej
+
+# ---- 3. Runtime output --------------------------------------------------------------
+
+# JVM crash and profiling output
+hs_err_pid*
+replay_pid*
+*.hprof
+*.jfr
+*.log
+
+# ---- 4. Minecraft -------------------------------------------------------------------
+
+run/
+!**/src/**/run/
+logs/
+!**/src/**/logs/
+crash-reports/
+.mixin.out/
+
+# ---- 5. Operating systems -----------------------------------------------------------
+
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ---- 6. GroovyScript ----------------------------------------------------------------
+
+examples/assets/*
+examples/**/postInit/main.groovy
+examples/**/generated/*
+
+# ---- 7. Buildscript -----------------------------------------------------------------
+
+# Credentials, see secrets.example.properties for the example file
+secrets.properties
+
+# The Kotlin reference object is generated dynamically, so it is not committed
+src/main/kotlin/*/*/*/*Reference.kt
+
+# ---- USER SECTION (everything below is kept on buildscript updates) -----------------
+gradle/template/*
+
