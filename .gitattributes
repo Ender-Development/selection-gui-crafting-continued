@@ -1,0 +1,82 @@
+# v2.1.0
+
+# =====================================================================================
+#  BUILDSCRIPT-MANAGED .gitattributes
+# =====================================================================================
+#  Everything ABOVE the "USER SECTION" marker at the bottom is overwritten whenever the
+#  buildscript is updated (./gradlew updateBuildScript). Do not edit it.
+#  Add your own rules BELOW the marker; that part is never touched by updates.
+#
+#  The first line ("# v<version>") is the version header, generated from
+#  'buildscript_version' by ./gradlew syncBuildScriptVersion. Keep it on line 1.
+#
+#  Git applies the LAST matching rule for an attribute, so rules in the user section
+#  override the managed rules above them.
+#
+#  Sections:
+#    1. Line endings   normalisation and per-type overrides
+#    2. Text files     file types treated as text
+#    3. Binary files   file types treated as binary
+#    4. Gradle wrapper wrapper jar handling
+# =====================================================================================
+
+# ---- 1. Line endings ----------------------------------------------------------------
+
+# Normalise on commit, check out LF everywhere. Windows contributors included.
+* text=auto eol=lf
+
+# Windows scripts need CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Unix scripts need LF
+gradlew text eol=lf
+*.sh text eol=lf
+
+# ---- 2. Text files ------------------------------------------------------------------
+
+*.glsl text
+*.gradle text
+*.groovy text
+*.info text
+*.java text
+*.json text
+*.json5 text
+*.kt text
+*.kts text
+*.lang text
+*.mcmeta text
+*.md text
+*.properties text
+*.scala text
+*.toml text
+*.xml text
+*.yaml text
+*.yml text
+
+# ---- 3. Binary files ----------------------------------------------------------------
+
+*.class binary
+*.dat binary
+*.dll binary
+*.dylib binary
+*.gif binary
+*.jar binary
+*.jpeg binary
+*.jpg binary
+*.nbt binary
+*.ogg binary
+*.otf binary
+*.png binary
+*.so binary
+*.ttf binary
+*.wav binary
+*.zip binary
+
+# ---- 4. Gradle wrapper --------------------------------------------------------------
+
+# Keep the wrapper jar out of diffs, it is verified by checksum
+**/gradle/wrapper/gradle-wrapper.jar binary linguist-vendored linguist-generated
+
+# ---- USER SECTION (everything below is kept on buildscript updates) -----------------
