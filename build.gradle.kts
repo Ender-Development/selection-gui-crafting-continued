@@ -1,4 +1,4 @@
-// v2.1.0
+// v2.1.2
 
 // =====================================================================================
 //  BUILDSCRIPT-MANAGED FILE: DO NOT EDIT
@@ -943,6 +943,7 @@ data class VersionedFile(
 val versionedFiles =
     listOf(
         VersionedFile("build.gradle.kts", "// v"),
+        VersionedFile("settings.gradle.kts", "// v"),
         VersionedFile("gradle.properties", "# v"),
         VersionedFile("README.md", "<!-- v", " -->"),
         VersionedFile(".gitignore", "# v", userSectionMarker = "# ---- USER SECTION"),
@@ -1481,7 +1482,7 @@ tasks.register("tagRelease") {
             versionedFiles.forEach { git("add", file(it.path).canonicalPath) }
         }
         git("add", changelogFile.canonicalPath)
-        git("commit", "-m", "Release $commitMsg")
+        git("commit", "-m", commitMsg)
         git("tag", "-a", modVersion, "-m", changelog.renderItem(changelog.get(modVersion), Changelog.OutputType.PLAIN_TEXT))
     }
 }
@@ -1527,7 +1528,7 @@ tasks.register("collectCommits") {
                 }
 
                 line.isBlank() -> {
-                    Unit
+                    continue
                 }
 
                 line.startsWith("- ") || line.startsWith("* ") -> {
