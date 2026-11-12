@@ -1,0 +1,374 @@
+{
+    "CURSEFORGE_TOKEN": {
+        "category": "\ud83d\udcf0 Publishing - CurseForge",
+        "description": "CurseForge API Token to publish builds straight from your IDE. [Read their API Documentation](https://support.curseforge.com/en/support/solutions/articles/9000197321-curseforge-api)"
+    },
+    "DEV_USERNAME": {
+        "category": "\ud83c\udf0d Minecraft",
+        "description": "Can be used to set the player name"
+    },
+    "MAVEN_PASSWORD": {
+        "category": "\ud83d\udcf0 Publishing - Maven",
+        "description": "Password to authenticate Maven access"
+    },
+    "MAVEN_USERNAME": {
+        "category": "\ud83d\udcf0 Publishing - Maven",
+        "description": "Name used to upload files to the Maven specified by `maven_url`"
+    },
+    "MODRINTH_TOKEN": {
+        "category": "\ud83d\udcf0 Publishing - Modrinth",
+        "description": "Modrinth API Token to publish builds straight from your IDE. The token must have the `CREATE_VERSION` and `PROJECT_WRITE` permissions. [Read their API Documentaion](https://docs.modrinth.com/)"
+    },
+    "access_transformer_location": {
+        "category": "\ud83d\udee0\ufe0f Utility - Access Transformers",
+        "description": "Change location and name of the AT file"
+    },
+    "additional_dependencies": {
+        "category": "\ud83d\udcf0 Publishing",
+        "description": "Project names that should be added as 'required'. Mods with build-in integration except the ones from `dependencies.properties` are taken care of automatically."
+    },
+    "assetmover_version": {
+        "category": "\ud83d\udd2d Integration - AssetMover",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "betterconfig_version": {
+        "category": "\ud83d\udd2d Integration - Better Config",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "catalyx_version": {
+        "category": "\ud83d\udd2d Integration - Catalyx",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "configanytime_version": {
+        "category": "\ud83d\udd2d Integration - Configanytime",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "coremod_includes_mod": {
+        "category": "\ud83d\udee0\ufe0f Utility - Core Mod",
+        "description": "Change to false if your coremod doesn't have a `@Mod` annotation"
+    },
+    "coremod_plugin_class_name": {
+        "category": "\ud83d\udee0\ufe0f Utility - Core Mod",
+        "description": "You MUST state a class name if you are making a coremod, the class should implement `IFMLLoadingPlugin`"
+    },
+    "crafttweaker_version": {
+        "category": "\ud83d\udd2d Integration - CraftTweaker",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "curseforge_debug": {
+        "category": "\ud83d\udcf0 Publishing - CurseForge",
+        "description": "Enable debug mode. Simulating a file upload, without actually pushing anything."
+    },
+    "curseforge_id": {
+        "category": "\ud83d\udcf0 Publishing - CurseForge",
+        "description": "CurseForge project ID must be the numerical ID and not the slug"
+    },
+    "disable_editorconfig": {
+        "category": "\ud83d\udee0\ufe0f Utility - .editorconfig",
+        "description": "Use this to prevent the buildscripts from overriding your `.editorconfig` file"
+    },
+    "disable_spotless": {
+        "category": "\ud83d\udee0\ufe0f Utility - Formatting",
+        "description": "Spotless is a code formatting plugin that can enforce a consistent code style across your project. [Documentation](https://github.com/diffplug/spotless/tree/main/plugin-gradle)"
+    },
+    "editorconfig": {
+        "category": "\ud83d\udee0\ufe0f Utility - .editorconfig",
+        "description": "Must be on of [`roz`, `spotless`]."
+    },
+    "expandedevents_version": {
+        "category": "\ud83d\udd2d Integration - Expanded Events",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "extra_jvm_args": {
+        "category": "\ud83d\udea7 Internal",
+        "description": "Additional arguments applied to the JVM when launching minecraft. Syntax: `-arg1=value1;-arg2=value2;...`"
+    },
+    "flexmark_version": {
+        "category": "\ud83d\udee0\ufe0f Utility - Formatting",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "forgelin_continuous_version": {
+        "category": "\ud83d\udd2d Integration - Forgelin Continuous",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "generate_javadocs_jar": {
+        "category": "\ud83c\udfd7\ufe0f Build",
+        "description": "If true, Gradle will also generate a Javadocs jar whenever you build your project."
+    },
+    "generate_mixin_json": {
+        "category": "\ud83d\udee0\ufe0f Utility - Mixins",
+        "description": "Generate missing configs from `mixin_configs` (full resource filenames, e.g. `mixins.modid.config_name.json`)"
+    },
+    "generate_source_jar": {
+        "category": "\ud83c\udfd7\ufe0f Build",
+        "description": "If true, Gradle will also generate a sources jar whenever you build your project."
+    },
+    "google_java_format_version": {
+        "category": "\ud83d\udee0\ufe0f Utility - Formatting",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "gradle_version": {
+        "category": "\ud83d\udea7 Internal",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "greclipse_version": {
+        "category": "\ud83d\udee0\ufe0f Utility - Formatting",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "groovyscript_version": {
+        "category": "\ud83d\udd2d Integration - GroovyScript",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "grs_disable_cache": {
+        "category": "\ud83d\udd2d Integration - GroovyScript",
+        "description": "Should GroovyScript cache changes to improve load time?"
+    },
+    "grs_generate_and_crash": {
+        "category": "\ud83d\udd2d Integration - GroovyScript",
+        "description": "Should the game crash after generating the wiki page and/or example scripts?"
+    },
+    "grs_generate_examples": {
+        "category": "\ud83d\udd2d Integration - GroovyScript",
+        "description": "Should example scripts from other loaded mods be generated in the 'examples' folder?"
+    },
+    "grs_generate_wiki": {
+        "category": "\ud83d\udd2d Integration - GroovyScript",
+        "description": "Should the corresponding wiki page be generated when executing the 'runClient' task?"
+    },
+    "grs_log_missing_lang_keys": {
+        "category": "\ud83d\udd2d Integration - GroovyScript",
+        "description": "Should missing language keys be logged to the mod log?"
+    },
+    "grs_run_ls": {
+        "category": "\ud83d\udd2d Integration - GroovyScript",
+        "description": "Should the GroovyScript language server be run when executing the 'runClient' task?"
+    },
+    "grs_use_examples_folder": {
+        "category": "\ud83d\udd2d Integration - GroovyScript",
+        "description": "Instead of using the GroovyScript folder in run/groovyscript, use the 'examples' folder instead."
+    },
+    "gson_version": {
+        "category": "\ud83d\udee0\ufe0f Utility - Formatting",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "hei_version": {
+        "category": "\ud83d\udd2d Integration - Had Enough Items",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "is_client_side": {
+        "category": "\ud83d\udcf0 Publishing",
+        "description": "Set to false if your mod is server-side only. Used to set environment on CurseForge and Modrinth."
+    },
+    "is_coremod": {
+        "category": "\ud83d\udee0\ufe0f Utility - Core Mod",
+        "description": "The most powerful way to change java classes at runtime, it is however very primitive with little documentation. Only make a coremod if you are absolutely sure of what you are doing."
+    },
+    "is_server_side": {
+        "category": "\ud83d\udcf0 Publishing",
+        "description": "Set to false if your mod is client-side only. Used to set environment on CurseForge and Modrinth."
+    },
+    "jetbrains_annotation_version": {
+        "category": "\ud83d\udea7 Internal",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "kotlin_version": {
+        "category": "\ud83d\udea7 Internal",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "ktlint_version": {
+        "category": "\ud83d\udee0\ufe0f Utility - Formatting",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "license": {
+        "category": "\ud83d\udcd6 README.md",
+        "description": "The license this project is published under."
+    },
+    "mapping_channel": {
+        "category": "\ud83d\udea7 Internal - Mapping",
+        "description": "Should not be changed!"
+    },
+    "mapping_version": {
+        "category": "\ud83d\udea7 Internal - Mapping",
+        "description": "Should not be changed!"
+    },
+    "maven_name": {
+        "category": "\ud83d\udcf0 Publishing - Maven",
+        "description": "The name of the file you want to publish"
+    },
+    "maven_url": {
+        "category": "\ud83d\udcf0 Publishing - Maven",
+        "description": "URL of the maven you want to publish on"
+    },
+    "minecraft_username": {
+        "category": "\ud83c\udf0d Minecraft",
+        "description": "This can also be set via the `DEV_USERNAME` variable."
+    },
+    "minecraft_version": {
+        "category": "\ud83c\udf0d Minecraft",
+        "description": "The version of Minecraft to use. This should only ever be `1.12.2` and changing this may lead to unexpected issues."
+    },
+    "mixin_booter_version": {
+        "category": "\ud83d\udee0\ufe0f Utility - Mixins",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "mixin_configs": {
+        "category": "\ud83d\udee0\ufe0f Utility - Mixins",
+        "description": "Delimit configs with spaces. Template generation can be toggled via `generate_mixins_json`"
+    },
+    "mixin_connector_class": {
+        "category": "\ud83d\udee0\ufe0f Utility - Mixins",
+        "description": "Classpath to fully-qualified class implementing `org.spongepowered.asm.mixin.connect.IMixinConnector`. When non-empty, written to the jar manifest as MixinConnector"
+    },
+    "mixin_refmap": {
+        "category": "\ud83d\udee0\ufe0f Utility - Mixins",
+        "description": "A refmap is a JSON that denotes mapping conversions, this JSON is generated automatically, with the name `mixins.mod_id.refmap.json`"
+    },
+    "mod_authors": {
+        "category": "\ud83d\uddfa\ufe0f Project",
+        "description": "Authors of the mod. Separate multiple authors with commas."
+    },
+    "mod_credits": {
+        "category": "\ud83d\uddfa\ufe0f Project",
+        "description": "Credits for the mod."
+    },
+    "mod_description": {
+        "category": "\ud83d\uddfa\ufe0f Project",
+        "description": "A short description of your mod."
+    },
+    "mod_id": {
+        "category": "\ud83d\uddfa\ufe0f Project",
+        "description": "The mod id is a unique identifier for your mod. It must be all lowercase and contain no spaces."
+    },
+    "mod_logo_path": {
+        "category": "\ud83d\uddfa\ufe0f Project",
+        "description": "The logo path for the mod. This should be a path to a PNG file within the assets folder of your mod."
+    },
+    "mod_name": {
+        "category": "\ud83d\uddfa\ufe0f Project",
+        "description": "The mod name is the display name for your mod. This can contain spaces and capitalization."
+    },
+    "mod_url": {
+        "category": "\ud83d\uddfa\ufe0f Project",
+        "description": "The URL to the homepage of the mod or its git repository."
+    },
+    "modrinth_debug": {
+        "category": "\ud83d\udcf0 Publishing - Modrinth",
+        "description": "Enable debug mode. Simulating a file upload, without actually pushing anything."
+    },
+    "modrinth_id": {
+        "category": "\ud83d\udcf0 Publishing - Modrinth",
+        "description": "The Modrinth ID of your project"
+    },
+    "modrinth_sync_readme": {
+        "category": "\ud83d\udcf0 Publishing - Modrinth",
+        "description": "Allows Gradle to sync the README.md to the Modrinth project body"
+    },
+    "modularui_version": {
+        "category": "\ud83d\udd2d Integration - ModularUI",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "osxnarratorblocker_version": {
+        "category": "\ud83d\udea7 Internal",
+        "description": "Provided by the template via `gradle.properties`. Blocks the narrator for M1+ Macs to prevent crashes and issues."
+    },
+    "partnership": {
+        "category": "\ud83d\udcd6 README.md",
+        "description": "A section about a partnership if there is one to promote. Use `<br>` for linebreak. An example can be found in the `project.properties`."
+    },
+    "publish_to_curseforge": {
+        "category": "\ud83d\udcf0 Publishing - CurseForge",
+        "description": "Enable features related to publishing to CurseForge"
+    },
+    "publish_to_modrinth": {
+        "category": "\ud83d\udcf0 Publishing - Modrinth",
+        "description": "Enable features related to publishing to Modrinth"
+    },
+    "reachfix_version": {
+        "category": "\ud83d\udd2d Integration - Reach Fix",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "readme": {
+        "category": "\ud83d\udcd6 README.md",
+        "description": "A longer description about the features of this mod. Use `<br>` for linebreak. An example can be found in the `project.properties`."
+    },
+    "release_type": {
+        "category": "\ud83d\udcf0 Publishing",
+        "description": "Must be one of [`release`, `beta`, `alpha`]!"
+    },
+    "root_package": {
+        "category": "\ud83d\uddfa\ufe0f Project",
+        "description": "The root package for your mod's main class. Change this to your own package. This should match the directory structure of your main class."
+    },
+    "strip_latest_forge_requirements_version": {
+        "category": "\ud83d\udea7 Internal",
+        "description": "Provided by the template via `gradle.properties`. Saves everyone a hassle when it comes to depending on mods, which require the _latest_ forge version."
+    },
+    "tag_class_name": {
+        "category": "\ud83d\udee0\ufe0f Utility - Tags",
+        "description": "The path where the generated Tags class will be placed. Separators should be dots, e.g. `com.example.project`"
+    },
+    "top_version": {
+        "category": "\ud83d\udd2d Integration - TheOneSmeagle",
+        "description": "Provided by the template via `gradle.properties`"
+    },
+    "use_access_transformer": {
+        "category": "\ud83d\udee0\ufe0f Utility - Access Transformers",
+        "description": "A way to change visibility of Minecraft's classes, methods and fields. AT files should be in the root of src/main/resources with the filename formatted as: `${mod_id}_at.cfg`"
+    },
+    "use_assetmover": {
+        "category": "\ud83d\udd2d Integration - AssetMover",
+        "description": "Convenient way to allow downloading of assets from official vanilla Minecraft servers, CurseForge, or any direct links. Also check the [Documentation](https://github.com/CleanroomMC/AssetMover)."
+    },
+    "use_betterconfig": {
+        "category": "\ud83d\udd2d Integration - Better Config",
+        "description": "BetterConfig extends Forge's annotation-based config system to support nested arrays, collections, arrays/collections/maps of objects, and much more. Also check the [Documentation](https://github.com/Meldexun/BetterConfig/blob/main/README.md)"
+    },
+    "use_catalyx": {
+        "category": "\ud83d\udd2d Integration - Catalyx",
+        "description": "Kotlin library by [Ender-Development.org](https://ender-development.org) that provides various utilities and helpers for Minecraft Forge modding"
+    },
+    "use_configanytime": {
+        "category": "\ud83d\udd2d Integration - Configanytime",
+        "description": "Allows Forge configurations to be setup at any point in time"
+    },
+    "use_crafttweaker": {
+        "category": "\ud83d\udd2d Integration - CraftTweaker",
+        "description": "Allows modpack creators to change recipes and other game objects via [ZenScript](https://github.com/CraftTweaker/ZenScript)"
+    },
+    "use_dependency_at_files": {
+        "category": "\ud83d\udee0\ufe0f Utility - Access Transformers",
+        "description": "If true, dependencies will be scanned for AT files and applied automatically"
+    },
+    "use_expandedevents": {
+        "category": "\ud83d\udd2d Integration - Expanded Events",
+        "description": "It adds a number of new event handlers to Minecraft. Aimed at developers who want to access these methods without needing to write mixins every time. See [Documentation](https://github.com/Invadermonky/ExpandedEvents/wiki)"
+    },
+    "use_forgelincontinuous": {
+        "category": "\ud83d\udd2d Integration - Forgelin Continuous",
+        "description": "A library that provides Kotlin support for Minecraft Forge mods. Automatically enabled, when your project is written in Kotlin or you are using Catalyx."
+    },
+    "use_groovyscript": {
+        "category": "\ud83d\udd2d Integration - GroovyScript",
+        "description": "Allows modpack creators to change recipes and other game objects via [Groovy](https://github.com/apache/groovy)"
+    },
+    "use_kotlin": {
+        "category": "\ud83d\udcb1 Language",
+        "description": "Use Kotlin as a language instead of Java."
+    },
+    "use_mixins": {
+        "category": "\ud83d\udee0\ufe0f Utility - Mixins",
+        "description": "Powerful tool to do runtime description changes of classes. Docs: [SpongeForge Wiki](https://github.com/SpongePowered/Mixin/wiki), [MixinBooter Wiki](https://github.com/CleanroomMC/MixinBooter), [CleanroomMC Wiki](https://cleanroommc.com/wiki/forge-mod-development/mixin/preface)"
+    },
+    "use_modularui": {
+        "category": "\ud83d\udd2d Integration - ModularUI",
+        "description": "A GUI library to ease the process of creating vanilla style GUIs. Docs: [CleanroomMC Wiki](https://cleanroommc.com/wiki/modularui/introduction#modularui)"
+    },
+    "use_reachfix": {
+        "category": "\ud83d\udd2d Integration - Reach Fix",
+        "description": "Fix for vanillas hit detection and the reach attribute not being used for entities. Provides utils when working with player reach."
+    },
+    "use_tags": {
+        "category": "\ud83d\udee0\ufe0f Utility - Tags",
+        "description": "A class is generated at build-time for compilation, to describe property that have values that could change at build time such as versioning. Java uses the RetroFuturaGradle implementation, while Kotlin uses a dynamically generated class."
+    }
+}

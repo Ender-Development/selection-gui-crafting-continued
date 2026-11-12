@@ -1,4 +1,4 @@
-# v2.1.2
+# v2.1.4
 
 # =====================================================================================
 #  BUILDSCRIPT-MANAGED .gitignore
@@ -147,6 +147,7 @@ $RECYCLE.BIN/
 
 # ---- 6. GroovyScript ----------------------------------------------------------------
 
+examples/*.json
 examples/assets/*
 examples/**/postInit/main.groovy
 examples/**/generated/*
@@ -160,4 +161,3 @@ secrets.properties
 src/main/kotlin/*/*/*/*Reference.kt
 
 # ---- USER SECTION (everything below is kept on buildscript updates) -----------------
-gradle/template/*

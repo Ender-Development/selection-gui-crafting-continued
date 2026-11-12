@@ -1,4 +1,4 @@
-<!-- v2.1.2 -->
+<!-- v2.1.4 -->
 <!---freshmark header
 output = [
 	'#',
@@ -9,21 +9,45 @@ output = [
 # <img src="src/main/resources/assets/selectionguicrafting/textures/logo.png" height="42" width="42"> Selection GUI Crafting
 <!---freshmark /header -->
 <!---freshmark shields
-output = [
-link(shield("Kotlin", "Kotlin", "{{kotlin_version}}", "blue"), "https://kotlinlang.org/"),
-link(shield("Java", "Java", "{{java_version}}", "blue"), "https://www.azul.com/downloads/?version=java-25-lts&package=jdk#zulu"),
-link(shield("Maven artifact", "Maven", "{{root_package}}:{{mod_id}}", "blue"), "{{mavenUrl}}/" + "{{root_package}}/{{mod_id}}/".replaceAll("\\.", "/")),
-link(shield("Version", "Version", "{{VERSION}}", "blue"), "{{mod_url}}/tags"),
-link(shield("License", "License", "{{LICENSE}}", "blue"), "{{mod_url}}/blob/master/LICENSE"),
-"",
-"> {{mod_description}}"
-].join("\n")
+function linkShield(name, value, suffix, url) {
+    return link(shield(name, name, value, "blue").replace("-blue.svg", suffix), url);
+}
+
+var shields = [];
+
+shields.push(linkShield("Kotlin", "{{kotlin_version}}", "-blue?logo=kotlin", "https://kotlinlang.org/"));
+shields.push(linkShield("Java", "{{java_version}}", "-blue?logo=openjdk&logoColor=000000", "https://www.azul.com/downloads/?version=java-25-lts&package=jdk#zulu"));
+shields.push(linkShield("Gradle", "{{gradle_version}}", "-blue?logo=gradle&logoColor=02303A", "https://gradle.org/releases/"));
+
+if ("{{CURSEFORGE}}" !== "") {
+    shields.push("![CurseForge Downloads](https://img.shields.io/curseforge/dt/{{CURSEFORGE}}?logo=curseforge&label=Downloads&color=orange)");
+}
+if ("{{MODRINTH}}" !== "") {
+    shields.push("![Modrinth Downloads](https://img.shields.io/modrinth/dt/{{MODRINTH}}?logo=modrinth&label=Downloads&color=green)");
+}
+
+shields.push("");
+shields.push("");
+
+shields.push(linkShield("Maven", "{{root_package}}:{{mod_id}}", "-blue?logo=apachemaven&logoColor=C71A36", "{{mavenUrl}}/" + "{{root_package}}/{{mod_id}}/".replaceAll("\\.", "/") + "{{VERSION}}/"));
+shields.push(linkShield("Version", "{{VERSION}}", "-blue?logo=semver&logoColor=3F4551", "{{mod_url}}/releases/tag/{{VERSION}}"));
+shields.push(linkShield("License", "{{LICENSE}}", "-blue?logo=spdx", "{{mod_url}}/blob/master/LICENSE"));
+
+shields.push("");
+shields.push("> {{mod_description}}");
+
+output = shields.join("\n");
 -->
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.4.20-blue.svg)](https://kotlinlang.org/)
-[![Java](https://img.shields.io/badge/Java-25.0.5-blue.svg)](https://www.azul.com/downloads/?version=java-25-lts&package=jdk#zulu)
-[![Maven artifact](https://img.shields.io/badge/Maven-org.ender__development%3Aselectionguicrafting-blue.svg)](https://maven.ender-development.org/org/ender_development/selectionguicrafting/)
-[![Version](https://img.shields.io/badge/Version-3.0.1-blue.svg)](https://www.curseforge.com/minecraft/mc-mods/selectiongui-crafting-continued/tags)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://www.curseforge.com/minecraft/mc-mods/selectiongui-crafting-continued/blob/master/LICENSE)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.4.20-blue?logo=kotlin)](https://kotlinlang.org/)
+[![Java](https://img.shields.io/badge/Java-25.0.5-blue?logo=openjdk&logoColor=000000)](https://www.azul.com/downloads/?version=java-25-lts&package=jdk#zulu)
+[![Gradle](https://img.shields.io/badge/Gradle-9.9.0-blue?logo=gradle&logoColor=02303A)](https://gradle.org/releases/)
+![CurseForge Downloads](https://img.shields.io/curseforge/dt/1185607?logo=curseforge&label=Downloads&color=orange)
+![Modrinth Downloads](https://img.shields.io/modrinth/dt/7kAs3nhe?logo=modrinth&label=Downloads&color=green)
+
+
+[![Maven](https://img.shields.io/badge/Maven-org.ender__development%3Aselectionguicrafting-blue?logo=apachemaven&logoColor=C71A36)](https://maven.ender-development.org/org/ender_development/selectionguicrafting/3.0.1/)
+[![Version](https://img.shields.io/badge/Version-3.0.1-blue?logo=semver&logoColor=3F4551)](https://www.curseforge.com/minecraft/mc-mods/selectiongui-crafting-continued/releases/tag/3.0.1)
+[![License](https://img.shields.io/badge/License-MIT-blue?logo=spdx)](https://www.curseforge.com/minecraft/mc-mods/selectiongui-crafting-continued/blob/master/LICENSE)
 
 > A mod that gives modpack authors the ability to add crafting recipes into a selection GUI that is triggered by right-clicking while holding the right items.
 <!---freshmark /shields -->
