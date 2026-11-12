@@ -83,7 +83,7 @@ public class Category extends VirtualizedRegistry<org.ender_development.selectio
 
     @RecipeBuilderDescription(
             example = {
-                @Example(".id('dummy_category').trigger(item('minecraft:diamond'), 0.2, 0.8, 2.65).background('selectionguicrafting:textures/gui/background/wood.png')"),
+                @Example(".id('dummy_category').trigger(item('minecraft:diamond'), 0.2, 0.8, 2.65).hideInvalid().background('selectionguicrafting:textures/gui/background/wood.png')"),
                 @Example(".id('blub').trigger(item('minecraft:stone_shovel')).background('selectionguicrafting:textures/gui/background/lake.png').backgroundType('SINGLE_CUT')"),
                 @Example(
                         ".id('dead').trigger(block('minecraft:snow')).background('selectionguicrafting:textures/gui/background/deadlands.png').decoration('selectionguicrafting:textures/gui/decor/gold.png').border('selectionguicrafting:textures/gui/background/wood.png').backgroundType('SINGLE_CUT')")
