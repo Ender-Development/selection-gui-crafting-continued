@@ -283,6 +283,11 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
         int OFFSET = (final_width_offset + 8 - (cols * ICON_DISTANCE)) / 2;
 
+        if (this.validRecipes.isEmpty()) {
+            drawCenteredString(fontRenderer, I18n.format("gui.selectionguicrafting.no_recipe"), width / 2, (height / 2) - 10, Color.white.getRGB());
+            return;
+        }
+
         for (Recipe recipe : this.validRecipes) {
             RecipeHelper recipeHelper = new RecipeHelper(recipe);
 
