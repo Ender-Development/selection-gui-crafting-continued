@@ -188,7 +188,9 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             queue.remove(0);
             if (queue.isEmpty()) {
                 timeQueueStart = -1;
-                mc.player.closeScreen();
+                if (!recipeCategory.getScreenData().shouldKeepOpen()) {
+                    mc.player.closeScreen();
+                }
                 if (mc.currentScreen == null) {
                     mc.setIngameFocus();
                 }

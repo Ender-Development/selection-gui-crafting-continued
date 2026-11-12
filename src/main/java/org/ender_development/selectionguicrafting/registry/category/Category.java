@@ -223,4 +223,9 @@ public class Category implements IRegisterObject {
         ScreenData.setViewType(viewType);
         return this;
     }
+
+    public Category keepOpen() {
+        ScreenData.keepOpen();
+        return this;
+    }
 }

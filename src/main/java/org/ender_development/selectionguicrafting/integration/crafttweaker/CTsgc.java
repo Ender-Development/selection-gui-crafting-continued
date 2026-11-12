@@ -188,6 +188,13 @@ public final class CTsgc {
         }
 
         @ZenMethod
+        @ZenDoc("Keep the GUI open once the queue is empty.")
+        public CTCategoryBuilder keepOpen() {
+            category.keepOpen();
+            return this;
+        }
+
+        @ZenMethod
         @ZenDoc("Adds a sound to the category")
         public CTCategoryBuilder sound(String sound, float volume, float pitch) {
             category.addSound(new Sound(new ResourceLocation(sound), volume, pitch));

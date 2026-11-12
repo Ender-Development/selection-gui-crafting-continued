@@ -17,6 +17,7 @@ public class CategoryData extends RecipeData {
     private ResourceLocation decoration;
     private BackgroundType backgroundType;
     private ViewType viewType;
+    private boolean keepOpen;
 
     public CategoryData() {
         // get default values from RecipeData
@@ -35,6 +36,7 @@ public class CategoryData extends RecipeData {
 
         this.backgroundType = BackgroundType.TILE;
         this.viewType = ViewType.ALL;
+        this.keepOpen = false;
     }
 
     public ResourceLocation getBackground() {
@@ -79,6 +81,15 @@ public class CategoryData extends RecipeData {
 
     public CategoryData setViewType(ViewType viewType) {
         this.viewType = viewType;
+        return this;
+    }
+
+    public boolean shouldKeepOpen() {
+        return keepOpen;
+    }
+
+    public CategoryData keepOpen() {
+        this.keepOpen = true;
         return this;
     }
 }
