@@ -90,10 +90,8 @@ public abstract class GuiScreenDynamic extends GuiContainer {
     // Draw labels and buttons (replacing super.drawScreen() call)
     // Can be called after background drawing, for proper layering
     public void drawLabels(int mouseX, int mouseY) {
-        // Labels
         for (GuiButton aButtonList : this.buttonList) aButtonList.drawButton(this.mc, mouseX, mouseY, 0);
 
-        // Buttons
         for (GuiLabel aLabelList : this.labelList) aLabelList.drawLabel(this.mc, mouseX, mouseY);
     }
 
@@ -238,7 +236,7 @@ public abstract class GuiScreenDynamic extends GuiContainer {
         int posX = left + (guiWidth / 2) - (textureWidth / 2);
         GlStateManager.pushMatrix();
         drawScaledCustomSizeModalRect(posX, top, 0, 0, textureWidth, textureHeight / 2, textureWidth, textureHeight / 2, textureWidth, textureHeight);
-        drawScaledCustomSizeModalRect(posX, bottom - textureHeight / 2, 0, textureHeight / 2, textureWidth, textureHeight / 2, textureWidth, textureHeight / 2, textureWidth, textureHeight);
+        drawScaledCustomSizeModalRect(posX, bottom - textureHeight / 2, 0, (float) textureHeight / 2, textureWidth, textureHeight / 2, textureWidth, textureHeight / 2, textureWidth, textureHeight);
         GlStateManager.popMatrix();
     }
 }
