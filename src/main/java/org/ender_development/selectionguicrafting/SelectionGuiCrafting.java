@@ -18,7 +18,7 @@ import org.ender_development.selectionguicrafting.proxy.CommonProxy;
 @Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION, dependencies = SelectionGuiCrafting.DEPENDENCIES)
 public class SelectionGuiCrafting {
 
-    public static final String DEPENDENCIES = "after:jei@[4.28.0,);";
+    public static final String DEPENDENCIES = "after:jei;";
 
     public static final Logger LOGGER = LogManager.getLogger(Tags.MOD_NAME);
 
