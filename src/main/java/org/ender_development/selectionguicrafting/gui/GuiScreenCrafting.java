@@ -163,7 +163,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         // Recipe is finished
         if (craftingProgress >= 1.0f) {
             SelectionPacketHandler.SELECTION_NETWORK_WRAPPER.sendToServer(
-                    new SelectionMessageProcessRecipe(validRecipes.get(0).getCategory(), recipeSelectedIndex, player.getName(), selectedRecipeHelper.getAbsoluteXP(xpMultiplier), damageMultiplier));
+                new SelectionMessageProcessRecipe(validRecipes.get(0).getCategory(), recipeSelectedIndex, player.getName(), selectedRecipeHelper.getAbsoluteXP(xpMultiplier), damageMultiplier));
 
             List<Sound> sounds = selectedRecipeHelper.getSounds();
             SoundType soundType = selectedRecipeHelper.getSoundType();
@@ -213,55 +213,58 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             if (hoveredRecipeHelper.hasMainHand()) {
                 textLines.add(I18n.format("gui.selectionguicrafting.mainhand"));
                 textLines.add(
-                        (hoveredRecipeHelper.checkMainHand(mainHand, damageMultiplier) ? TextFormatting.GREEN : TextFormatting.RED)
-                                + I18n.format("gui." + Tags.MOD_ID + ".wrong_input", formatItemName(hoveredRecipe.getMainHand().getIngredient().getMatchingStacks()[0]))
-                                + TextFormatting.RESET);
+                    (hoveredRecipeHelper.checkMainHand(mainHand, damageMultiplier) ? TextFormatting.GREEN : TextFormatting.RED)
+                        + I18n.format("gui." + Tags.MOD_ID + ".wrong_input", formatItemName(hoveredRecipe.getMainHand().getIngredient().getMatchingStacks()[0]))
+                        + TextFormatting.RESET);
             }
             if (hoveredRecipeHelper.hasOffHand()) {
                 textLines.add(I18n.format("gui.selectionguicrafting.offhand"));
                 textLines.add(
-                        (hoveredRecipeHelper.checkOffHand(offHand, damageMultiplier) ? TextFormatting.GREEN : TextFormatting.RED)
-                                + I18n.format("gui." + Tags.MOD_ID + ".wrong_input", formatItemName(hoveredRecipe.getOffHand().getIngredient().getMatchingStacks()[0]))
-                                + TextFormatting.RESET);
+                    (hoveredRecipeHelper.checkOffHand(offHand, damageMultiplier) ? TextFormatting.GREEN : TextFormatting.RED)
+                        + I18n.format("gui." + Tags.MOD_ID + ".wrong_input", formatItemName(hoveredRecipe.getOffHand().getIngredient().getMatchingStacks()[0]))
+                        + TextFormatting.RESET);
             }
             if (!hoveredRecipe.getInputs().isEmpty()) {
                 textLines.add(I18n.format("gui.selectionguicrafting.input"));
                 for (RecipeInput input : hoveredRecipe.getInputs()) {
                     textLines.add(
-                            (player.inventory.mainInventory.stream().anyMatch(itemStack -> input.compare(itemStack, damageMultiplier)) ? TextFormatting.GREEN : TextFormatting.RED)
-                                    + I18n.format("gui." + Tags.MOD_ID + ".wrong_input", formatItemName(input.getIngredient().getMatchingStacks()[0]))
-                                    + TextFormatting.RESET);
+                        (player.inventory.mainInventory.stream().anyMatch(itemStack -> input.compare(itemStack, damageMultiplier)) ? TextFormatting.GREEN : TextFormatting.RED)
+                            + I18n.format("gui." + Tags.MOD_ID + ".wrong_input", formatItemName(input.getIngredient().getMatchingStacks()[0]))
+                            + TextFormatting.RESET);
                 }
             }
             if (!hoveredRecipe.getAdvancements().isEmpty()) {
-                textLines.add(I18n.format("gui.selectionguicrafting.advancement"));
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".advancement"));
                 hoveredRecipe
-                        .getAdvancements()
-                        .forEach(advancement ->
-                                textLines.add(
-                                        (hoveredRecipeHelper.hasAdvancement(player, advancement) ? TextFormatting.GREEN : TextFormatting.RED)
-                                                + I18n.format("gui.selectionguicrafting.advancement.advancement", hoveredRecipeHelper.translateAdvancement(player, advancement))
-                                                + TextFormatting.RESET));
+                    .getAdvancements()
+                    .forEach(advancement ->
+                        textLines.add(
+                            (hoveredRecipeHelper.hasAdvancement(player, advancement) ? TextFormatting.GREEN : TextFormatting.RED)
+                                + I18n.format("gui." + Tags.MOD_ID + ".advancement.advancement", hoveredRecipeHelper.translateAdvancement(player, advancement))
+                                + TextFormatting.RESET));
             }
             if (!hoveredRecipe.getGamestages().isEmpty() && Loader.isModLoaded("gamestages")) {
-                textLines.add(I18n.format("gui.selectionguicrafting.gamestage"));
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".gamestage"));
                 hoveredRecipe
-                        .getGamestages()
-                        .forEach(stage ->
-                                textLines.add(
-                                        (hoveredRecipeHelper.hasGamestage(player, stage) ? TextFormatting.GREEN : TextFormatting.RED)
-                                                + I18n.format("gui.selectionguicrafting.gamestage.gamestage", hoveredRecipeHelper.translateGamestage(stage))
-                                                + TextFormatting.RESET));
+                    .getGamestages()
+                    .forEach(stage ->
+                        textLines.add(
+                            (hoveredRecipeHelper.hasGamestage(player, stage) ? TextFormatting.GREEN : TextFormatting.RED)
+                                + I18n.format("gui." + Tags.MOD_ID + ".gamestage.gamestage", hoveredRecipeHelper.translateGamestage(stage))
+                                + TextFormatting.RESET));
             }
             if (!hoveredRecipe.getSkills().isEmpty() && Loader.isModLoaded("reskillable")) {
-                textLines.add(I18n.format("gui.selectionguicrafting.skill"));
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".skill"));
                 hoveredRecipe
-                        .getSkills()
-                        .forEach((skill, level) ->
-                                textLines.add(
-                                        (hoveredRecipeHelper.hasSkill(player, skill, level) ? TextFormatting.GREEN : TextFormatting.RED)
-                                                + I18n.format("gui.selectionguicrafting.skill.skill", hoveredRecipeHelper.translateSkill(skill), level)
-                                                + TextFormatting.RESET));
+                    .getSkills()
+                    .forEach((skill, level) ->
+                        textLines.add(
+                            (hoveredRecipeHelper.hasSkill(player, skill, level) ? TextFormatting.GREEN : TextFormatting.RED)
+                                + I18n.format("gui." + Tags.MOD_ID + ".skill.skill", hoveredRecipeHelper.translateSkill(skill), level)
+                                + TextFormatting.RESET));
+            }
+            if (isShiftKeyDown()) {
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".craft_64"));
             }
         } else {
             textLines.add(I18n.format("gui." + Tags.MOD_ID + ".no_queue"));
@@ -286,7 +289,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         int OFFSET = (final_width_offset + 8 - (cols * ICON_DISTANCE)) / 2;
 
         if (this.validRecipes.isEmpty()) {
-            drawCenteredString(fontRenderer, I18n.format("gui.selectionguicrafting.no_recipe"), width / 2, (height / 2) - 10, Color.white.getRGB());
+            drawCenteredString(fontRenderer, I18n.format("gui." + Tags.MOD_ID + ".no_recipe"), width / 2, (height / 2) - 10, Color.white.getRGB());
             return;
         }
 
@@ -366,7 +369,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
                 String renderTime = String.format("%.1f", (remainingCraftingTime) / 1000);
                 fontRenderer.drawStringWithShadow(
-                        I18n.format("gui.selectionguicrafting.crafting_time", renderTime), right - fontRenderer.getStringWidth(renderTime) - 10, top + 10, Color.white.getRGB());
+                    I18n.format("gui." + Tags.MOD_ID + ".crafting_time", renderTime), right - fontRenderer.getStringWidth(renderTime) - 10, top + 10, Color.white.getRGB());
 
                 GlStateManager.pushMatrix();
                 ResourceLocation progressBar = recipeHelper.getProgressBar();
@@ -407,14 +410,23 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                     break;
                 }
                 if (recipeHelper.canCraft(player, damageMultiplier)) {
-                    queue.add(i / 4);
-                    timeQueueStart = timeQueueStart == -1 ? Minecraft.getSystemTime() : timeQueueStart;
-                    totalCraftingTime += (recipe.getTime() / timeMultiplier) * 50;
-                    break;
+                    if (isShiftKeyDown()) {
+                        for (int c = 0; c < 64; c++) {
+                            addToQueue(i / 4, recipe);
+                        }
+                    } else {
+                        addToQueue(i / 4, recipe);
+                    }
                 }
             }
             i += 4;
         }
+    }
+
+    private void addToQueue(int index, Recipe recipe) {
+        queue.add(index / 4);
+        timeQueueStart = timeQueueStart == -1 ? Minecraft.getSystemTime() : timeQueueStart;
+        totalCraftingTime += (recipe.getTime() / timeMultiplier) * 50;
     }
 
     // Called when GUI is opened or resized

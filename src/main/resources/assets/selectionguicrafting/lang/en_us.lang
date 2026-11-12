@@ -13,6 +13,7 @@ gui.selectionguicrafting.wrong_input=> %s
 gui.selectionguicrafting.no_queue=§c§oCan't queue this recipe
 gui.selectionguicrafting.crafting_time=%s
 gui.selectionguicrafting.no_recipe=§cNo valid recipes! :c
+gui.selectionguicrafting.craft_64=Add 64 recipes to the queue.
 
 jei.selectionguicrafting.category=Selection GUI Crafting
 jei.selectionguicrafting.output=§6[Output]§r
