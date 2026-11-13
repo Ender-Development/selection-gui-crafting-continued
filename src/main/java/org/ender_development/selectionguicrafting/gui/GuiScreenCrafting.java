@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -65,7 +66,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     private int toolTipToRenderY = 32000;
 
     private final ArrayList<Integer> slotCoordinates = new ArrayList<>();
-    private final ArrayList<Integer> queue = new ArrayList<>();
+    private final LinkedList<Integer> queue = new LinkedList<>();
     private final ArrayList<Recipe> validRecipes;
 
     private double craftingProgress = 0.0;
@@ -153,7 +154,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         }
 
         if (!queue.isEmpty() && recipeSelectedIndex == -1) {
-            recipeSelectedIndex = queue.get(0);
+            recipeSelectedIndex = queue.getFirst();
             timeRecipeStart = Minecraft.getSystemTime();
             selectedRecipe = validRecipes.get(recipeSelectedIndex);
             selectedRecipeHelper = new RecipeHelper(selectedRecipe);
@@ -185,7 +186,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             });
 
             // Close GUI
-            queue.remove(0);
+            queue.removeFirst();
             if (queue.isEmpty()) {
                 timeQueueStart = -1;
                 if (!recipeCategory.getScreenData().shouldKeepOpen()) {
@@ -424,7 +425,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     }
 
     private void addToQueue(int index, Recipe recipe) {
-        queue.add(index / 4);
+        queue.addLast(index);
         timeQueueStart = timeQueueStart == -1 ? Minecraft.getSystemTime() : timeQueueStart;
         totalCraftingTime += (recipe.getTime() / timeMultiplier) * 50;
     }
