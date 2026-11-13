@@ -251,6 +251,10 @@
         "category": "\ud83d\uddfa\ufe0f Project",
         "description": "The URL to the homepage of the mod or its git repository."
     },
+    "moddex_id": {
+        "category": "\ud83d\udcf0 Publishing",
+        "description": "The Moddex.gg ID of your project."
+    },
     "modrinth_debug": {
         "category": "\ud83d\udcf0 Publishing - Modrinth",
         "description": "Enable debug mode. Simulating a file upload, without actually pushing anything."

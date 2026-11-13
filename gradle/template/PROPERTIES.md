@@ -436,8 +436,8 @@ The mod name is the display name for your mod. This can contain spaces and capit
 The URL to the homepage of the mod or its git repository.
 
 - **Type:** String
-- **Required:** no
-- **Default:** `""`
+- **Required:** yes
+- **Default:** none
 
 ### `root_package`
 
@@ -472,6 +472,14 @@ Set to false if your mod is client-side only. Used to set environment on CurseFo
 - **Type:** Boolean
 - **Required:** no
 - **Default:** `true`
+
+### `moddex_id`
+
+The Moddex.gg ID of your project.
+
+- **Type:** String
+- **Required:** no
+- **Default:** `""`
 
 ### `release_type`
 

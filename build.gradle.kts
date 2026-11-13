@@ -1,4 +1,4 @@
-// v2.1.4
+// v2.2.0
 
 // =====================================================================================
 //  BUILDSCRIPT-MANAGED FILE: DO NOT EDIT
@@ -32,6 +32,11 @@ import groovy.lang.GroovyShell
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.longOrNull
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
@@ -45,6 +50,7 @@ import org.jetbrains.gradle.ext.settings
 import org.jetbrains.gradle.ext.taskTriggers
 import java.net.URI
 import java.net.URLConnection
+import java.net.URLEncoder
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.util.Properties
@@ -195,10 +201,6 @@ if (!listOf("release", "beta", "alpha").contains(releaseType)) throw GradleExcep
 val isServer = getProp("is_server_side", true).toBoolean()
 val isClient = getProp("is_client_side", true).toBoolean()
 if (!isClient && !isServer) throw GradleException("At least one of 'client_side' and 'server_side' must be true!")
-val curseForgeId = getProp("curseforge_id", "")
-val publishToCurseForge = getProp("publish_to_curseforge", false).toBoolean() && curseForgeId.isNotBlank()
-val modrinthId = getProp("modrinth_id", "")
-val publishToModrinth = getProp("publish_to_modrinth", false).toBoolean() && modrinthId.isNotBlank()
 val additionalDependencies = getPropList("additional_dependencies", " ")
 val modDependencies =
     listOf(
@@ -220,6 +222,11 @@ val useSpotless = getProp("disable_spotless", false).toBoolean()
 val rmLicense = getProp("license", "All Rights Reserved")
 val rmContent = evalProp("readme", $$"${mod_description}")
 val rmPartnership = getProp("partnership", "")
+
+val moddexProject = moddexLookup(getProp("moddex_id", ""), getProp("curseforge_id", ""), getProp("modrinth_id", ""))
+val isPublished = moddexProject != null
+val publishToCurseForge = getProp("publish_to_curseforge", false).toBoolean() && isPublished && moddexProject!!.curseforge != null
+val publishToModrinth = getProp("publish_to_modrinth", false).toBoolean() && isPublished && moddexProject!!.modrinth != null
 
 group = rootPackage
 
@@ -576,8 +583,12 @@ configure<SpotlessExtension> {
             put("README", rmContent)
             put("SPONSOR", rmPartnership)
             put("VERSION", latestRelease())
-            put("MODRINTH", modrinthId)
-            put("CURSEFORGE", curseForgeId)
+            put("MODRINTH", moddexProject?.modrinth?.id ?: "")
+            put("MODRINTH_LINK", moddexProject?.modrinth?.url ?: "")
+            put("CURSEFORGE", moddexProject?.curseforge?.id ?: "")
+            put("CURSEFORGE_LINK", moddexProject?.curseforge?.url ?: "")
+            put("MODDEX", moddexProject?.slug ?: "")
+            put("REVIEW", if (moddexProject?.rating != null) "${moddexProject.rating}%2F5.0" else "Rate_on_ModDex_%E2%99%A5")
         }
     }
     flexmark {
@@ -1160,8 +1171,8 @@ tasks.register<TaskPublishCurseForge>("curseforge") {
     onlyIf { publishToCurseForge }
     apiToken = getPropEnv("CURSEFORGE_TOKEN")
     debugMode = getProp("curseforge_debug", false).toBoolean()
-    if (curseForgeId.isBlank() || !publishToCurseForge) return@register
-    val uploadFile = upload(curseForgeId, tasks.reobfJar)
+    if (!publishToCurseForge || apiToken.toString().isBlank()) return@register
+    val uploadFile = upload(moddexProject!!.curseforge!!.id, tasks.reobfJar)
     uploadFile.displayName = "$modId-$version"
     uploadFile.releaseType = releaseType
     uploadFile.addJavaVersion("Java 8")
@@ -1186,8 +1197,8 @@ tasks.register<TaskPublishCurseForge>("curseforge") {
 modrinth {
     // [Docs](https://github.com/modrinth/minotaur)
     token = getPropEnv("MODRINTH_TOKEN")
-    if (modrinthId.isBlank() || token.toString().isBlank() || !publishToModrinth) return@modrinth
-    projectId = modrinthId
+    if (token.toString().isBlank() || !publishToModrinth) return@modrinth
+    projectId = moddexProject!!.modrinth!!.id
     versionName = "$modName v$modVersion"
     versionNumber = modVersion
     versionType = releaseType
@@ -1621,4 +1632,63 @@ tasks.register("releaseAndPublish") {
     group = "release"
     description = "release, then publish. Run with -Preckon.stage=final"
     dependsOn("pushRelease", tasks.publish)
+}
+
+data class Platform(
+    val id: String,
+    val url: String,
+    val downloadsCount: Long,
+)
+
+data class ModdexProject(
+    val id: Int,
+    val slug: String,
+    val rating: Double?,
+    val curseforge: Platform?,
+    val modrinth: Platform?,
+)
+
+fun moddexLookup(
+    moddexId: String? = null,
+    curseforgeId: String? = null,
+    modrinthId: String? = null,
+): ModdexProject? {
+    val params =
+        listOf(
+            "moddex_id" to moddexId,
+            "curseforge_id" to curseforgeId,
+            "modrinth_id" to modrinthId,
+        ).mapNotNull { (key, value) ->
+            value?.trim()?.takeIf { it.isNotBlank() }?.let { key to URLEncoder.encode(it, "UTF-8") }
+        }
+    if (params.isEmpty()) return null
+
+    val query = params.joinToString("&") { (key, value) -> "$key=$value" }
+    return parseModdex(fetchText("https://moddex.gg/api/v2/lookup?$query"))
+}
+
+fun parseModdex(text: String): ModdexProject {
+    val data =
+        Json
+            .parseToJsonElement(text)
+            .jsonObject
+            .getValue("data")
+            .jsonObject
+
+    fun platform(key: String): Platform? {
+        val o = data[key] as? JsonObject ?: return null
+        return Platform(
+            id = o.getValue("id").jsonPrimitive.content,
+            url = o.getValue("url").jsonPrimitive.content,
+            downloadsCount = o["downloads_count"]?.jsonPrimitive?.longOrNull ?: 0,
+        )
+    }
+
+    return ModdexProject(
+        id = data.getValue("id").jsonPrimitive.int,
+        slug = data.getValue("slug").jsonPrimitive.content,
+        rating = (data["rating"] as? JsonObject)?.get("average")?.jsonPrimitive?.doubleOrNull,
+        curseforge = platform("curseforge"),
+        modrinth = platform("modrinth"),
+    )
 }
