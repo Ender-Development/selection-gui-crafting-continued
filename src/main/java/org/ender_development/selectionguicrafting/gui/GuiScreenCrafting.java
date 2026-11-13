@@ -215,14 +215,16 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         ItemStack offHand = player.getHeldItemOffhand();
         tooltipIcons = new ArrayList<>();
         if (!noQueue) {
-            if (isShiftKeyDown()) {
-                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".craft"));
-                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".remove"));
-                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".mod_shift"));
-                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".mod_ctrl"));
-                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".mod_alt"));
-            } else {
-                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".info"));
+            if (!SelectionConfig.CLIENT.noShiftTooltip) {
+                if (isShiftKeyDown()) {
+                    textLines.add(I18n.format("gui." + Tags.MOD_ID + ".craft"));
+                    textLines.add(I18n.format("gui." + Tags.MOD_ID + ".remove"));
+                    textLines.add(I18n.format("gui." + Tags.MOD_ID + ".mod_shift"));
+                    textLines.add(I18n.format("gui." + Tags.MOD_ID + ".mod_ctrl"));
+                    textLines.add(I18n.format("gui." + Tags.MOD_ID + ".mod_alt"));
+                } else {
+                    textLines.add(I18n.format("gui." + Tags.MOD_ID + ".info"));
+                }
             }
             final String gap = StringUtils.repeat(' ', -Math.floorDiv(-10, fontRenderer.getCharWidth(' ')));
             if (hoveredRecipeHelper.hasMainHand()) {

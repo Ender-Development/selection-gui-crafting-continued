@@ -23,6 +23,9 @@ public class SelectionConfig {
         @Config.Comment("Clientside config: Disables selection crafting GUIs from displaying the 'Close GUI' button, as you can use E and ESC to exit the GUI and the button could be clutter to "
                 + "some people.")
         public boolean disableCloseGUIbutton = false;
+        @Config.Name("Disable SHIFT Tooltip")
+        @Config.Comment("Clientside config: Disables the 'Hold SHIFT for more information' tooltip")
+        public boolean noShiftTooltip = false;
     }
 
     @Config.Name("General")
