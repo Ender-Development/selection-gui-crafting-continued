@@ -104,6 +104,8 @@ public class Category extends VirtualizedRegistry<org.ender_development.selectio
     @Property(property = "sound", defaultValue = "null")
     @Property(property = "particle", defaultValue = "null")
     @Property(property = "keepOpen", defaultValue = "false")
+    @Property(property = "craftingSound", defaultValue = "null")
+    @Property(property = "soundDelay", defaultValue = "0")
     public static class CategoryBuilder extends org.ender_development.selectionguicrafting.registry.category.Category
             implements IRecipeBuilder<org.ender_development.selectionguicrafting.registry.category.Category>
     {
@@ -135,6 +137,10 @@ public class Category extends VirtualizedRegistry<org.ender_development.selectio
         private ResourceLocation frame;
         @Property
         private boolean keepOpen;
+        @Property
+        private Sound craftingSound;
+        @Property
+        private int soundDelay;
 
         // Register
         @Override
@@ -395,6 +401,43 @@ public class Category extends VirtualizedRegistry<org.ender_development.selectio
         @RecipeBuilderMethodDescription(field = "particle")
         public CategoryBuilder particle(String particle) {
             return particle(EnumParticleTypes.valueOf(particle));
+        }
+
+        // Idle Sound
+        @RecipeBuilderMethodDescription(field = {"craftingSound", "soundDelay"})
+        public CategoryBuilder craftingSound(Sound sound, int delay) {
+            super.setCraftingSound(sound, delay);
+            return this;
+        }
+
+        @RecipeBuilderMethodDescription(field = {"craftingSound", "soundDelay"})
+        public CategoryBuilder craftingSound(ResourceLocation sound, float volume, float pitch, int delay) {
+            return craftingSound(new Sound(sound, volume, pitch), delay);
+        }
+
+        @RecipeBuilderMethodDescription(field = {"craftingSound", "soundDelay"})
+        public CategoryBuilder craftingSound(ResourceLocation sound, int delay) {
+            return craftingSound(new Sound(sound), delay);
+        }
+
+        @RecipeBuilderMethodDescription(field = {"craftingSound", "soundDelay"})
+        public CategoryBuilder craftingSound(String sound, float volume, float pitch, int delay) {
+            return craftingSound(new ResourceLocation(sound), volume, pitch, delay);
+        }
+
+        @RecipeBuilderMethodDescription(field = {"craftingSound", "soundDelay"})
+        public CategoryBuilder craftingSound(String sound, int delay) {
+            return craftingSound(new ResourceLocation(sound), delay);
+        }
+
+        @RecipeBuilderMethodDescription(field = {"craftingSound", "soundDelay"})
+        public CategoryBuilder craftingSound(SoundEvent sound, float volume, float pitch, int delay) {
+            return craftingSound(sound.getSoundName(), volume, pitch, delay);
+        }
+
+        @RecipeBuilderMethodDescription(field = {"craftingSound", "soundDelay"})
+        public CategoryBuilder craftingSound(SoundEvent sound, int delay) {
+            return craftingSound(sound.getSoundName(), delay);
         }
     }
 }

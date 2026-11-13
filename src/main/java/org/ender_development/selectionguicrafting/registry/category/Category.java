@@ -227,4 +227,9 @@ public class Category implements IRegisterObject {
         ScreenData.keepOpen();
         return this;
     }
+
+    public Category setCraftingSound(Sound craftingSound, int soundDelay) {
+        ScreenData.setCraftingSound(craftingSound, soundDelay);
+        return this;
+    }
 }

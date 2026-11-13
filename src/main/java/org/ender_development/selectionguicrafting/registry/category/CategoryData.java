@@ -8,6 +8,8 @@ package org.ender_development.selectionguicrafting.registry.category;
 import net.minecraft.util.ResourceLocation;
 import org.ender_development.selectionguicrafting.gui.Assets;
 import org.ender_development.selectionguicrafting.registry.recipe.RecipeData;
+import org.ender_development.selectionguicrafting.registry.util.Sound;
+import org.jetbrains.annotations.Nullable;
 
 public class CategoryData extends RecipeData {
     // set by category, can't be overridden by recipe
@@ -17,6 +19,8 @@ public class CategoryData extends RecipeData {
     private BackgroundType backgroundType;
     private ViewType viewType;
     private boolean keepOpen;
+    @Nullable private Sound craftingSound;
+    private int soundDelay;
 
     public CategoryData() {
         // get default values from RecipeData
@@ -36,6 +40,9 @@ public class CategoryData extends RecipeData {
         this.backgroundType = BackgroundType.TILE;
         this.viewType = ViewType.ALL;
         this.keepOpen = false;
+
+        this.craftingSound = null;
+        this.soundDelay = 0;
     }
 
     public ResourceLocation getBackground() {
@@ -89,6 +96,20 @@ public class CategoryData extends RecipeData {
 
     public CategoryData keepOpen() {
         this.keepOpen = true;
+        return this;
+    }
+
+    public Sound getCraftingSound() {
+        return craftingSound;
+    }
+
+    public int getSoundDelay() {
+        return soundDelay;
+    }
+
+    public CategoryData setCraftingSound(Sound craftingSound, int soundDelay) {
+        this.craftingSound = craftingSound;
+        this.soundDelay = soundDelay;
         return this;
     }
 }

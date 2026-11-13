@@ -5,6 +5,13 @@
 
 package org.ender_development.selectionguicrafting.gui;
 
+import java.awt.Color;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -44,14 +51,6 @@ import org.ender_development.selectionguicrafting.registry.util.Sound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
 @SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(modid = Tags.MOD_ID, value = Side.CLIENT)
 public class GuiScreenCrafting extends GuiScreenDynamic {
@@ -79,6 +78,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     private int recipeTime = -1;
     private long timeQueueStart = -1;
     private long timeRecipeStart = -1;
+    private long lastPhase = 0;
     private int rows;
     private int cols;
     private int final_width_offset;
@@ -147,6 +147,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        long phase = recipeCategory.getScreenData().getSoundDelay() == 0 ? 0 : ((Minecraft.getSystemTime() - timeRecipeStart) % recipeCategory.getScreenData().getSoundDelay()) * 50;
         // Background
         super.drawScreen(mouseX, mouseY, partialTicks);
         // Items
@@ -164,6 +165,12 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             selectedRecipe = validRecipes.get(recipeSelectedIndex);
             selectedRecipeHelper = new RecipeHelper(selectedRecipe);
             recipeTime = selectedRecipe.getTime();
+        }
+        // Crafting Sounds
+        if (recipeCategory.getScreenData().getCraftingSound() != null && phase < lastPhase) {
+            lastPhase = phase;
+            Sound craftingSound = recipeCategory.getScreenData().getCraftingSound();
+            player.playSound(new SoundEvent(craftingSound.getSound()), craftingSound.getVolume(), craftingSound.getPitch());
         }
         // Recipe is finished
         if (craftingProgress >= 1.0f) {
@@ -207,6 +214,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
     private void resetProgress() {
         selectedRecipe = null;
+        lastPhase = 0;
         craftingProgress = 0.0f;
         recipeSelectedIndex = -1;
         lineCoordX = 32000;

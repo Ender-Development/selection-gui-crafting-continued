@@ -190,6 +190,13 @@ public final class CTsgc {
         }
 
         @ZenMethod
+        @ZenDoc("Set the crafting sounds that plays every n ticks, while the queue is not empty.")
+        public CTCategoryBuilder craftingSound(String sound, float volume, float pitch, int delay) {
+            category.setCraftingSound(new Sound(new ResourceLocation(sound), volume, pitch), delay);
+            return this;
+        }
+
+        @ZenMethod
         @ZenDoc("Adds a sound to the category")
         public CTCategoryBuilder sound(String sound, float volume, float pitch) {
             category.addSound(new Sound(new ResourceLocation(sound), volume, pitch));
