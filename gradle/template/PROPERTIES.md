@@ -709,14 +709,6 @@ Provided by the template via `gradle.properties`
 - **Required:** yes
 - **Default:** none
 
-### `google_java_format_version`
-
-Provided by the template via `gradle.properties`
-
-- **Type:** String
-- **Required:** yes
-- **Default:** none
-
 ### `greclipse_version`
 
 Provided by the template via `gradle.properties`
@@ -734,6 +726,14 @@ Provided by the template via `gradle.properties`
 - **Default:** none
 
 ### `ktlint_version`
+
+Provided by the template via `gradle.properties`
+
+- **Type:** String
+- **Required:** yes
+- **Default:** none
+
+### `prince_of_space_version`
 
 Provided by the template via `gradle.properties`
 

@@ -1,4 +1,4 @@
-// v2.2.0
+// v2.2.1
 
 // =====================================================================================
 //  BUILDSCRIPT-MANAGED FILE: DO NOT EDIT
@@ -629,11 +629,13 @@ configure<SpotlessExtension> {
         removeUnusedImports()
         forbidWildcardImports()
         shortenFullyQualifiedTypes()
-        googleJavaFormat(getProp("google_java_format_version"))
-            .reorderImports(true)
-            .formatJavadoc(true)
-            .maxLineLength(200)
-            .aosp()
+        princeOfSpace(getProp("prince_of_space_version"))
+            .indentStyle("SPACES")
+            .indentSize(4)
+            .lineLength(200)
+            .closingParenOnNewLine(true)
+            .trailingCommas(true)
+            .javaLanguageLevel(8)
         formatAnnotations()
         licenseHeader(header)
     }

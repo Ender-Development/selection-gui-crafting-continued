@@ -103,10 +103,6 @@
         "category": "\ud83c\udfd7\ufe0f Build",
         "description": "If true, Gradle will also generate a sources jar whenever you build your project."
     },
-    "google_java_format_version": {
-        "category": "\ud83d\udee0\ufe0f Utility - Formatting",
-        "description": "Provided by the template via `gradle.properties`"
-    },
     "gradle_version": {
         "category": "\ud83d\udea7 Internal",
         "description": "Provided by the template via `gradle.properties`"
@@ -278,6 +274,10 @@
     "partnership": {
         "category": "\ud83d\udcd6 README.md",
         "description": "A section about a partnership if there is one to promote. Use `<br>` for linebreak. An example can be found in the `project.properties`."
+    },
+    "prince_of_space_version": {
+        "category": "\ud83d\udee0\ufe0f Utility - Formatting",
+        "description": "Provided by the template via `gradle.properties`"
     },
     "publish_to_curseforge": {
         "category": "\ud83d\udcf0 Publishing - CurseForge",

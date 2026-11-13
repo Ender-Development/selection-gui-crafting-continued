@@ -13,6 +13,12 @@ Try to follow the [Common Changelog](https://common-changelog.org/) conventions.
 
 ### Miscellaneous
 
+## [2.2.1] - 2026-11-13
+
+### Changes
+
+- switch from google-java-format to prince-of-space
+
 ## [2.2.0] - 2026-11-13
 
 ### Changes
@@ -197,7 +203,8 @@ _The major refactor_
 - move functionality to `build.gradle.kts`
 - updated RFG to 2.0.6
 
-[Unreleased]: https://github.com/Ender-Development/EnderDevelopmentTemplate/compare/2.2.0...HEAD
+[Unreleased]: https://github.com/Ender-Development/EnderDevelopmentTemplate/compare/2.2.1...HEAD
+[2.2.1]: https://github.com/Ender-Development/EnderDevelopmentTemplate/compare/2.2.0...2.2.1
 [2.2.0]: https://github.com/Ender-Development/EnderDevelopmentTemplate/compare/2.1.4...2.2.0
 [2.1.4]: https://github.com/Ender-Development/EnderDevelopmentTemplate/compare/2.1.3...2.1.4
 [2.1.3]: https://github.com/Ender-Development/EnderDevelopmentTemplate/compare/2.1.2...2.1.3
