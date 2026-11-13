@@ -20,6 +20,7 @@ public interface IRegisterObject {
 
     /**
      * Register the object in the registry.
+     * @return The registered object
      */
     IRegisterObject register();
 

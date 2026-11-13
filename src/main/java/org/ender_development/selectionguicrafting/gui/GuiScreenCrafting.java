@@ -5,13 +5,6 @@
 
 package org.ender_development.selectionguicrafting.gui;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -50,6 +43,14 @@ import org.ender_development.selectionguicrafting.registry.util.Particle;
 import org.ender_development.selectionguicrafting.registry.util.Sound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.awt.Color;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(modid = Tags.MOD_ID, value = Side.CLIENT)
@@ -314,12 +315,11 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     }
 
     /**
-     * Adapted from {@code GuiCuttingSaw#onDrawTooltip} in
-     * <a href=https://github.com/Rebirth-of-the-Night/Serrated">Rebirth-of-the-Night/Serrated</a>
-     * (commit {@code 284ebab}).
+     * Adapted from {@code GuiCuttingSaw#onDrawTooltip} in Rebirth-of-the-Night/Serrate (commit {@code 284ebab}).
      *
      * <p>Copyright (c) 2026 phantamanta44. Licensed under the MIT License.
      *
+     * @param event Event that is fired after the background of the tooltip has been drawn
      * @see <a href="https://github.com/Rebirth-of-the-Night/Serrated/blob/284ebab1543907c64c9b51727ba86d40e01139a2/src/main/java/st/evening/mc/rotnsaws/feature/saw/GuiCuttingSaw.java#L311">Original source</a>
      */
     @SubscribeEvent

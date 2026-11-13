@@ -5,10 +5,11 @@
 
 package org.ender_development.selectionguicrafting.registry.recipe;
 
-import java.util.Arrays;
-import java.util.Random;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+
+import java.util.Arrays;
+import java.util.Random;
 
 public class RecipeInput {
     private final Random random = new Random();
@@ -66,6 +67,7 @@ public class RecipeInput {
      * Consumes the item stack if the chance is met. If the item is damageable, it will damage the item. If the item is not damageable, it will remove the amount from the stack.
      *
      * @param stack the stack to consume
+     * @param damageMultiplier trigger-depended multiplier for item damage
      */
     public void consume(ItemStack stack, double damageMultiplier) {
         if (!beConsumed()) {
@@ -91,6 +93,7 @@ public class RecipeInput {
      * Compares the input with the given stack. (The +1 is to account that tool durability is 0 based)
      *
      * @param stack the stack to compare with
+     * @param damageMultiplier trigger-depended multiplier for item damage
      * @return true if the input matches the stack, false otherwise
      */
     public boolean compare(ItemStack stack, double damageMultiplier) {
