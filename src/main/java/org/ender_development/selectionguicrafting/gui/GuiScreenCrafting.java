@@ -197,12 +197,16 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 }
             }
 
-            selectedRecipe = null;
-            craftingProgress = 0.0f;
-            recipeSelectedIndex = -1;
-            lineCoordX = 32000;
-            lineCoordY = 32000;
+            resetProgress();
         }
+    }
+
+    private void resetProgress() {
+        selectedRecipe = null;
+        craftingProgress = 0.0f;
+        recipeSelectedIndex = -1;
+        lineCoordX = 32000;
+        lineCoordY = 32000;
     }
 
     @Override
@@ -212,7 +216,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
         ItemStack offHand = player.getHeldItemOffhand();
         if (!noQueue) {
             if (hoveredRecipeHelper.hasMainHand()) {
-                textLines.add(I18n.format("gui.selectionguicrafting.mainhand"));
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".mainhand"));
                 textLines.add(
                         (hoveredRecipeHelper.checkMainHand(mainHand, damageMultiplier) ? TextFormatting.GREEN : TextFormatting.RED)
                                 + I18n.format("gui." + Tags.MOD_ID + ".wrong_input", formatItemName(hoveredRecipe.getMainHand().getIngredient().getMatchingStacks()[0]))
@@ -265,7 +269,13 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                                                 + TextFormatting.RESET));
             }
             if (isShiftKeyDown()) {
-                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".craft_64"));
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".craft"));
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".remove"));
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".mod_shift"));
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".mod_ctrl"));
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".mod_alt"));
+            } else {
+                textLines.add(I18n.format("gui." + Tags.MOD_ID + ".info"));
             }
         } else {
             textLines.add(I18n.format("gui." + Tags.MOD_ID + ".no_queue"));
@@ -406,28 +416,50 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
             RecipeHelper recipeHelper = new RecipeHelper(recipe);
             boolean isQueueable = recipeHelper.getQueueable().isQueueable();
 
+            // left-click handling
             if (isMouseOverSlot(mouseX, mouseY, slotXmin, slotXmax, slotYmin, slotYmax)) {
                 if (!isQueueable && !queue.isEmpty()) {
                     break;
                 }
-                if (recipeHelper.canCraft(player, damageMultiplier)) {
-                    if (isShiftKeyDown()) {
-                        for (int c = 0; c < 64; c++) {
-                            addToQueue(i / 4, recipe);
-                        }
-                    } else {
+                if (recipeHelper.canCraft(player, damageMultiplier) && mouseButton == 0) {
+                    for (int c = 0; c < keyMultiplier(); c++) {
                         addToQueue(i / 4, recipe);
                     }
+                    break;
+                }
+                // right-click handling
+                if (!queue.isEmpty() && mouseButton == 1) {
+                    for (int c = 0; c < keyMultiplier(); c++) {
+                        removeFromQueue(i / 4, recipe);
+                    }
+                    break;
                 }
             }
             i += 4;
         }
     }
 
+    private int keyMultiplier() {
+        return isShiftKeyDown() ? 64 : isCtrlKeyDown() ? 10 : isAltKeyDown() ? 5 : 1;
+    }
+
     private void addToQueue(int index, Recipe recipe) {
         queue.addLast(index);
         timeQueueStart = timeQueueStart == -1 ? Minecraft.getSystemTime() : timeQueueStart;
         totalCraftingTime += (recipe.getTime() / timeMultiplier) * 50;
+    }
+
+    private void removeFromQueue(int index, Recipe recipe) {
+        if (queue.removeLastOccurrence(index)) {
+            totalCraftingTime -= (recipe.getTime() / timeMultiplier) * 50;
+            if (!queue.contains(index)) {
+                resetProgress();
+            }
+        }
+        if (queue.isEmpty()) {
+            timeQueueStart = -1;
+            totalCraftingTime = 0;
+        }
     }
 
     // Called when GUI is opened or resized
