@@ -7,8 +7,7 @@ package org.ender_development.selectionguicrafting.registry.category;
 
 public enum QueueType {
     YES,
-    NO;
-
+    NO,;
     public boolean isQueueable() {
         return this == YES;
     }

@@ -7,7 +7,6 @@ package org.ender_development.selectionguicrafting.network;
 
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-
 import org.ender_development.selectionguicrafting.Tags;
 
 public class SelectionPacketHandler {

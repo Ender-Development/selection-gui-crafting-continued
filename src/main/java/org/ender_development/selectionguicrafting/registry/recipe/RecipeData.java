@@ -5,8 +5,8 @@
 
 package org.ender_development.selectionguicrafting.registry.recipe;
 
+import java.util.ArrayList;
 import net.minecraft.util.ResourceLocation;
-
 import org.ender_development.selectionguicrafting.registry.category.OutputType;
 import org.ender_development.selectionguicrafting.registry.category.QueueType;
 import org.ender_development.selectionguicrafting.registry.category.SoundType;
@@ -14,12 +14,9 @@ import org.ender_development.selectionguicrafting.registry.util.Particle;
 import org.ender_development.selectionguicrafting.registry.util.Sound;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-
 public class RecipeData {
     private final ArrayList<Sound> sounds = new ArrayList<>();
     private final ArrayList<Particle> particles = new ArrayList<>();
-
     // set by category, can be overridden by recipe
     private ResourceLocation frame;
     private ResourceLocation progressBar;
@@ -27,7 +24,8 @@ public class RecipeData {
     private QueueType queueable;
     private SoundType soundType;
 
-    public RecipeData() {}
+    public RecipeData() {
+    }
 
     @Nullable public ResourceLocation getFrame() {
         return frame;

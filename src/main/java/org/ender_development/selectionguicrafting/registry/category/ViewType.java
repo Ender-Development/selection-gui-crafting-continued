@@ -5,8 +5,10 @@
 
 package org.ender_development.selectionguicrafting.registry.category;
 
-/** Used by the {@link Category} class to determine how to display recipes */
+/**
+ * Used by the {@link Category} class to determine how to display recipes
+ */
 public enum ViewType {
     ALL,
-    VALID
+    VALID,
 }

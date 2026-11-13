@@ -6,7 +6,6 @@
 package org.ender_development.selectionguicrafting.registry.category;
 
 import net.minecraft.util.ResourceLocation;
-
 import org.ender_development.selectionguicrafting.gui.Assets;
 import org.ender_development.selectionguicrafting.registry.recipe.RecipeData;
 

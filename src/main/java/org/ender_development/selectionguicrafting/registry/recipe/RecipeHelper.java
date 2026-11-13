@@ -8,9 +8,11 @@ package org.ender_development.selectionguicrafting.registry.recipe;
 import codersafterdark.reskillable.api.ReskillableRegistries;
 import codersafterdark.reskillable.api.data.PlayerDataHandler;
 import codersafterdark.reskillable.api.skill.Skill;
-
 import io.enderdev.endermodpacktweaks.config.CfgTweaks;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
@@ -23,7 +25,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
-
 import org.ender_development.selectionguicrafting.SelectionGuiCrafting;
 import org.ender_development.selectionguicrafting.registry.Register;
 import org.ender_development.selectionguicrafting.registry.category.Category;
@@ -33,11 +34,6 @@ import org.ender_development.selectionguicrafting.registry.category.QueueType;
 import org.ender_development.selectionguicrafting.registry.category.SoundType;
 import org.ender_development.selectionguicrafting.registry.util.Particle;
 import org.ender_development.selectionguicrafting.registry.util.Sound;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 public class RecipeHelper {
     private final Recipe recipe;
@@ -100,31 +96,42 @@ public class RecipeHelper {
     }
 
     public boolean canCraft(EntityPlayer player, double multiplier) {
-        if (!checkAdvancement(player)) return false;
-        if (!checkGamestage(player)) return false;
-        if (!checkSkill(player)) return false;
+        if (!checkAdvancement(player)) {
+            return false;
+        }
+        if (!checkGamestage(player)) {
+            return false;
+        }
+        if (!checkSkill(player)) {
+            return false;
+        }
 
         ItemStack mainHand = player.getHeldItemMainhand();
         ItemStack offHand = player.getHeldItemOffhand();
         ArrayList<ItemStack> inventory = new ArrayList<>(player.inventory.mainInventory);
 
-        if (!checkMainHand(mainHand, multiplier)) return false;
-        if (!checkOffHand(offHand, multiplier)) return false;
-
+        if (!checkMainHand(mainHand, multiplier)) {
+            return false;
+        }
+        if (!checkOffHand(offHand, multiplier)) {
+            return false;
+        }
         // this will only work for a whole inventory slot having a good amount of items
         // if you'd want to also check for the items being spread out across multiple slots (like 3 slots each with 1 snow blocks and the recipe requiring 3 snow blocks)
         // you'd probably want to consume the recipe input instead of consuming item stacks, and at the end check if any inputs haven't been fully consumed
-
         // go through all recipeInputs, if all can be found in the simplified inventory, return true
         for (RecipeInput input : recipe.getInputs()) {
             boolean found = false;
-            for (ItemStack stack : inventory)
+            for (ItemStack stack : inventory) {
                 if (input.compare(stack, multiplier)) {
                     inventory.remove(stack);
                     found = true;
                     break;
                 }
-            if (!found) return false;
+            }
+            if (!found) {
+                return false;
+            }
         }
 
         return true;
@@ -157,27 +164,40 @@ public class RecipeHelper {
 
     // Gamestage
     public boolean checkGamestage(EntityPlayer player) {
-        if (!Loader.isModLoaded("gamestages") || recipe.getGamestages().isEmpty()) return true;
+        if (!Loader.isModLoaded("gamestages") || recipe.getGamestages().isEmpty()) {
+            return true;
+        }
         return GameStageHelper.hasAllOf(player, recipe.getGamestages());
     }
 
     public boolean hasGamestage(EntityPlayer player, String gamestage) {
-        if (!Loader.isModLoaded("gamestages")) return true;
+        if (!Loader.isModLoaded("gamestages")) {
+            return true;
+        }
         return GameStageHelper.hasStage(player, gamestage);
     }
 
     public String translateGamestage(String gamestage) {
-        if (!Loader.isModLoaded("gamestages") || !Loader.isModLoaded("endermodpacktweaks")) return gamestage;
-        if (CfgTweaks.GAME_STAGES.enable && CfgTweaks.GAME_STAGES.localizeRecipeStages) return I18n.format("emt.game_stages." + gamestage.toLowerCase(Locale.ROOT).trim());
+        if (!Loader.isModLoaded("gamestages") || !Loader.isModLoaded("endermodpacktweaks")) {
+            return gamestage;
+        }
+        if (CfgTweaks.GAME_STAGES.enable && CfgTweaks.GAME_STAGES.localizeRecipeStages) {
+            return I18n.format("emt.game_stages." + gamestage.toLowerCase(Locale.ROOT).trim());
+        }
         return gamestage;
     }
 
     // Skill
     public boolean checkSkill(EntityPlayer player) {
-        if (!Loader.isModLoaded("reskillable") || recipe.getSkills().isEmpty()) return true;
+        if (!Loader.isModLoaded("reskillable") || recipe.getSkills().isEmpty()) {
+            return true;
+        }
         Map<String, Integer> playerData = new HashMap<>();
         boolean check = true;
-        PlayerDataHandler.get(player).getAllSkillInfo().forEach(playerSkillInfo -> playerData.put(playerSkillInfo.skill.getKey(), playerSkillInfo.getLevel()));
+        PlayerDataHandler
+            .get(player)
+            .getAllSkillInfo()
+            .forEach(playerSkillInfo -> playerData.put(playerSkillInfo.skill.getKey(), playerSkillInfo.getLevel()));
         for (Map.Entry<String, Integer> entry : recipe.getSkills().entrySet()) {
             String skill = entry.getKey();
             Integer level = entry.getValue();
@@ -189,21 +209,39 @@ public class RecipeHelper {
     }
 
     public boolean hasSkill(EntityPlayer player, String skill, int level) {
-        if (!Loader.isModLoaded("reskillable")) return true;
+        if (!Loader.isModLoaded("reskillable")) {
+            return true;
+        }
         Map<String, Integer> skillTuple = new HashMap<>();
-        PlayerDataHandler.get(player).getAllSkillInfo().forEach(playerSkillInfo -> skillTuple.put(playerSkillInfo.skill.getKey(), playerSkillInfo.getLevel()));
+        PlayerDataHandler
+            .get(player)
+            .getAllSkillInfo()
+            .forEach(playerSkillInfo -> skillTuple.put(playerSkillInfo.skill.getKey(), playerSkillInfo.getLevel()));
         return skillTuple.containsKey(skill) && skillTuple.get(skill) >= level;
     }
 
     public String translateSkill(String skill) {
-        if (!Loader.isModLoaded("reskillable")) return skill;
-        return ReskillableRegistries.SKILLS.getValuesCollection().stream().filter(skill1 -> skill1.getKey().equals(skill)).map(Skill::getName).findFirst().orElse(skill);
+        if (!Loader.isModLoaded("reskillable")) {
+            return skill;
+        }
+        return ReskillableRegistries.SKILLS
+            .getValuesCollection()
+            .stream()
+            .filter(skill1 -> skill1.getKey().equals(skill))
+            .map(Skill::getName)
+            .findFirst()
+            .orElse(skill);
     }
 
     // Advancement
     public boolean checkAdvancement(EntityPlayer player) {
-        if (recipe.getAdvancements().isEmpty()) return true;
-        return recipe.getAdvancements().stream().allMatch(advancement -> hasAdvancement(player, advancement));
+        if (recipe.getAdvancements().isEmpty()) {
+            return true;
+        }
+        return recipe
+            .getAdvancements()
+            .stream()
+            .allMatch(advancement -> hasAdvancement(player, advancement));
     }
 
     /*
@@ -239,7 +277,9 @@ public class RecipeHelper {
         if (player instanceof EntityPlayerMP) {
             advancement = ((EntityPlayerMP) player).getServerWorld().getAdvancementManager().getAdvancement(locAdvancement);
         }
-        if (advancement == null) return locAdvancement.getPath();
+        if (advancement == null) {
+            return locAdvancement.getPath();
+        }
         return advancement.getDisplayText().getUnformattedText().substring(1, advancement.getDisplayText().getUnformattedText().length() - 1);
     }
 }

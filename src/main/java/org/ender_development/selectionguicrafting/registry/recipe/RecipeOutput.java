@@ -5,13 +5,11 @@
 
 package org.ender_development.selectionguicrafting.registry.recipe;
 
-import net.minecraft.item.ItemStack;
-
 import java.util.Random;
+import net.minecraft.item.ItemStack;
 
 public class RecipeOutput {
     private final Random random = new Random();
-
     private final ItemStack output;
     private final double chance;
 

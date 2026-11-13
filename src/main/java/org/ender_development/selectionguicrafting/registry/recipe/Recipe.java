@@ -5,10 +5,17 @@
 
 package org.ender_development.selectionguicrafting.registry.recipe;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-
 import org.ender_development.selectionguicrafting.SelectionGuiCrafting;
 import org.ender_development.selectionguicrafting.registry.IRegisterObject;
 import org.ender_development.selectionguicrafting.registry.Register;
@@ -19,15 +26,6 @@ import org.ender_development.selectionguicrafting.registry.util.Particle;
 import org.ender_development.selectionguicrafting.registry.util.Sound;
 import org.ender_development.selectionguicrafting.registry.util.Validation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 public class Recipe implements IRegisterObject {
     private final Validation ErrorCheck = new Validation();
     private final RecipeData ScreenData = new RecipeData();
@@ -35,13 +33,11 @@ public class Recipe implements IRegisterObject {
     private final ArrayList<RecipeInput> inputs = new ArrayList<>();
     private final ArrayList<RecipeOutput> outputs = new ArrayList<>();
     private String category;
-
     // optional
     private RecipeInput mainHand;
     private RecipeInput offHand;
     private Integer time;
     private Integer xp;
-
     // optional integration
     private final ArrayList<String> commands = new ArrayList<>();
     private final ArrayList<ResourceLocation> advancements = new ArrayList<>();
@@ -56,7 +52,6 @@ public class Recipe implements IRegisterObject {
     /* --------------------- */
     /* ---- VALIDATION ----- */
     /* --------------------- */
-
     @Override
     public IRegisterObject register() {
         if (!validate()) {
@@ -91,7 +86,6 @@ public class Recipe implements IRegisterObject {
     /* --------------------- */
     /* ------ CATEGORY ----- */
     /* --------------------- */
-
     public Recipe category(String category) {
         this.category = category;
         return this;
@@ -104,7 +98,6 @@ public class Recipe implements IRegisterObject {
     /* --------------------- */
     /* ------ INPUTS ------- */
     /* --------------------- */
-
     public Recipe input(Collection<?> inputs) {
         for (Object input : inputs) {
             if (input instanceof RecipeInput) {
@@ -160,7 +153,6 @@ public class Recipe implements IRegisterObject {
     /* --------------------- */
     /* ------ OUTPUTS ------ */
     /* --------------------- */
-
     public Recipe output(Collection<?> outputs) {
         for (Object output : outputs) {
             if (output instanceof RecipeOutput) {
@@ -206,7 +198,6 @@ public class Recipe implements IRegisterObject {
     /* --------------------- */
     /* ------ HANDS -------- */
     /* --------------------- */
-
     public Recipe mainHand(RecipeInput input) {
         this.mainHand = input;
         return this;
@@ -268,7 +259,6 @@ public class Recipe implements IRegisterObject {
     /* --------------------- */
     /* ------ TIME --------- */
     /* --------------------- */
-
     public Recipe time(int time) {
         this.time = time;
         return this;
@@ -281,7 +271,6 @@ public class Recipe implements IRegisterObject {
     /* --------------------- */
     /* ------- XP ---------- */
     /* --------------------- */
-
     public Recipe xp(int xp) {
         this.xp = xp;
         return this;
@@ -294,7 +283,6 @@ public class Recipe implements IRegisterObject {
     /* --------------------- */
     /* ----- COMMAND ------- */
     /* --------------------- */
-
     public Recipe command(String command) {
         this.commands.add(command);
         return this;
@@ -312,7 +300,6 @@ public class Recipe implements IRegisterObject {
     /* --------------------- */
     /* ---- INTEGRATION ---- */
     /* --------------------- */
-
     public Recipe advancement(ResourceLocation advancement) {
         this.advancements.add(advancement);
         return this;
@@ -362,7 +349,6 @@ public class Recipe implements IRegisterObject {
     /* --------------------- */
     /* ---- SCREENDATA ----- */
     /* --------------------- */
-
     public RecipeData getRecipeData() {
         return ScreenData;
     }

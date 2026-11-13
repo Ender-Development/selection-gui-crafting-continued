@@ -6,21 +6,18 @@
 package org.ender_development.selectionguicrafting.network;
 
 import io.netty.buffer.ByteBuf;
-
+import java.nio.charset.Charset;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
 import org.ender_development.selectionguicrafting.registry.Register;
 import org.ender_development.selectionguicrafting.registry.recipe.RecipeHandler;
 
-import java.nio.charset.Charset;
-
 public class SelectionMessageProcessRecipe implements IMessage {
-
-    public SelectionMessageProcessRecipe() {}
+    public SelectionMessageProcessRecipe() {
+    }
 
     private String recipeCategory;
     private int recipeIndex;
@@ -65,7 +62,6 @@ public class SelectionMessageProcessRecipe implements IMessage {
     }
 
     public static class SelectionMessageProcessRecipeHandler implements IMessageHandler<SelectionMessageProcessRecipe, IMessage> {
-
         @Override
         public IMessage onMessage(SelectionMessageProcessRecipe message, MessageContext ctx) {
             EntityPlayer player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(message.playerName);

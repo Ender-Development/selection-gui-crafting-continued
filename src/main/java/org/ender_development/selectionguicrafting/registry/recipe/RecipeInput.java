@@ -5,15 +5,13 @@
 
 package org.ender_development.selectionguicrafting.registry.recipe;
 
+import java.util.Arrays;
+import java.util.Random;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 
-import java.util.Arrays;
-import java.util.Random;
-
 public class RecipeInput {
     private final Random random = new Random();
-
     private final Ingredient input;
     private final double chance;
     private final int damage;
@@ -55,7 +53,9 @@ public class RecipeInput {
     }
 
     public boolean isDamageable() {
-        return Arrays.stream(getIngredient().getMatchingStacks()).anyMatch(e -> e.getItem().isDamageable());
+        return Arrays
+            .stream(getIngredient().getMatchingStacks())
+            .anyMatch(e -> e.getItem().isDamageable());
     }
 
     public boolean beConsumed() {
@@ -94,7 +94,9 @@ public class RecipeInput {
      * @return true if the input matches the stack, false otherwise
      */
     public boolean compare(ItemStack stack, double damageMultiplier) {
-        boolean isItemEqual = Arrays.stream(getIngredient().getMatchingStacks()).anyMatch(matching -> matching.isItemEqualIgnoreDurability(stack));
+        boolean isItemEqual = Arrays
+            .stream(getIngredient().getMatchingStacks())
+            .anyMatch(matching -> matching.isItemEqualIgnoreDurability(stack));
         boolean hasEnoughDurability = !stack.getItem().isDamageable() || stack.getMaxDamage() - stack.getItemDamage() + 1 >= getDamage() * damageMultiplier;
         boolean hasEnoughStackSize = stack.getCount() >= getAmount();
 

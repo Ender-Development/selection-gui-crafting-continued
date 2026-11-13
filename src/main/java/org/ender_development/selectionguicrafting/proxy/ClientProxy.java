@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy implements IProxy {
-
     @Override
     public void preInit(FMLPreInitializationEvent preEvent) {
         super.preInit(preEvent);

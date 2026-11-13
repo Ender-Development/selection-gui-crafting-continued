@@ -6,7 +6,6 @@
 package org.ender_development.selectionguicrafting.gui;
 
 import net.minecraft.util.ResourceLocation;
-
 import org.ender_development.selectionguicrafting.Tags;
 
 public enum Assets {
@@ -29,8 +28,7 @@ public enum Assets {
     FRAME_DEFAULT("textures/gui/frame/default.png"),
     FRAME_IRON("textures/gui/frame/iron.png"),
     JEI_LOCKED("textures/jei/locked.png"),
-    JEI_SELECTION("textures/jei/selection.png");
-
+    JEI_SELECTION("textures/jei/selection.png"),;
     private final String path;
 
     Assets(String path) {

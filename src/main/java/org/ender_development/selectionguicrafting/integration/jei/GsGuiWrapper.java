@@ -6,16 +6,20 @@
 package org.ender_development.selectionguicrafting.integration.jei;
 
 import static net.minecraft.client.gui.Gui.drawModalRectWithCustomSizedTexture;
-
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-
 import org.ender_development.selectionguicrafting.gui.Assets;
 import org.ender_development.selectionguicrafting.registry.Register;
 import org.ender_development.selectionguicrafting.registry.category.BlockTrigger;
@@ -25,14 +29,6 @@ import org.ender_development.selectionguicrafting.registry.recipe.RecipeHelper;
 import org.ender_development.selectionguicrafting.registry.recipe.RecipeInput;
 import org.ender_development.selectionguicrafting.registry.recipe.RecipeOutput;
 import org.jetbrains.annotations.NotNull;
-
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class GsGuiWrapper implements IRecipeWrapper {
     private final Recipe recipe;
@@ -62,37 +58,41 @@ public class GsGuiWrapper implements IRecipeWrapper {
         outputChance.clear();
 
         trigger.addAll(Register.getCategoryByID(recipe.getCategory()).getTriggerItems().stream().map(ItemTrigger::getTriggerItem).collect(Collectors.toList()));
-        triggerStats.addAll(
-                Register.getCategoryByID(recipe.getCategory()).getTriggerItems().stream()
-                        .map(itemTrigger ->
-                                new ArrayList<Double>() {
-                                    {
-                                        add(itemTrigger.getDamageMultiplier());
-                                        add(itemTrigger.getTimeMultiplier());
-                                        add(itemTrigger.getXpMultiplier());
-                                    }
-                                })
-                        .collect(Collectors.toList()));
+        triggerStats.addAll(Register
+            .getCategoryByID(recipe.getCategory())
+            .getTriggerItems()
+            .stream()
+            .map(itemTrigger -> new ArrayList<Double>() {
+                {
+                    add(itemTrigger.getDamageMultiplier());
+                    add(itemTrigger.getTimeMultiplier());
+                    add(itemTrigger.getXpMultiplier());
+                }
+            })
+            .collect(Collectors.toList()));
 
         trigger.addAll(Register.getCategoryByID(recipe.getCategory()).getTriggerBlocks().stream().map(BlockTrigger::getTriggerBlock).map(ItemStack::new).collect(Collectors.toList()));
-        triggerStats.addAll(
-                Register.getCategoryByID(recipe.getCategory()).getTriggerBlocks().stream()
-                        .map(blockTrigger ->
-                                new ArrayList<Double>() {
-                                    {
-                                        add(blockTrigger.getDamageMultiplier());
-                                        add(blockTrigger.getTimeMultiplier());
-                                        add(blockTrigger.getXpMultiplier());
-                                    }
-                                })
-                        .collect(Collectors.toList()));
+        triggerStats.addAll(Register
+            .getCategoryByID(recipe.getCategory())
+            .getTriggerBlocks()
+            .stream()
+            .map(blockTrigger -> new ArrayList<Double>() {
+                {
+                    add(blockTrigger.getDamageMultiplier());
+                    add(blockTrigger.getTimeMultiplier());
+                    add(blockTrigger.getXpMultiplier());
+                }
+            })
+            .collect(Collectors.toList()));
 
-        input.addAll(
-                recipe.getInputs().stream()
-                        .map(RecipeInput::getIngredient)
-                        .map(Ingredient::getMatchingStacks)
-                        .map(itemStacks -> Arrays.stream(itemStacks).collect(Collectors.toList()))
-                        .collect(Collectors.toList()));
+        input.addAll(recipe
+            .getInputs()
+            .stream()
+            .map(RecipeInput::getIngredient)
+            .map(Ingredient::getMatchingStacks)
+            .map(itemStacks -> Arrays.stream(itemStacks).collect(Collectors.toList()))
+            .collect(Collectors.toList())
+        );
 
         inputChance.addAll(recipe.getInputs().stream().map(RecipeInput::getChance).collect(Collectors.toList()));
 
@@ -151,16 +151,17 @@ public class GsGuiWrapper implements IRecipeWrapper {
         // ->
         if (isMouseOver(mouseX, mouseY, 114, 31, 18, 14)) {
             tooltips.add(I18n.format("jei.selectionguicrafting.output"));
-            tooltips.addAll(
-                    output.stream()
-                            .map(itemStack ->
-                                    "- "
-                                            + I18n.format(
-                                                    "jei.selectionguicrafting.output.entry",
-                                                    itemStack.getCount(),
-                                                    itemStack.getDisplayName(),
-                                                    String.format("%.2f", outputChance.get(output.indexOf(itemStack)) * 100)))
-                            .collect(Collectors.toList()));
+            tooltips.addAll(output
+                .stream()
+                .map(itemStack -> "- "
+                        + I18n.format(
+                                "jei.selectionguicrafting.output.entry",
+                                itemStack.getCount(),
+                                itemStack.getDisplayName(),
+                                String.format("%.2f", outputChance.get(output.indexOf(itemStack)) * 100)
+                        ))
+                .collect(Collectors.toList())
+            );
         }
         // !
         if (isMouseOver(mouseX, mouseY, 0, 31, 6, 14)) {
@@ -170,10 +171,18 @@ public class GsGuiWrapper implements IRecipeWrapper {
                 double time = triggerStats.get(trigger.indexOf(item)).get(1);
                 double xp = triggerStats.get(trigger.indexOf(item)).get(2);
                 tooltips.add(I18n.format("jei.selectionguicrafting.trigger.item", item.getDisplayName()));
-                if (damage != 1.0) tooltips.add(I18n.format("jei.selectionguicrafting.trigger.damage", damage));
-                if (time != 1.0) tooltips.add(I18n.format("jei.selectionguicrafting.trigger.time", time));
-                if (xp != 1.0) tooltips.add(I18n.format("jei.selectionguicrafting.trigger.xp", xp));
-                if (damage == 1.0 && time == 1.0 && xp == 1.0) tooltips.add(I18n.format("jei.selectionguicrafting.trigger.nomodifier"));
+                if (damage != 1.0) {
+                    tooltips.add(I18n.format("jei.selectionguicrafting.trigger.damage", damage));
+                }
+                if (time != 1.0) {
+                    tooltips.add(I18n.format("jei.selectionguicrafting.trigger.time", time));
+                }
+                if (xp != 1.0) {
+                    tooltips.add(I18n.format("jei.selectionguicrafting.trigger.xp", xp));
+                }
+                if (damage == 1.0 && time == 1.0 && xp == 1.0) {
+                    tooltips.add(I18n.format("jei.selectionguicrafting.trigger.nomodifier"));
+                }
             });
         }
         // +
@@ -184,17 +193,24 @@ public class GsGuiWrapper implements IRecipeWrapper {
         if (isMouseOver(mouseX, mouseY, 150, 0, 10, 10) && recipeHelper.hasAdditionalInfo()) {
             if (!recipe.getGamestages().isEmpty()) {
                 tooltips.add(I18n.format("gui.selectionguicrafting.gamestage"));
-                recipe.getGamestages().forEach(stage -> tooltips.add(I18n.format("gui.selectionguicrafting.gamestage.gamestage", recipeHelper.translateGamestage(stage))));
+                recipe
+                    .getGamestages()
+                    .forEach(stage -> tooltips.add(I18n.format("gui.selectionguicrafting.gamestage.gamestage", recipeHelper.translateGamestage(stage))));
             }
             if (!recipe.getAdvancements().isEmpty()) {
                 tooltips.add(I18n.format("gui.selectionguicrafting.advancement"));
-                recipe.getAdvancements()
-                        .forEach(advancement ->
-                                tooltips.add(I18n.format("gui.selectionguicrafting.advancement.advancement", recipeHelper.translateAdvancement(Minecraft.getMinecraft().player, advancement))));
+                recipe
+                    .getAdvancements()
+                    .forEach(advancement -> tooltips.add(I18n.format(
+                            "gui.selectionguicrafting.advancement.advancement",
+                            recipeHelper.translateAdvancement(Minecraft.getMinecraft().player, advancement)
+                    )));
             }
             if (!recipe.getSkills().isEmpty()) {
                 tooltips.add(I18n.format("gui.selectionguicrafting.skill"));
-                recipe.getSkills().forEach((skill, level) -> tooltips.add(I18n.format("gui.selectionguicrafting.skill.skill", recipeHelper.translateSkill(skill), level)));
+                recipe
+                    .getSkills()
+                    .forEach((skill, level) -> tooltips.add(I18n.format("gui.selectionguicrafting.skill.skill", recipeHelper.translateSkill(skill), level)));
             }
         }
         return tooltips;

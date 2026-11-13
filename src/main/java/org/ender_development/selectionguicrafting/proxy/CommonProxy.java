@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-
 import org.ender_development.selectionguicrafting.SelectionGuiCrafting;
 import org.ender_development.selectionguicrafting.events.EventRightClick;
 import org.ender_development.selectionguicrafting.gui.ModGuiHandler;
@@ -20,7 +19,6 @@ import org.ender_development.selectionguicrafting.network.SelectionMessageProces
 import org.ender_development.selectionguicrafting.network.SelectionPacketHandler;
 
 public class CommonProxy implements IProxy {
-
     public void preInit(FMLPreInitializationEvent preEvent) {
         MinecraftForge.EVENT_BUS.register(new EventRightClick());
         SelectionPacketHandler.SELECTION_NETWORK_WRAPPER.registerMessage(SelectionMessageProcessRecipe.SelectionMessageProcessRecipeHandler.class, SelectionMessageProcessRecipe.class, 0, Side.SERVER);
@@ -30,7 +28,8 @@ public class CommonProxy implements IProxy {
         NetworkRegistry.INSTANCE.registerGuiHandler(SelectionGuiCrafting.instance, new ModGuiHandler());
     }
 
-    public void postInit(FMLPostInitializationEvent postEvent) {}
+    public void postInit(FMLPostInitializationEvent postEvent) {
+    }
 
     public EntityPlayer getPlayerClient() {
         return null;

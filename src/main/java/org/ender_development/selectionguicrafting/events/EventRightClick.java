@@ -5,6 +5,9 @@
 
 package org.ender_development.selectionguicrafting.events;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,38 +16,33 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
 import org.ender_development.selectionguicrafting.SelectionGuiCrafting;
 import org.ender_development.selectionguicrafting.Tags;
 import org.ender_development.selectionguicrafting.config.SelectionConfig;
 import org.ender_development.selectionguicrafting.gui.ModGuiHandler;
 import org.ender_development.selectionguicrafting.registry.Register;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 @Mod.EventBusSubscriber(modid = Tags.MOD_ID)
 public class EventRightClick {
-
-    private static final List<Class<?>> blacklistBlocks =
-            new ArrayList<Class<?>>() {
-                {
-                    Arrays.asList(SelectionConfig.GENERAL.blacklistClasses)
-                            .forEach(entry -> {
-                                try {
-                                    Class<?> clazz = Class.forName(entry);
-                                    if (Block.class.isAssignableFrom(clazz)) add(clazz);
-                                } catch (ClassNotFoundException e) {
-                                    SelectionGuiCrafting.LOGGER.error(e);
-                                }
-                            });
-                }
-            };
+    private static final List<Class<?>> blacklistBlocks = new ArrayList<Class<?>>() {
+        {
+            Arrays
+                .asList(SelectionConfig.GENERAL.blacklistClasses)
+                .forEach(entry -> {
+                    try {
+                        Class<?> clazz = Class.forName(entry);
+                        if (Block.class.isAssignableFrom(clazz)) {
+                            add(clazz);
+                        }
+                    } catch (ClassNotFoundException e) {
+                        SelectionGuiCrafting.LOGGER.error(e);
+                    }
+                });
+        }
+    };
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void rightClickItem(PlayerInteractEvent.RightClickItem event) {
-
         EntityPlayer player = (EntityPlayer) event.getEntity();
 
         if (player == null) {
@@ -59,7 +57,6 @@ public class EventRightClick {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void rightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-
         EntityPlayer player = (EntityPlayer) event.getEntity();
 
         if (player == null) {
@@ -68,13 +65,14 @@ public class EventRightClick {
 
         IBlockState eventState = player.getEntityWorld().getBlockState(event.getPos());
         Block eventBlock = eventState.getBlock();
-
         // ignore TileEntities
         if (eventBlock.hasTileEntity(eventState)) {
             return;
         }
 
-        if (blacklistBlocks.stream().anyMatch(clazz -> eventBlock.getClass().equals(clazz))) {
+        if (blacklistBlocks
+            .stream()
+            .anyMatch(clazz -> eventBlock.getClass().equals(clazz))) {
             return;
         }
 

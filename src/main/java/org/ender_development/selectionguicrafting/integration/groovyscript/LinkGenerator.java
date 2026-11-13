@@ -6,7 +6,6 @@
 package org.ender_development.selectionguicrafting.integration.groovyscript;
 
 import com.cleanroommc.groovyscript.documentation.linkgenerator.BasicLinkGenerator;
-
 import org.ender_development.selectionguicrafting.Tags;
 
 public class LinkGenerator extends BasicLinkGenerator {

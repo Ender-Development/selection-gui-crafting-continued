@@ -5,22 +5,19 @@
 
 package org.ender_development.selectionguicrafting.integration.jei;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
-
 import net.minecraft.client.resources.I18n;
-
 import org.ender_development.selectionguicrafting.Tags;
 import org.ender_development.selectionguicrafting.gui.Assets;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class GsGuiCategory implements IRecipeCategory<GsGuiWrapper> {
     private final IDrawable drawable;
@@ -63,28 +60,23 @@ public class GsGuiCategory implements IRecipeCategory<GsGuiWrapper> {
         final int INDEX_MAINHAND = 1;
         final int INDEX_OFFHAND = 2;
         final int INDEX_INPUT = 3;
-
         // Output Items
         AtomicInteger index = new AtomicInteger();
         AtomicInteger slot = new AtomicInteger();
         iRecipeLayout.getItemStacks().init(index.get(), false, 138, 29);
         iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getOutputs(VanillaTypes.ITEM).get(INDEX_OUTPUT));
-
         // Trigger Items
         index.getAndIncrement();
         iRecipeLayout.getItemStacks().init(index.get(), true, 13, 29);
         iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_TRIGGER));
-
         // Main Hand
         index.getAndIncrement();
         iRecipeLayout.getItemStacks().init(index.get(), true, 21, 9);
         iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_MAINHAND));
-
         // Offhand
         index.getAndIncrement();
         iRecipeLayout.getItemStacks().init(index.get(), true, 21, 49);
         iRecipeLayout.getItemStacks().set(index.get(), iIngredients.getInputs(VanillaTypes.ITEM).get(INDEX_OFFHAND));
-
         // Input Items
         for (int i = INDEX_INPUT; i < iIngredients.getInputs(VanillaTypes.ITEM).size(); i++) {
             index.getAndIncrement();

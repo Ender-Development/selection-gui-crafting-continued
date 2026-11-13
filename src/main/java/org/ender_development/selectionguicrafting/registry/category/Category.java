@@ -5,6 +5,10 @@
 
 package org.ender_development.selectionguicrafting.registry.category;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.stream.Collectors;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -12,7 +16,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.ender_development.selectionguicrafting.SelectionGuiCrafting;
 import org.ender_development.selectionguicrafting.Tags;
 import org.ender_development.selectionguicrafting.registry.IRegisterObject;
@@ -21,28 +24,24 @@ import org.ender_development.selectionguicrafting.registry.util.Particle;
 import org.ender_development.selectionguicrafting.registry.util.Sound;
 import org.ender_development.selectionguicrafting.registry.util.Validation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.stream.Collectors;
-
 public class Category implements IRegisterObject {
     private final CategoryData ScreenData = new CategoryData();
-
     private final ArrayList<ItemTrigger> triggerItems = new ArrayList<>();
     private final ArrayList<BlockTrigger> triggerBlocks = new ArrayList<>();
-
     private String id;
 
-    public Category() {}
+    public Category() {
+    }
 
     /* --------------------- */
     /* ------ ID & NAME ---- */
     /* --------------------- */
-
     public Category id(String id) {
         String sanitize = id.toLowerCase(Locale.ROOT).replace(" ", "_");
-        if (Register.getCategories().stream().anyMatch(ctg -> ctg.getID().equals(sanitize))) {
+        if (Register
+            .getCategories()
+            .stream()
+            .anyMatch(ctg -> ctg.getID().equals(sanitize))) {
             ErrorCheck.error("ID already exists");
         } else {
             this.id = sanitize;
@@ -62,13 +61,15 @@ public class Category implements IRegisterObject {
     /* --------------------- */
     /* ------ TRIGGER ------ */
     /* --------------------- */
-
     public Category trigger(Ingredient input, double damageMultiplier, double timeMultiplier, double xpMultiplier) {
         ArrayList<ItemStack> inputItems = new ArrayList<>(Arrays.asList(input.getMatchingStacks()));
         if (Register.getTriggerItems().stream().map(ItemTrigger::getTriggerItem).anyMatch(inputItems::contains)) {
             ErrorCheck.error("Invalid Trigger Item " + inputItems.get(0).getDisplayName() + " is already registered as Trigger.");
         } else {
-            triggerItems.addAll(inputItems.stream().map(item -> new ItemTrigger(item, damageMultiplier, timeMultiplier, xpMultiplier)).collect(Collectors.toList()));
+            triggerItems.addAll(inputItems
+                .stream()
+                .map(item -> new ItemTrigger(item, damageMultiplier, timeMultiplier, xpMultiplier))
+                .collect(Collectors.toList()));
         }
         return this;
     }
@@ -127,7 +128,6 @@ public class Category implements IRegisterObject {
     /* --------------------- */
     /* ---- VALIDATION ----- */
     /* --------------------- */
-
     @Override
     public boolean validate() {
         if (id == null) {
@@ -159,7 +159,6 @@ public class Category implements IRegisterObject {
     /* --------------------- */
     /* ---- SCREENDATA ----- */
     /* --------------------- */
-
     public CategoryData getScreenData() {
         return ScreenData;
     }

@@ -12,14 +12,13 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.IBlock;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
-
+import java.util.stream.Collectors;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
-
 import org.ender_development.selectionguicrafting.registry.Register;
 import org.ender_development.selectionguicrafting.registry.category.BackgroundType;
 import org.ender_development.selectionguicrafting.registry.category.Category;
@@ -30,15 +29,11 @@ import org.ender_development.selectionguicrafting.registry.category.ViewType;
 import org.ender_development.selectionguicrafting.registry.recipe.Recipe;
 import org.ender_development.selectionguicrafting.registry.util.Particle;
 import org.ender_development.selectionguicrafting.registry.util.Sound;
-
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.stream.Collectors;
-
 @SuppressWarnings("unused")
 public final class CTsgc {
-
     @ZenRegister
     @ZenClass("mods.selectionguicrafting.category")
     public static class CTCategoryBuilder {
@@ -226,35 +221,33 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Removes a category by its ID.")
         public static void removeByName(String categoryName) {
-            CraftTweakerAPI.apply(
-                    new IAction() {
-                        @Override
-                        public void apply() {
-                            Register.removeCategory(Register.getCategoryByID(categoryName));
-                        }
+            CraftTweakerAPI.apply(new IAction() {
+                @Override
+                public void apply() {
+                    Register.removeCategory(Register.getCategoryByID(categoryName));
+                }
 
-                        @Override
-                        public String describe() {
-                            return "Removing Selection GUI Crafting recipe category '" + categoryName + "'";
-                        }
-                    });
+                @Override
+                public String describe() {
+                    return "Removing Selection GUI Crafting recipe category '" + categoryName + "'";
+                }
+            });
         }
 
         @ZenMethod
         @ZenDoc("Removes all categories.")
         public static void removeAllCategories() {
-            CraftTweakerAPI.apply(
-                    new IAction() {
-                        @Override
-                        public void apply() {
-                            Register.getCategories().clear();
-                        }
+            CraftTweakerAPI.apply(new IAction() {
+                @Override
+                public void apply() {
+                    Register.getCategories().clear();
+                }
 
-                        @Override
-                        public String describe() {
-                            return "Removing all Selection GUI Crafting recipe categories";
-                        }
-                    });
+                @Override
+                public String describe() {
+                    return "Removing all Selection GUI Crafting recipe categories";
+                }
+            });
         }
     }
 
@@ -613,18 +606,17 @@ public final class CTsgc {
         @ZenMethod
         @ZenDoc("Removes all recipes.")
         public static void removeAllRecipes() {
-            CraftTweakerAPI.apply(
-                    new IAction() {
-                        @Override
-                        public void apply() {
-                            Register.getRecipes().clear();
-                        }
+            CraftTweakerAPI.apply(new IAction() {
+                @Override
+                public void apply() {
+                    Register.getRecipes().clear();
+                }
 
-                        @Override
-                        public String describe() {
-                            return "Removing all Selection GUI Crafting recipes";
-                        }
-                    });
+                @Override
+                public String describe() {
+                    return "Removing all Selection GUI Crafting recipes";
+                }
+            });
         }
     }
 }

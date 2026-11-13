@@ -19,12 +19,13 @@ import com.cleanroommc.groovyscript.api.documentation.annotations.RegistryDescri
 import com.cleanroommc.groovyscript.helper.SimpleObjectStream;
 import com.cleanroommc.groovyscript.helper.recipe.IRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
-
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-
 import org.ender_development.selectionguicrafting.Tags;
 import org.ender_development.selectionguicrafting.registry.Register;
 import org.ender_development.selectionguicrafting.registry.category.OutputType;
@@ -35,10 +36,6 @@ import org.ender_development.selectionguicrafting.registry.recipe.RecipeOutput;
 import org.ender_development.selectionguicrafting.registry.util.Particle;
 import org.ender_development.selectionguicrafting.registry.util.Sound;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 @RegistryDescription(linkGenerator = Tags.MOD_ID)
 public class Recipe extends VirtualizedRegistry<org.ender_development.selectionguicrafting.registry.recipe.Recipe> {
@@ -66,43 +63,42 @@ public class Recipe extends VirtualizedRegistry<org.ender_development.selectiong
         return false;
     }
 
-    @MethodDescription(
-            type = MethodDescription.Type.REMOVAL,
-            example = @Example(value = "'dummy_category'", commented = true),
-            description = "groovyscript.wiki.selectionguicrafting.recipe.remove_by_category")
+    @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example(value = "'dummy_category'", commented = true), description = "groovyscript.wiki.selectionguicrafting.recipe.remove_"
+            + "by_category")
     public boolean removeByCategory(String category) {
-        return Register.getRecipes()
-                .removeIf(recipe -> {
-                    if (recipe.getCategory().equals(category)) {
-                        addBackup(recipe);
-                        return true;
-                    }
-                    return false;
-                });
+        return Register.getRecipes().removeIf(recipe -> {
+            if (recipe.getCategory().equals(category)) {
+                addBackup(recipe);
+                return true;
+            }
+            return false;
+        });
     }
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example("item('minecraft:stone')"))
     public boolean removeByOutput(IIngredient output) {
-        return Register.getRecipes()
-                .removeIf(recipe -> {
-                    if (recipe.getOutputs().stream().map(RecipeOutput::getItemStack).anyMatch(output)) {
-                        addBackup(recipe);
-                        return true;
-                    }
-                    return false;
-                });
+        return Register.getRecipes().removeIf(recipe -> {
+            if (recipe.getOutputs().stream().map(RecipeOutput::getItemStack).anyMatch(output)) {
+                addBackup(recipe);
+                return true;
+            }
+            return false;
+        });
     }
 
     @MethodDescription(type = MethodDescription.Type.REMOVAL, example = @Example("item('minecraft:cobblestone')"))
     public boolean removeByInput(IIngredient input) {
-        return Register.getRecipes()
-                .removeIf(recipe -> {
-                    if (recipe.getInputs().stream().map(RecipeInput::getIngredient).anyMatch(ingredient -> ingredient.equals(input.toMcIngredient()))) {
-                        addBackup(recipe);
-                        return true;
-                    }
-                    return false;
-                });
+        return Register.getRecipes().removeIf(recipe -> {
+            if (recipe
+                .getInputs()
+                .stream()
+                .map(RecipeInput::getIngredient)
+                .anyMatch(ingredient -> ingredient.equals(input.toMcIngredient()))) {
+                addBackup(recipe);
+                return true;
+            }
+            return false;
+        });
     }
 
     @MethodDescription(type = MethodDescription.Type.QUERY)
@@ -116,17 +112,15 @@ public class Recipe extends VirtualizedRegistry<org.ender_development.selectiong
         Register.getRecipes().clear();
     }
 
-    @RecipeBuilderDescription(
-            example = {
-                @Example(
-                        ".category('dummy_category').input(item('minecraft:stone') * 3).output(item('minecraft:cobblestone') * 2, 0.5).time(200).xp(1).sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
-                @Example(".category('blub').input(item('minecraft:diamond')).output(item('minecraft:wheat_seeds') * 5, 0.5)"),
-                @Example(
-                        ".category('dummy_category').input(item('minecraft:stone') * 32).output(item('minecraft:diamond') * 50, 0.5).output(item('minecraft:clay') * 2, 0.1).time(200).xp(10).sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
-                @Example(".category('dead').input(item('minecraft:wheat_seeds') * 3).output(item('minecraft:sand') * 2).time(40).queueable(false).outputType('DROP').xp(100)"),
-                @Example(
-                        ".category('dead').input(item('minecraft:stick') * 3).output(item('minecraft:sand') * 2).frame('selectionguicrafting:textures/gui/frame/iron.png').time(40).queueable(false).command('kill @p')")
-            })
+    @RecipeBuilderDescription(example = {
+            @Example(".category('dummy_category').input(item('minecraft:stone') * 3).output(item('minecraft:cobblestone') * 2, 0.5).time(200).xp(1).sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
+            @Example(".category('blub').input(item('minecraft:diamond')).output(item('minecraft:wheat_seeds') * 5, 0.5)"),
+            @Example(".category('dummy_category').input(item('minecraft:stone') * 32).output(item('minecraft:diamond') * 50, 0.5).output(item('minecraft:clay') * 2, 0.1).time(200).xp(10)."
+            + "sound('minecraft:block.anvil.land', 1.0f, 1.0f)"),
+            @Example(".category('dead').input(item('minecraft:wheat_seeds') * 3).output(item('minecraft:sand') * 2).time(40).queueable(false).outputType('DROP').xp(100)"),
+            @Example(".category('dead').input(item('minecraft:stick') * 3).output(item('minecraft:sand') * 2).frame('selectionguicrafting:textures/gui/frame/iron.png').time(40)."
+            + "queueable(false).command('kill @p')"),
+    })
     public RecipeBuilder recipeBuilder() {
         return new RecipeBuilder();
     }
@@ -150,22 +144,38 @@ public class Recipe extends VirtualizedRegistry<org.ender_development.selectiong
     @Property(property = "gamestage", defaultValue = "null")
     @Property(property = "advancement", defaultValue = "null")
     public static class RecipeBuilder extends org.ender_development.selectionguicrafting.registry.recipe.Recipe
-            implements IRecipeBuilder<org.ender_development.selectionguicrafting.registry.recipe.Recipe> {
-        @Property private RecipeInput mainhand;
-        @Property private OutputType outputType;
-        @Property private RecipeInput offhand;
-        @Property private RecipeOutput output;
-        @Property private RecipeInput input;
-        @Property private Sound sound;
-        @Property private ResourceLocation progressBar;
-        @Property private QueueType queueable;
-        @Property private Particle particle;
-        @Property private SoundType soundType;
-        @Property private ResourceLocation frame;
-        @Property private String command;
-        @Property private String skill;
-        @Property private ResourceLocation advancement;
-        @Property private String gamestage;
+            implements IRecipeBuilder<org.ender_development.selectionguicrafting.registry.recipe.Recipe>
+    {
+        @Property
+        private RecipeInput mainhand;
+        @Property
+        private OutputType outputType;
+        @Property
+        private RecipeInput offhand;
+        @Property
+        private RecipeOutput output;
+        @Property
+        private RecipeInput input;
+        @Property
+        private Sound sound;
+        @Property
+        private ResourceLocation progressBar;
+        @Property
+        private QueueType queueable;
+        @Property
+        private Particle particle;
+        @Property
+        private SoundType soundType;
+        @Property
+        private ResourceLocation frame;
+        @Property
+        private String command;
+        @Property
+        private String skill;
+        @Property
+        private ResourceLocation advancement;
+        @Property
+        private String gamestage;
 
         // Register
         @Override

@@ -7,5 +7,5 @@ package org.ender_development.selectionguicrafting.registry.category;
 
 public enum OutputType {
     DROP,
-    INVENTORY
+    INVENTORY,
 }

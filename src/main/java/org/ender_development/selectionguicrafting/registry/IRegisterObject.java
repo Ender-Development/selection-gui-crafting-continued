@@ -8,7 +8,9 @@ package org.ender_development.selectionguicrafting.registry;
 import org.ender_development.selectionguicrafting.registry.util.Validation;
 
 public interface IRegisterObject {
-    /** Every object that implements this interface must have a ErrorCheck */
+    /**
+     * Every object that implements this interface must have a ErrorCheck
+     */
     Validation ErrorCheck = new Validation();
 
     /**
@@ -16,7 +18,9 @@ public interface IRegisterObject {
      */
     Validation getErrorCheck();
 
-    /** Register the object in the registry. */
+    /**
+     * Register the object in the registry.
+     */
     IRegisterObject register();
 
     /**

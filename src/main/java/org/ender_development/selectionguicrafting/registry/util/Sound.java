@@ -6,7 +6,6 @@
 package org.ender_development.selectionguicrafting.registry.util;
 
 import net.minecraft.util.ResourceLocation;
-
 import org.jetbrains.annotations.NotNull;
 
 public class Sound {

@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-
 import org.ender_development.selectionguicrafting.registry.Register;
 import org.ender_development.selectionguicrafting.registry.category.AbstractTrigger;
 import org.ender_development.selectionguicrafting.registry.category.BlockTrigger;
@@ -35,20 +34,17 @@ public class ModGuiHandler implements IGuiHandler {
 
     private Object implementMethod(int ID, EntityPlayer player, World world, int x, int y, int z) {
         AbstractTrigger trigger = null;
-
         /* BLOCK: HIGHEST PRIORITY */
         RayTraceResult rayTraceResult = player.rayTrace(Minecraft.getMinecraft().playerController.getBlockReachDistance(), 1.0F);
         if (rayTraceResult != null && rayTraceResult.typeOfHit == RayTraceResult.Type.BLOCK) {
             Block rayBlock = world.getBlockState(rayTraceResult.getBlockPos()).getBlock();
             trigger = Register.getTriggerBlock(rayBlock);
         }
-
         /* MAINHAND: HIGHER PRIORITY */
         if (trigger == null) {
             ItemStack heldStackMainhand = player.getHeldItemMainhand();
             trigger = Register.getTriggerItem(heldStackMainhand);
         }
-
         /* OFFHAND: LOWEST PRIORITY */
         if (trigger == null) {
             ItemStack heldStackOffhand = player.getHeldItemOffhand();

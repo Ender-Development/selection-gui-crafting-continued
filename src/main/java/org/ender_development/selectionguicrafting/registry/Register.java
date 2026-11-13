@@ -5,25 +5,21 @@
 
 package org.ender_development.selectionguicrafting.registry;
 
+import java.util.ArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-
 import org.ender_development.selectionguicrafting.registry.category.BlockTrigger;
 import org.ender_development.selectionguicrafting.registry.category.Category;
 import org.ender_development.selectionguicrafting.registry.category.ItemTrigger;
 import org.ender_development.selectionguicrafting.registry.recipe.Recipe;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-
 public class Register {
     private static final ArrayList<Category> categories = new ArrayList<>();
     private static final ArrayList<Recipe> recipes = new ArrayList<>();
-
     private static final ArrayList<ItemTrigger> allTriggerItems = new ArrayList<>();
     private static final ArrayList<BlockTrigger> allTriggerBlocks = new ArrayList<>();
-
     private static final Category INVALID = new Category().id("invalid").trigger(Blocks.BARRIER, 1, 1, 1).register();
 
     public static void addCategory(Category category) {
@@ -74,45 +70,74 @@ public class Register {
     }
 
     public static Category getCategoryByID(String id) {
-        return categories.stream().filter(category -> category.getID().equals(id)).findFirst().orElse(INVALID);
+        return categories
+            .stream()
+            .filter(category -> category.getID().equals(id))
+            .findFirst()
+            .orElse(INVALID);
     }
 
     public static Category getCategoryByTriggerItem(ItemTrigger item) {
-        return categories.stream().filter(category -> category.getTriggerItems().contains(item)).findFirst().orElse(INVALID);
+        return categories
+            .stream()
+            .filter(category -> category.getTriggerItems().contains(item))
+            .findFirst()
+            .orElse(INVALID);
     }
 
     public static Category getCategoryByTriggerBlock(BlockTrigger block) {
-        return categories.stream().filter(category -> category.getTriggerBlocks().contains(block)).findFirst().orElse(INVALID);
+        return categories
+            .stream()
+            .filter(category -> category.getTriggerBlocks().contains(block))
+            .findFirst()
+            .orElse(INVALID);
     }
 
     public static ArrayList<Recipe> getRecipesByCategory(Category category) {
-        return recipes.stream().filter(recipe -> recipe.getCategory().equals(category.getID())).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        return recipes
+            .stream()
+            .filter(recipe -> recipe.getCategory().equals(category.getID()))
+            .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
     }
 
     public static boolean isTriggerItem(ItemStack itemStack) {
-        return allTriggerItems.stream()
-                .anyMatch(triggerItem -> {
-                    boolean match = triggerItem.getTriggerItem().isItemEqualIgnoreDurability(itemStack);
-                    if (triggerItem.getTriggerItem().hasTagCompound() && triggerItem.getTriggerItem().getTagCompound() != null) {
-                        if (!itemStack.hasTagCompound() || itemStack.getTagCompound() == null) {
-                            return false; // If the trigger item has a tag compound, the item stack must also have one
-                        }
-                        if (!match) return false;
-                        return triggerItem.getTriggerItem().getTagCompound().equals(itemStack.getTagCompound());
+        return allTriggerItems
+            .stream()
+            .anyMatch(triggerItem -> {
+                boolean match = triggerItem.getTriggerItem().isItemEqualIgnoreDurability(itemStack);
+                if (triggerItem.getTriggerItem().hasTagCompound() && triggerItem.getTriggerItem().getTagCompound() != null) {
+                    if (!itemStack.hasTagCompound() || itemStack.getTagCompound() == null) {
+                        // If the trigger item has a tag compound, the item stack must also have one
+                        return false;
                     }
-                    return match;
-                });
+                    if (!match) {
+                        return false;
+                    }
+                    return triggerItem.getTriggerItem().getTagCompound().equals(itemStack.getTagCompound());
+                }
+                return match;
+            });
     }
 
     @Nullable public static ItemTrigger getTriggerItem(ItemStack itemStack) {
-        return allTriggerItems.stream().filter(triggerItem -> triggerItem.getTriggerItem().isItemEqualIgnoreDurability(itemStack)).findFirst().orElse(null);
+        return allTriggerItems
+            .stream()
+            .filter(triggerItem -> triggerItem.getTriggerItem().isItemEqualIgnoreDurability(itemStack))
+            .findFirst()
+            .orElse(null);
     }
 
     public static boolean isTriggerBlock(Block block) {
-        return allTriggerBlocks.stream().anyMatch(triggerBlock -> triggerBlock.getTriggerBlock().isAssociatedBlock(block));
+        return allTriggerBlocks
+            .stream()
+            .anyMatch(triggerBlock -> triggerBlock.getTriggerBlock().isAssociatedBlock(block));
     }
 
     @Nullable public static BlockTrigger getTriggerBlock(Block block) {
-        return allTriggerBlocks.stream().filter(triggerBlock -> triggerBlock.getTriggerBlock().isAssociatedBlock(block)).findFirst().orElse(null);
+        return allTriggerBlocks
+            .stream()
+            .filter(triggerBlock -> triggerBlock.getTriggerBlock().isAssociatedBlock(block))
+            .findFirst()
+            .orElse(null);
     }
 }

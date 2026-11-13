@@ -19,12 +19,10 @@ import com.cleanroommc.groovyscript.api.documentation.annotations.RegistryDescri
 import com.cleanroommc.groovyscript.helper.SimpleObjectStream;
 import com.cleanroommc.groovyscript.helper.recipe.IRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
-
 import net.minecraft.block.Block;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-
 import org.ender_development.selectionguicrafting.Tags;
 import org.ender_development.selectionguicrafting.registry.Register;
 import org.ender_development.selectionguicrafting.registry.category.AbstractTrigger;
@@ -81,13 +79,12 @@ public class Category extends VirtualizedRegistry<org.ender_development.selectio
         Register.getCategories().clear();
     }
 
-    @RecipeBuilderDescription(
-            example = {
-                @Example(".id('dummy_category').trigger(item('minecraft:diamond'), 0.2, 0.8, 2.65).hideInvalid().keepOpen().background('selectionguicrafting:textures/gui/background/wood.png')"),
-                @Example(".id('blub').trigger(item('minecraft:stone_shovel')).background('selectionguicrafting:textures/gui/background/lake.png').backgroundType('SINGLE_CUT')"),
-                @Example(
-                        ".id('dead').trigger(block('minecraft:snow')).background('selectionguicrafting:textures/gui/background/deadlands.png').decoration('selectionguicrafting:textures/gui/decor/gold.png').border('selectionguicrafting:textures/gui/background/wood.png').backgroundType('SINGLE_CUT')")
-            })
+    @RecipeBuilderDescription(example = {
+            @Example(".id('dummy_category').trigger(item('minecraft:diamond'), 0.2, 0.8, 2.65).hideInvalid().keepOpen().background('selectionguicrafting:textures/gui/background/wood.png')"),
+            @Example(".id('blub').trigger(item('minecraft:stone_shovel')).background('selectionguicrafting:textures/gui/background/lake.png').backgroundType('SINGLE_CUT')"),
+            @Example(".id('dead').trigger(block('minecraft:snow')).background('selectionguicrafting:textures/gui/background/deadlands.png').decoration('selectionguicrafting:"
+            + "textures/gui/decor/gold.png').border('selectionguicrafting:textures/gui/background/wood.png').backgroundType('SINGLE_CUT')"),
+    })
     public CategoryBuilder categoryBuilder() {
         return new CategoryBuilder();
     }
@@ -108,21 +105,36 @@ public class Category extends VirtualizedRegistry<org.ender_development.selectio
     @Property(property = "particle", defaultValue = "null")
     @Property(property = "keepOpen", defaultValue = "false")
     public static class CategoryBuilder extends org.ender_development.selectionguicrafting.registry.category.Category
-            implements IRecipeBuilder<org.ender_development.selectionguicrafting.registry.category.Category> {
-        @Property private ResourceLocation border;
-        @Property private Sound sound;
-        @Property private OutputType outputType;
-        @Property private AbstractTrigger trigger;
-        @Property private ResourceLocation background;
-        @Property private ResourceLocation progressBar;
-        @Property private Particle particle;
-        @Property private QueueType queueable;
-        @Property private ViewType viewType;
-        @Property private ResourceLocation decoration;
-        @Property private BackgroundType backgroundType;
-        @Property private SoundType soundType;
-        @Property private ResourceLocation frame;
-        @Property private boolean keepOpen;
+            implements IRecipeBuilder<org.ender_development.selectionguicrafting.registry.category.Category>
+    {
+        @Property
+        private ResourceLocation border;
+        @Property
+        private Sound sound;
+        @Property
+        private OutputType outputType;
+        @Property
+        private AbstractTrigger trigger;
+        @Property
+        private ResourceLocation background;
+        @Property
+        private ResourceLocation progressBar;
+        @Property
+        private Particle particle;
+        @Property
+        private QueueType queueable;
+        @Property
+        private ViewType viewType;
+        @Property
+        private ResourceLocation decoration;
+        @Property
+        private BackgroundType backgroundType;
+        @Property
+        private SoundType soundType;
+        @Property
+        private ResourceLocation frame;
+        @Property
+        private boolean keepOpen;
 
         // Register
         @Override
