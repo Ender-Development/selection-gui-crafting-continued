@@ -5,13 +5,6 @@
 
 package org.ender_development.selectionguicrafting.gui;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -51,6 +44,14 @@ import org.ender_development.selectionguicrafting.registry.util.Sound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.Color;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
 @SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(modid = Tags.MOD_ID, value = Side.CLIENT)
 public class GuiScreenCrafting extends GuiScreenDynamic {
@@ -66,7 +67,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     private double totalCraftingTime;
     private final EntityPlayer player;
     private final World world;
-    private ItemStack toolTipToRenderItem = null;
+    @Nullable private ItemStack toolTipToRenderItem = null;
     private int toolTipToRenderX = 32000;
     private int toolTipToRenderY = 32000;
     private final ArrayList<Integer> slotCoordinates = new ArrayList<>();
@@ -115,6 +116,10 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
                 .filter(r -> (new RecipeHelper(r)).canCraft(player, damageMultiplier))
                 .collect(Collectors.toCollection(ArrayList::new));
         }
+    }
+
+    @NotNull public ItemStack getHoveredItemStack() {
+        return toolTipToRenderItem == null ? ItemStack.EMPTY : toolTipToRenderItem;
     }
 
     private void calculateRowsCols() {
@@ -210,7 +215,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
 
     @Override
     public void drawHoveringText(@NotNull List<String> textLines, int x, int y, @NotNull FontRenderer font) {
-        RecipeHelper hoveredRecipeHelper = new RecipeHelper(hoveredRecipe);
+        final RecipeHelper hoveredRecipeHelper = new RecipeHelper(hoveredRecipe);
         ItemStack mainHand = player.getHeldItemMainhand();
         ItemStack offHand = player.getHeldItemOffhand();
         tooltipIcons = new ArrayList<>();
@@ -295,6 +300,7 @@ public class GuiScreenCrafting extends GuiScreenDynamic {
     }
 
     private String formatItemName(ItemStack stack) {
+        assert tooltipIcons != null;
         tooltipIcons.add(stack);
         return stack.getCount() == 1 ? stack.getDisplayName() : String.format("%dx %s", stack.getCount(), stack.getDisplayName());
     }

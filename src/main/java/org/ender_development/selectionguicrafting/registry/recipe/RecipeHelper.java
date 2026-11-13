@@ -9,10 +9,6 @@ import codersafterdark.reskillable.api.ReskillableRegistries;
 import codersafterdark.reskillable.api.data.PlayerDataHandler;
 import codersafterdark.reskillable.api.skill.Skill;
 import io.enderdev.endermodpacktweaks.config.CfgTweaks;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
@@ -35,6 +31,11 @@ import org.ender_development.selectionguicrafting.registry.category.SoundType;
 import org.ender_development.selectionguicrafting.registry.util.Particle;
 import org.ender_development.selectionguicrafting.registry.util.Sound;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 public class RecipeHelper {
     private final Recipe recipe;
     private final RecipeData recipeData;
@@ -46,6 +47,18 @@ public class RecipeHelper {
         this.category = Register.getCategoryByID(recipe.getCategory());
         this.recipeData = recipe.getRecipeData();
         this.categoryData = category.getScreenData();
+    }
+
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public ItemStack getDisplayOutput() {
+        return recipe.getOutputs().get(0).getItemStack();
     }
 
     public ResourceLocation getFrame() {
